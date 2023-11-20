@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* @font-face {
+    font-family: Inter-Light;
+    src: url("../fonts/Inter-Light.ttf") format('truetype');
+  }
+  @font-face {
+    font-family: Inter-Regular;
+    src: url("../fonts/Inter-Regular.ttf") format('truetype');
+  }
+  @font-face {
+    font-family: Inter-Medium;
+    src: url("../fonts/Inter-Medium.ttf") format('truetype');
+  }
+  @font-face {
+    font-family: Inter-SemiBold;
+    src: url("../fonts/Inter-SemiBold.ttf") format('truetype');
+  }
+  @font-face {
+    font-family: Inter-Bold;
+    src: url("../fonts/Inter-Bold.ttf") format('truetype');
+  } */
+}
+
+@layer components {
+  .container-fluid {
+    @apply w-full mx-auto px-4;
+  }
+}
+
+@layer utilities {
+  .translate-50 {
+    transform: translate(-50%, -50%);
+  }
+}
