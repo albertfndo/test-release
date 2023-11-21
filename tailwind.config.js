@@ -28,7 +28,7 @@ module.exports = {
       colors: {
         brand: "#F3C76F",
         brandSecondary: "#FAE9C5",
-        primaryBg: "#1D1D1D",
+        primaryBg: "#121212",
         secondaryBg: "#2C2C2C",
         cardBg: "#464646",
         primaryText: "#EEECE8",
