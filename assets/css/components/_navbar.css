@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+
+
+@layer base {
+  aside {
+    @apply bg-primaryBg h-screen w-2/3 md:w-1/2 lg:w-64 fixed overflow-y-auto transition-all duration-500 ease-in-out z-50 lg:z-30;
+  }
+  aside nav {
+    @apply mt-6;
+  }
+  aside nav .nav-link {
+    @apply flex items-center gap-2 px-4 py-3 hover:bg-secondaryBg cursor-pointer duration-200 text-primaryText text-sm font-poppins-r;
+  }
+  aside nav .nav-link.active {
+    @apply bg-brand text-primaryBg;
+  }
+}
+
+@layer components {
+  aside .nav-info {
+    @apply px-4 pt-8 text-center;
+  }
+  aside .nav-info h3 {
+    @apply mt-4 uppercase text-primaryText text-base xl:text-lg font-poppins-sb;
+  }
+  aside .nav-info .general {
+    @apply my-2;
+  }
+  aside .nav-info .general p {
+    @apply uppercase text-primaryText text-xs xl:text-sm font-poppins-r;
+  }
+  aside .nav-info .status {
+    @apply mt-4 mb-2 flex justify-center items-center gap-2;
+  }
+  aside .nav-info .status p, aside .nav-info p.version {
+    @apply uppercase text-primaryText text-xs font-poppins-r;
+  }
+  .status-dot {
+    @apply w-3 h-3 rounded-full;
+  }
+  .status-dot.online {
+    @apply bg-success;
+  }
+  .status-dot.offline {
+    @apply bg-danger;
+  }
+}

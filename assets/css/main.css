@@ -1,33 +1,219 @@
+@import "./pages/_login.css";
+@import "./components/_button.css";
+@import "./components/_modal.css";
+@import "./components/_navbar.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* @font-face {
-    font-family: Inter-Light;
-    src: url("../fonts/Inter-Light.ttf") format('truetype');
+  @font-face {
+    font-family: Poppins-Regular;
+    src: url("../fonts/Poppins-Regular.ttf") format('truetype');
   }
   @font-face {
-    font-family: Inter-Regular;
-    src: url("../fonts/Inter-Regular.ttf") format('truetype');
+    font-family: Poppins-Medium;
+    src: url("../fonts/Poppins-Medium.ttf") format('truetype');
   }
   @font-face {
-    font-family: Inter-Medium;
-    src: url("../fonts/Inter-Medium.ttf") format('truetype');
+    font-family: Poppins-SemiBold;
+    src: url("../fonts/Poppins-SemiBold.ttf") format('truetype');
   }
-  @font-face {
-    font-family: Inter-SemiBold;
-    src: url("../fonts/Inter-SemiBold.ttf") format('truetype');
+  html {
+    @apply bg-secondaryBg
   }
-  @font-face {
-    font-family: Inter-Bold;
-    src: url("../fonts/Inter-Bold.ttf") format('truetype');
-  } */
+  main {
+    @apply lg:ml-64 px-4 lg:px-6 mt-6 lg:mt-0;
+  }
 }
 
 @layer components {
+  .search {
+    @apply flex items-center min-w-[300px] ;
+  }
+  .search input[type="text"] {
+    @apply w-full p-2 bg-transparent rounded-l-md border border-brand text-primaryText focus:outline-brandSecondary placeholder:text-brand/50 text-sm font-poppins-r;;
+  }
+  .search button {
+    @apply px-4 py-2 bg-brand hover:bg-brandSecondary border border-brand duration-200 rounded-r-lg text-primaryBg text-sm xl:text-base font-poppins-r;
+  }
+  button.btn-add-guest .new {
+    @apply hidden lg:flex justify-center items-center gap-2;
+  }
+  button.btn-add-guest .new p{
+    @apply text-primaryBg text-base font-poppins-r;
+  }
+  
   .container-fluid {
     @apply w-full mx-auto px-4;
+  }
+  .overlay {
+    @apply fixed inset-0 bg-black/60 z-40;
+  }
+  textarea.global-textarea {
+    @apply p-2 rounded-lg bg-disabled w-full outline-none text-primaryText text-sm font-poppins-r;
+  }
+  section.without-topbar {
+    @apply pt-4;
+  }
+  .page-body {
+    @apply my-6;
+  }
+
+  .button-group {
+    @apply flex justify-between md:justify-start items-center gap-2 w-full md:max-w-[200px] lg:max-w-none overflow-x-auto;
+  }
+
+  /* text styling */
+  .headline-1 {
+    @apply text-[104px] font-poppins-sb;
+  }
+  .headline-2 {
+    @apply text-7xl font-poppins-sb;
+  }
+  .headline-3 {
+    @apply text-5xl font-poppins-sb;
+  }
+  .headline-4 {
+    @apply text-[40px] font-poppins-r;
+  }
+  .bodytext-1 {
+    @apply text-4xl font-poppins-r;
+  }
+  .bodytext-2 {
+    @apply text-[32px] font-poppins-m;
+  }
+  .subtitle-1-sb {
+    @apply text-lg xl:text-2xl font-poppins-sb;
+  }
+  .subtitle-1-r {
+    @apply text-lg xl:text-2xl font-poppins-r;
+  }
+  .subtitle-2 {
+    @apply text-base xl:text-xl font-poppins-sb;
+  }
+
+  #watermark {
+    @apply fixed inset-0 flex items-center justify-center z-[60] pointer-events-none;
+  }
+  #watermark .wrapper {
+    @apply w-full h-full p-4;
+  }
+
+  .logout-btn {
+    @apply flex absolute bottom-0 w-full font-poppins-r text-primaryText hover:text-brand hover:bg-secondaryBg duration-200 py-6 px-4 text-sm cursor-pointer border-t border-spacing-1 border-t-brand
+  }
+  .logout-items {
+    @apply flex items-center gap-2;
+  }
+
+  /* reservation page */
+  .rsvp-card {
+    @apply bg-cardBg rounded-xl shadow-card cursor-pointer;
+  }
+  .rsvp-card .rsvp-card-head {
+    @apply p-3 flex justify-between items-center rounded-t-xl;
+  }
+  .rsvp-card .rsvp-card-head p {
+    @apply text-base text-primaryText font-poppins-sb;
+  }
+  .rsvp-card-badge {
+    @apply py-1 px-2 rounded-full text-xs font-poppins-r;
+  }
+  .rsvp-card .rsvp-card-body {
+    @apply px-3 py-2;
+  }
+  .rsvp-card-detail {
+    @apply flex items-center gap-3 text-primaryText;
+  }
+  .rsvp-card-detail p {
+    @apply text-xs md:text-sm font-poppins-r;
+  }
+
+  .bottle-detail{
+    @apply border-t border-spacing-2 border-t-secondaryText/50;
+  }
+
+  .bottle-detail .detail-items {
+    @apply grid grid-cols-2 my-4;
+  }
+  .bottle-detail .detail-items.detail-items-label, .bottle-detail .detail-items .detail-items-label {
+    @apply text-sm font-poppins-r text-secondaryText;
+  }
+  .bottle-detail .detail-items p {
+    @apply text-sm font-poppins-r text-primaryText;
+  }
+  .bottle-detail p.brand {
+    @apply text-sm font-poppins-r text-brand;
+  }
+
+  /* Search Guest */
+  .devider {
+    @apply h-[36px] md:h-[38px] mx-2 w-px bg-brand;
+  }
+
+  form.form-guest {
+    @apply w-full;
+  }
+  form.form-guest .form-group {
+    @apply flex items-center w-full;
+  }
+  form.form-guest .form-group input[type="text"] {
+    @apply w-full p-2 bg-transparent rounded-md border border-brand text-primaryText focus:outline-brand placeholder:text-brand/50 text-sm font-poppins-r;
+  }
+  form.form-guest .form-group button.add-guest {
+    @apply w-1/6 p-2 bg-brand hover:bg-brandSecondary duration-200 rounded-md text-primaryBg;
+  }
+  form.form-guest .form-group button p {
+    @apply  text-primaryBg text-base font-poppins-r;
+  }
+
+  /* Form Guest Bottle Keeping */
+  
+  form.form-new-guest .form-group {
+    @apply mb-6;
+  }
+  form.form-new-guest .form-group label {
+    @apply block mb-1 text-secondaryText text-sm lg:text-base font-poppins-r;
+  }
+  form.form-new-guest .form-group input, form.form-new-guest .form-group textarea {
+    @apply block w-full p-2 bg-cardBg rounded-2xl outline-none focus:outline-brandSecondary text-primaryText placeholder:text-secondaryText/40 text-base font-poppins-r;
+  }
+  form.form-new-guest .form-group .text-counter {
+    @apply mt-1 text-right text-secondaryText text-sm font-poppins-r
+  }
+  form.form-new-guest .form-group .input-photo {
+    @apply border border-dashed border-secondaryText min-h-[150px] rounded-2xl hover:bg-cardBg/30 duration-200 flex justify-center items-center cursor-pointer;
+  }
+  form.form-new-guest .form-group .input-photo .items{
+    @apply text-secondaryText text-sm font-poppins-r;
+  }
+
+  .guest-card {
+    @apply bg-cardBg rounded-xl shadow-accent cursor-pointer;
+  }
+  .guest-card .guest-name {
+    @apply px-3 py-2 rounded-t-xl;
+  }
+  .guest-card .guest-name p {
+    @apply text-primaryBg text-sm xl:text-base font-poppins-r;
+  }
+  .guest-card .guest-data {
+    @apply px-3 py-4;
+  }
+  .guest-card .guest-data div>.guest-detail {
+    @apply flex items-center gap-3 text-primaryText;
+  }
+  .guest-card .guest-data div>.guest-detail p {
+    @apply capitalize text-primaryText text-xs md:text-sm xl:text-base font-poppins-r;
+  }
+
+  .menu-bar{
+    @apply mt-4 flex flex-col md:flex-row justify-between p-4 bg-primaryBg rounded-[20px] gap-2;
+  }
+  .menu-bar p{
+    @apply my-auto text-primaryText font-poppins-r
   }
 }
 

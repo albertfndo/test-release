@@ -4,7 +4,7 @@ type DialogCallback = {
   onTapBack: () => void | null;
   onTapConfirm: () => void;
 };
-  
+
 type SuccessDialog = {
   confirmText: string | null;
   backText: string | null;
@@ -13,7 +13,7 @@ type SuccessDialog = {
   title: string;
   content: string;
 };
-  
+
 export const useDialog = defineStore("dialog", {
   state: () => ({
     isShown: <boolean>false,
@@ -22,7 +22,7 @@ export const useDialog = defineStore("dialog", {
     confirmText: <string>"",
     title: <string>"",
     content: <string>"",
-    callback: <DialogCallback>{}
+    callback: <DialogCallback>{},
   }),
 
   actions: {
@@ -76,8 +76,8 @@ export const useDialog = defineStore("dialog", {
           },
           onTapConfirm: () => {
             this.hideDialog();
-          }
-        }
+          },
+        };
       }
 
       this.title = title;
@@ -85,6 +85,6 @@ export const useDialog = defineStore("dialog", {
 
       this.setCallback(callback);
       this.showDialog();
-    }
-  }
+    },
+  },
 });

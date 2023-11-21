@@ -1,0 +1,31 @@
+@tailwind components;
+
+@layer components {
+  section#login {
+    @apply container h-screen;
+  }
+  .login-wrapper {
+    @apply grid grid-cols-1 lg:grid-cols-2 items-center h-full;
+  }
+  form.login-form {
+    @apply mt-16 lg:mt-20;
+  }
+  form.login-form .form-group {
+    @apply relative mb-8;
+  }
+  form.login-form .form-group small {
+    @apply text-dangerCard font-poppins-r;
+  }
+  form.login-form .form-group:last-child {
+    @apply mb-0;
+  }
+  form.login-form .form-group input {
+    @apply w-full py-2 bg-transparent border-b-2 border-disabled outline-none placeholder:text-disabled text-primaryText subtitle-1-r;
+  }
+  form.login-form .form-group button {
+    @apply absolute top-1/2 right-1 -translate-y-1/2;
+  }
+  .btn-login {
+    @apply p-5 bg-brand hover:bg-brandSecondary rounded-full duration-200 text-primaryBg;
+  }
+}

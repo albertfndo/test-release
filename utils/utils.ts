@@ -29,9 +29,14 @@ export function formatTitle(text: string): string {
   return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
+export function isProduction() {
+  const config = useRuntimeConfig();
+  return config.public.environment == "production";
+}
+
 // export function registerLocalStorageMeta() {
-  // localStorage.setItem("APP_ENV", import.meta.env.VITE_APP_ENV);
-  // localStorage.setItem("VERSION", import.meta.env.VITE_VERSION);
+// localStorage.setItem("APP_ENV", import.meta.env.VITE_APP_ENV);
+// localStorage.setItem("VERSION", import.meta.env.VITE_VERSION);
 // }
 
 // export function isProduction() {

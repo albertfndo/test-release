@@ -3,43 +3,52 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      title: "Nuxt Boilerplate",
+      title: "Bottle Keeping - Customer",
       meta: [
-        { "http-equiv": "X-UA-Compatible", content: "IE=edge"},
-        { name: "viewport", content: "width=device-width, initial-scale=1.0, shrink-to-fit=no"},
-        { name: "description", content: "" },
+        { "http-equiv": "X-UA-Compatible", content: "IE=edge" },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1.0, shrink-to-fit=no",
+        },
+        { name: "description", content: "Welcome to Outlet Management Tools" },
         { name: "keyword", content: "" },
+        { name: "robots", content: "noindex" },
       ],
       htmlAttrs: {
-        lang: "en"
+        lang: "en",
       },
       charset: "utf-8",
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
     },
   },
+  runtimeConfig: {
+    public: {
+      baseUrl: "https://customer.holywings.id",
+      environment: "production",
+      version: "2.0.0",
+    },
+  },
   modules: [
     [
-      '@pinia/nuxt',
+      "@pinia/nuxt",
       {
-        autoImports: [
-          'defineStore',
-          ['defineStore', 'definePiniaStore'],
-        ],
+        autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
       },
     ],
     [
-      '@nuxtjs/eslint-module', 
+      "@nuxtjs/eslint-module",
       {
         failOnError: true,
-        formatter: 'unix',
-      }
-    ]
+        formatter: "unix",
+      },
+    ],
+    "@nuxt/image",
   ],
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
-})
+});
