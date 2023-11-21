@@ -102,38 +102,47 @@ const actions = reactive<Action[]>([
 
   <section id="bottleKeepBody">
     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="rsvp-card" @click="openDetailModal = true">
-        <div class="rsvp-card-head bg-[#A38954]">
-          <p>Refined Cotton Bike</p>
-        </div>
-
-        <div class="rsvp-card-body my-2">
-          <div class="flex flex-col gap-y-5 gap-x-2">
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-              <p>Rendhy Widjaja</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-phone" class="text-xl" />
-              <p>+6282115831114</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-access-time" class="text-xl" />
-              <p>Expired in 7 days</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:round-lens" class="text-xl" />
-              <p>Picked Up</p>
+      <div class="rsvp-card">
+        <div @click="openDetailModal = true">
+          <div class="rsvp-card-head bg-[#A38954]">
+            <h1 class="text-primaryText font-poppins-sb">
+              Refined Cotton Bike
+            </h1>
+            <Iconify
+              icon="game-icons:beer-bottle"
+              class="text-2xl text-primaryText"
+            />
+          </div>
+          <div class="rsvp-card-body">
+            <div class="flex flex-col gap-y-5 gap-x-2">
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>Rendhy Widjaja</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>+6282115831114</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-access-time" class="text-xl" />
+                <p>Expired in 7 days</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:round-lens" class="text-xl" />
+                <p class="status">Picked Up</p>
+              </div>
             </div>
           </div>
-          <div v-show="false" class="mt-4 flex justify-between gap-2">
+        </div>
+        <div v-show="true" class="rsvp-card-footer">
+          <div class="flex justify-between gap-2 py-4">
             <button class="btn-general w-full">
               <p>Release</p>
             </button>
-            <button class="btn-general w-full">
+            <button v-show="false" class="btn-general w-full">
               <p>Unlock</p>
             </button>
-            <button v-show="false" class="btn-general w-full">
+            <button v-show="true" class="btn-danger w-full">
               <p>Lock</p>
             </button>
             <button class="btn-full no-bg">
@@ -142,38 +151,42 @@ const actions = reactive<Action[]>([
           </div>
         </div>
       </div>
-      <div class="rsvp-card" @click="openDetailModal = true">
-        <div class="rsvp-card-head bg-[#A38954]">
-          <p>Refined Cotton Bike</p>
-        </div>
-
-        <div class="rsvp-card-body my-2">
-          <div class="flex flex-col gap-y-5 gap-x-2">
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-              <p>Rendhy Widjaja</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-phone" class="text-xl" />
-              <p>+6282115831114</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-access-time" class="text-xl" />
-              <p>Expired in 7 days</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:round-lens" class="text-xl" />
-              <p>Picked Up</p>
+      <div class="rsvp-card">
+        <div @click="openDetailModal = true">
+          <div class="rsvp-card-head bg-brand">
+            <p>Refined Cotton Bike</p>
+            <Iconify icon="game-icons:beer-bottle" class="text-2xl" />
+          </div>
+          <div class="rsvp-card-body">
+            <div class="flex flex-col gap-y-5 gap-x-2">
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>Rendhy Widjaja</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>+6282115831114</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-access-time" class="text-xl" />
+                <p>Expired in 7 days</p>
+              </div>
+              <div class="rsvp-card-detail text-success">
+                <Iconify icon="ic:round-lens" class="text-xl" />
+                <p class="status">Unlocked</p>
+              </div>
             </div>
           </div>
-          <div v-show="false" class="mt-4 flex justify-between gap-2">
-            <button class="btn-general w-full">
+        </div>
+        <div v-show="true" class="rsvp-card-footer">
+          <div class="rsvp-footer-items">
+            <button v-show="false" class="btn-general w-full">
               <p>Release</p>
             </button>
-            <button class="btn-general w-full">
+            <button v-show="true" class="btn-general w-full">
               <p>Unlock</p>
             </button>
-            <button v-show="false" class="btn-general w-full">
+            <button v-show="false" class="btn-danger w-full">
               <p>Lock</p>
             </button>
             <button class="btn-full no-bg">
@@ -182,78 +195,41 @@ const actions = reactive<Action[]>([
           </div>
         </div>
       </div>
-      <div class="rsvp-card" @click="openDetailModal = true">
-        <div class="rsvp-card-head bg-[#A38954]">
-          <p>Refined Cotton Bike</p>
-        </div>
-
-        <div class="rsvp-card-body my-2">
-          <div class="flex flex-col gap-y-5 gap-x-2">
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-              <p>Rendhy Widjaja</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-phone" class="text-xl" />
-              <p>+6282115831114</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-access-time" class="text-xl" />
-              <p>Expired in 7 days</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:round-lens" class="text-xl" />
-              <p>Picked Up</p>
+      <div class="rsvp-card">
+        <div @click="openDetailModal = true">
+          <div class="rsvp-card-head bg-brand">
+            <p>Refined Cotton Bike</p>
+          </div>
+          <div class="rsvp-card-body">
+            <div class="flex flex-col gap-y-5 gap-x-2">
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>Rendhy Widjaja</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>+6282115831114</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-access-time" class="text-xl" />
+                <p>Expired in 7 days</p>
+              </div>
+              <div class="rsvp-card-detail text-[#FF5D97]">
+                <Iconify icon="ic:round-lens" class="text-xl" />
+                <p class="status">Locked</p>
+              </div>
             </div>
           </div>
-          <div v-show="false" class="mt-4 flex justify-between gap-2">
+        </div>
+        <div v-show="true" class="rsvp-card-footer">
+          <div class="flex justify-between gap-2 py-4">
             <button class="btn-general w-full">
               <p>Release</p>
             </button>
-            <button class="btn-general w-full">
+            <button v-show="false" class="btn-general w-full">
               <p>Unlock</p>
             </button>
-            <button v-show="false" class="btn-general w-full">
-              <p>Lock</p>
-            </button>
-            <button class="btn-full no-bg">
-              <p>Detail</p>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="rsvp-card" @click="openDetailModal = true">
-        <div class="rsvp-card-head bg-[#A38954]">
-          <p>Refined Cotton Bike</p>
-        </div>
-
-        <div class="rsvp-card-body my-2">
-          <div class="flex flex-col gap-y-5 gap-x-2">
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-              <p>Rendhy Widjaja</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-phone" class="text-xl" />
-              <p>+6282115831114</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-access-time" class="text-xl" />
-              <p>Expired in 7 days</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:round-lens" class="text-xl" />
-              <p>Picked Up</p>
-            </div>
-          </div>
-          <div v-show="false" class="mt-4 flex justify-between gap-2">
-            <button class="btn-general w-full">
-              <p>Release</p>
-            </button>
-            <button class="btn-general w-full">
-              <p>Unlock</p>
-            </button>
-            <button v-show="false" class="btn-general w-full">
+            <button v-show="true" class="btn-danger w-full">
               <p>Lock</p>
             </button>
             <button class="btn-full no-bg">

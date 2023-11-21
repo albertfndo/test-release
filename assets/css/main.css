@@ -130,19 +130,28 @@
     @apply p-3 flex justify-between items-center rounded-t-xl;
   }
   .rsvp-card .rsvp-card-head p {
-    @apply text-base text-primaryText font-poppins-sb;
+    @apply text-base text-primaryBg font-poppins-sb;
   }
   .rsvp-card-badge {
     @apply py-1 px-2 rounded-full text-xs font-poppins-r;
   }
   .rsvp-card .rsvp-card-body {
-    @apply px-3 py-2;
+    @apply px-3 pt-3;
+  }
+  .rsvp-card .rsvp-card-footer {
+    @apply px-3 rounded-b-xl;
+  }
+  .rsvp-card .rsvp-card-footer .rsvp-footer-items {
+    @apply flex justify-between gap-2 py-4;
   }
   .rsvp-card-detail {
     @apply flex items-center gap-3 text-primaryText;
   }
-  .rsvp-card-detail p {
+  .rsvp-card-detail p:not(.status) {
     @apply text-xs md:text-sm font-poppins-r;
+  }
+  .rsvp-card-detail p.status {
+    @apply text-xs md:text-sm font-poppins-m;
   }
 
   .bottle-detail{

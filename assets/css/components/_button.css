@@ -2,10 +2,10 @@
 
 @layer components {
   .btn-general {
-    @apply px-4 py-2 bg-brand hover:bg-brandSecondary duration-200 rounded-lg text-primaryBg text-sm xl:text-base font-poppins-r;
+    @apply px-4 py-2 bg-brand hover:bg-brandSecondary duration-200 rounded-lg text-primaryBg text-sm xl:text-base font-poppins-m;
   }
   .btn-danger {
-    @apply px-4 py-2 bg-dangerCard hover:bg-danger duration-200 rounded-lg text-primaryBg text-sm xl:text-base font-poppins-r;
+    @apply px-4 py-2 bg-dangerCard hover:bg-danger duration-200 rounded-lg text-primaryBg text-sm xl:text-base font-poppins-m;
   }
   .btn-general-sm {
     @apply px-2 py-1 bg-brand hover:bg-brandSecondary duration-200 rounded-lg text-primaryBg text-sm font-poppins-r;
