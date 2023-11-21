@@ -18,7 +18,7 @@
   <section id="addNewDataBody" class="page-body flex w-full justify-center">
     <div class="w-3/4">
       <form class="form-new-guest">
-        <template v-if="true">
+        <template v-if="false">
           <div class="form-group">
             <label for="new-guest-name"
               >Guest's Name <span class="asterisk"></span
@@ -43,7 +43,7 @@
         </template>
         <template v-else>
           <div class="guest-card mb-3">
-            <div class="guest-name">
+            <div class="guest-name bg-brand">
               <p>Rendhy Widjaja</p>
             </div>
             <div class="guest-data">
@@ -78,7 +78,7 @@
           ></label>
           <input
             id="new-guest-pax1"
-            type="number"
+            type="text"
             placeholder="Type here..."
             data-hbid="gl-tt-incoming-pax"
           />

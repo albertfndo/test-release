@@ -22,13 +22,13 @@
         <div class="form-group">
           <input
             type="text"
-            placeholder="Enter name / phone number"
+            placeholder="Enter Name / Phone"
             data-hbid="gl-tt-name"
           />
           <div class="devider hidden md:block"></div>
           <button
             type="button"
-            class="add-guest"
+            class="btn-add-guest"
             data-hbid="gl-tt-addnew-button"
             @click="navigateTo('/bottle-keeping/add/form')"
           >
@@ -37,152 +37,138 @@
               <p>Add New</p>
             </div>
             <p class="block lg:hidden">
-              <Iconify icon="mdi:plus-circle" class="mx-auto" />
+              <Iconify icon="mdi:plus-circle" class="text-xl mx-auto" />
             </p>
           </button>
         </div>
       </form>
     </div>
 
-    <div class="mt-10">
-      <div
-        v-if="true"
-        class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
-      >
-        <div class="guest-card">
-          <div>
-            <div class="guest-name bg-brand">
-              <p>asd</p>
-            </div>
-            <div class="guest-data">
-              <div class="grid grid-cols-2 gap-y-5">
-                <div class="guest-detail">
-                  <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                  <p>Basic</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify
-                    icon="ic:outline-workspace-premium"
-                    class="text-xl"
-                  />
-                  <p>Regular</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:outline-phone" class="text-xl" />
-                  <p>+6282115831114</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:round-people-outline" class="text-xl" />
-                  <p>Male</p>
-                </div>
-              </div>
-            </div>
+    <div
+      v-if="true"
+      class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-8"
+    >
+      <div class="guest-card">
+        <div>
+          <div class="guest-name bg-brand">
+            <p>asd</p>
           </div>
-        </div>
-        <div class="guest-card">
-          <div>
-            <div class="guest-name bg-brand">
-              <p>asd</p>
-            </div>
-            <div class="guest-data">
-              <div class="grid grid-cols-2 gap-y-5">
-                <div class="guest-detail">
-                  <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                  <p>Basic</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify
-                    icon="ic:outline-workspace-premium"
-                    class="text-xl"
-                  />
-                  <p>Regular</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:outline-phone" class="text-xl" />
-                  <p>+6282115831114</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:round-people-outline" class="text-xl" />
-                  <p>Male</p>
-                </div>
+          <div class="guest-data">
+            <div class="grid grid-cols-2 gap-y-5">
+              <div class="guest-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>Basic</p>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="guest-card">
-          <div>
-            <div class="guest-name bg-brand">
-              <p>asd</p>
-            </div>
-            <div class="guest-data">
-              <div class="grid grid-cols-2 gap-y-5">
-                <div class="guest-detail">
-                  <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                  <p>Basic</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify
-                    icon="ic:outline-workspace-premium"
-                    class="text-xl"
-                  />
-                  <p>Regular</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:outline-phone" class="text-xl" />
-                  <p>+6282115831114</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:round-people-outline" class="text-xl" />
-                  <p>Male</p>
-                </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
+                <p>Regular</p>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="guest-card">
-          <div>
-            <div class="guest-name bg-brand">
-              <p>asd</p>
-            </div>
-            <div class="guest-data">
-              <div class="grid grid-cols-2 gap-y-5">
-                <div class="guest-detail">
-                  <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                  <p>Basic</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify
-                    icon="ic:outline-workspace-premium"
-                    class="text-xl"
-                  />
-                  <p>Regular</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:outline-phone" class="text-xl" />
-                  <p>+6282115831114</p>
-                </div>
-                <div class="guest-detail">
-                  <Iconify icon="ic:round-people-outline" class="text-xl" />
-                  <p>Male</p>
-                </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>+6282115831114</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:round-people-outline" class="text-xl" />
+                <p>Male</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="guest-card">
+        <div>
+          <div class="guest-name bg-brand">
+            <p>asd</p>
+          </div>
+          <div class="guest-data">
+            <div class="grid grid-cols-2 gap-y-5">
+              <div class="guest-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>Basic</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
+                <p>Regular</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>+6282115831114</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:round-people-outline" class="text-xl" />
+                <p>Male</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="guest-card">
+        <div>
+          <div class="guest-name bg-brand">
+            <p>asd</p>
+          </div>
+          <div class="guest-data">
+            <div class="grid grid-cols-2 gap-y-5">
+              <div class="guest-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>Basic</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
+                <p>Regular</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>+6282115831114</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:round-people-outline" class="text-xl" />
+                <p>Male</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="guest-card">
+        <div>
+          <div class="guest-name bg-brand">
+            <p>asd</p>
+          </div>
+          <div class="guest-data">
+            <div class="grid grid-cols-2 gap-y-5">
+              <div class="guest-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>Basic</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
+                <p>Regular</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>+6282115831114</p>
+              </div>
+              <div class="guest-detail">
+                <Iconify icon="ic:round-people-outline" class="text-xl" />
+                <p>Male</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <div v-else class="text-center">
-        <NuxtImg
-          preload
-          src="/images/icon-not-found.svg"
-          class="mx-auto"
-          width="160px"
-          loading="lazy"
-          quality="80"
-          alt="No Data"
-        />
-        <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
-      </div>
+    <div v-else class="text-center">
+      <NuxtImg
+        preload
+        src="/images/icon-not-found.svg"
+        class="mx-auto"
+        width="160px"
+        loading="lazy"
+        quality="80"
+        alt="No Data"
+      />
+      <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
   </section>
 </template>

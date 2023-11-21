@@ -34,6 +34,9 @@
   .btn-head {
     @apply block mx-auto p-2 duration-200 text-center font-poppins-r;
   }
+  .btn-outline-head {
+    @apply px-1 py-0.5 flex gap-0.5 border border-brand hover:bg-brand text-primaryText hover:text-primaryBg duration-200 rounded-md items-center font-poppins-r text-sm;
+  }
   .btn-head-mobile {
     @apply block w-full mb-5 font-poppins-r;
   }
@@ -116,7 +119,7 @@
     @apply text-success;
   }
   .btn-add-guest {
-    @apply w-full min-w-max p-2 bg-brand hover:bg-brandSecondary duration-200 text-primaryBg font-poppins-m rounded-lg;
+    @apply w-full max-w-max min-w-max p-2 bg-brand hover:bg-brandSecondary duration-200 text-primaryBg font-poppins-m rounded-lg;
   }
   .btn-add-guest p{
     @apply text-primaryBg font-poppins-r rounded-lg;

@@ -16,16 +16,16 @@ onClickOutside(dropdown, () => (showDropdown.value = false));
 
 <template>
   <div class="flex justify-between items-center">
-    <h1 class="subtitle-2 text-primaryText">{{ props.pageTitle }}</h1>
+    <h1 class="subtitle-2 text-primaryText pt-4">{{ props.pageTitle }}</h1>
 
     <div
       v-if="props.useActions"
-      class="hidden lg:flex justify-end items-center gap-2"
+      class="hidden lg:flex justify-end self-end gap-2"
     >
       <template v-for="(action, index) in props.actions" :key="index">
         <button
           type="button"
-          class="btn-head"
+          class="btn-outline-head"
           :class="action.color"
           :data-hbid="action.hbid"
           @click="action.click"

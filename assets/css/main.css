@@ -26,11 +26,22 @@
   main {
     @apply lg:ml-64 px-4 lg:px-6 mt-6 lg:mt-0;
   }
+  ::-webkit-scrollbar {
+    @apply w-2;               /* width of the entire scrollbar */
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-secondaryText/30 rounded-r-lg;        /* color of the tracking area */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brand rounded-r-lg;       /* color of the scroll thumb */
+  }
 }
 
 @layer components {
   .search {
-    @apply flex items-center min-w-[300px] ;
+    @apply flex items-center w-full;
   }
   .search input[type="text"] {
     @apply w-full p-2 bg-transparent rounded-l-md border border-brand text-primaryText focus:outline-brandSecondary placeholder:text-brand/50 text-sm font-poppins-r;;
@@ -62,7 +73,10 @@
   }
 
   .button-group {
-    @apply flex justify-between md:justify-start items-center gap-2 w-full md:max-w-[200px] lg:max-w-none overflow-x-auto;
+    @apply flex justify-start items-start gap-2 w-full md:max-w-[300px] lg:max-w-none overflow-x-auto;
+  }
+  .option-dropdown {
+    @apply w-44 p-3 bg-cardBg rounded-md shadow-lg;
   }
 
   /* text styling */
@@ -136,7 +150,7 @@
   }
 
   .bottle-detail .detail-items {
-    @apply grid grid-cols-2 my-4;
+    @apply grid grid-cols-2 my-2;
   }
   .bottle-detail .detail-items.detail-items-label, .bottle-detail .detail-items .detail-items-label {
     @apply text-sm font-poppins-r text-secondaryText;
@@ -153,24 +167,23 @@
     @apply h-[36px] md:h-[38px] mx-2 w-px bg-brand;
   }
 
+  /* Form Guest Bottle Keeping */
   form.form-guest {
     @apply w-full;
   }
   form.form-guest .form-group {
-    @apply flex items-center w-full;
+    @apply flex items-center w-full gap-1 ;
   }
   form.form-guest .form-group input[type="text"] {
     @apply w-full p-2 bg-transparent rounded-md border border-brand text-primaryText focus:outline-brand placeholder:text-brand/50 text-sm font-poppins-r;
   }
   form.form-guest .form-group button.add-guest {
-    @apply w-1/6 p-2 bg-brand hover:bg-brandSecondary duration-200 rounded-md text-primaryBg;
+    @apply w-auto p-2 bg-brand hover:bg-brandSecondary duration-200 rounded-md text-primaryBg;
   }
   form.form-guest .form-group button p {
     @apply  text-primaryBg text-base font-poppins-r;
   }
 
-  /* Form Guest Bottle Keeping */
-  
   form.form-new-guest .form-group {
     @apply mb-6;
   }
@@ -210,7 +223,7 @@
   }
 
   .menu-bar{
-    @apply mt-4 flex flex-col md:flex-row justify-between p-4 bg-primaryBg rounded-[20px] gap-2;
+    @apply mt-4 flex flex-col md:flex-row justify-between p-4 bg-primaryBg rounded-[20px];
   }
   .menu-bar p{
     @apply my-auto text-primaryText font-poppins-r

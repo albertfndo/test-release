@@ -28,49 +28,52 @@ const actions = reactive<Action[]>([
       :actions="actions"
     />
 
-    <div class="menu-bar">
-      <p>Status:</p>
-      <div class="button-group mb-2 md:mb-0">
-        <button
-          type="button"
-          class="btn-rsvp-status pending"
-          :class="bottleStatus === 0 ? 'active' : ''"
-          data-hbid="res-status-pending"
-          @click="bottleStatus = 0"
-        >
-          Show All
-        </button>
-        <button
-          type="button"
-          class="btn-rsvp-status"
-          :class="bottleStatus === 1 ? 'active' : ''"
-          data-hbid="res-status-arrived"
-          @click="bottleStatus = 1"
-        >
-          Picked Up
-        </button>
-        <button
-          type="button"
-          class="btn-rsvp-status arrived"
-          :class="bottleStatus === 2 ? 'active' : ''"
-          data-hbid="res-status-arrived"
-          @click="bottleStatus = 2"
-        >
-          Unlocked
-        </button>
-        <button
-          type="button"
-          class="btn-rsvp-status confirmed"
-          :class="bottleStatus === 3 ? 'active' : ''"
-          data-hbid="res-status-confirmed"
-          @click="bottleStatus = 3"
-        >
-          Locked
-        </button>
-      </div>
+    <div class="menu-bar my-6">
       <div class="flex gap-2">
+        <p>Status:</p>
+        <div class="button-group mb-4 md:mb-0">
+          <button
+            type="button"
+            class="btn-rsvp-status pending"
+            :class="bottleStatus === 0 ? 'active' : ''"
+            data-hbid="res-status-pending"
+            @click="bottleStatus = 0"
+          >
+            Show All
+          </button>
+          <button
+            type="button"
+            class="btn-rsvp-status"
+            :class="bottleStatus === 1 ? 'active' : ''"
+            data-hbid="res-status-arrived"
+            @click="bottleStatus = 1"
+          >
+            Picked Up
+          </button>
+          <button
+            type="button"
+            class="btn-rsvp-status arrived"
+            :class="bottleStatus === 2 ? 'active' : ''"
+            data-hbid="res-status-arrived"
+            @click="bottleStatus = 2"
+          >
+            Unlocked
+          </button>
+          <button
+            type="button"
+            class="btn-rsvp-status confirmed"
+            :class="bottleStatus === 3 ? 'active' : ''"
+            data-hbid="res-status-confirmed"
+            @click="bottleStatus = 3"
+          >
+            Locked
+          </button>
+        </div>
+      </div>
+
+      <div class="flex gap-2 lg:w-1/4">
         <div class="search">
-          <input type="text" placeholder="Enter Name / Phone Number" />
+          <input type="text" placeholder="Enter Name / Phone" />
           <button>
             <Iconify icon="material-symbols:search" class="text-xl" />
           </button>
@@ -83,11 +86,14 @@ const actions = reactive<Action[]>([
           @click="navigateTo('/bottle-keeping/add')"
         >
           <div class="new">
-            <Iconify class="text-primaryBg" icon="mdi:plus-circle" />
+            <Iconify icon="mdi:plus-circle" class="text-primaryBg text-xl" />
             <p>Add Data</p>
           </div>
           <p class="block lg:hidden">
-            <Iconify icon="mdi:plus-circle" class="mx-auto text-primaryBg" />
+            <Iconify
+              icon="mdi:plus-circle"
+              class="mx-auto text-primaryBg text-xl"
+            />
           </p>
         </button>
       </div>
@@ -95,7 +101,7 @@ const actions = reactive<Action[]>([
   </section>
 
   <section id="bottleKeepBody">
-    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="rsvp-card" @click="openDetailModal = true">
         <div class="rsvp-card-head bg-[#A38954]">
           <p>Refined Cotton Bike</p>
