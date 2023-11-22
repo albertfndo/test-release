@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import KeepingData from "~/models/KeepingData";
-
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
 
 onMounted(() => {
+  _bottle.$reset();
   nextTick(async () => {
     await initializaData();
   });
 });
 
 async function initializaData() {
-  _bottle.bottleDatas = [];
   await _bottle.getBottleDatas().then(() => {
     _bottle.bottleDatas = _bottle.bottleDatas.filter(
       (bottleData) => bottleData.status === 4
@@ -44,7 +42,10 @@ function selectBottleCard(bottleData: KeepingData) {
     />
   </section>
   <section id="bottleKeepHistoryBody" class="page-body">
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div
+      v-if="_bottle.bottleDatas.length"
+      class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+    >
       <div
         v-for="(expiredData, index) in _bottle.bottleDatas"
         :key="index"
@@ -82,6 +83,18 @@ function selectBottleCard(bottleData: KeepingData) {
           </div>
         </div>
       </div>
+    </div>
+    <div v-else class="text-center mt-10">
+      <NuxtImg
+        preload
+        src="/images/icon-not-found.svg"
+        class="m-auto"
+        width="160px"
+        loading="lazy"
+        quality="80"
+        alt="No Data"
+      />
+      <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
   </section>
 

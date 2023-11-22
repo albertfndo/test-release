@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { Action } from "~/models/Action";
 import { nextTick } from "vue";
-import type KeepingData from "~/models/KeepingData";
 
 await nextTick();
 
@@ -17,7 +15,7 @@ onMounted(() => {
 });
 
 async function initializaData(status?: number | null) {
-  _bottle.bottleDatas = [];
+  _bottle.$reset();
   await _bottle.getBottleDatas().then(() => {
     _bottle.bottleDatas = _bottle.bottleDatas.filter((bottleData) =>
       status ? bottleData.status === status : bottleData.status !== 4
@@ -73,9 +71,9 @@ const actions = reactive<Action[]>([
     />
 
     <div class="menu-bar my-6">
-      <div class="flex gap-2">
+      <div class="flex gap-2 mb-4 md:mb-0">
         <p>Status:</p>
-        <div class="button-group mb-4 md:mb-0">
+        <div class="button-group">
           <button
             type="button"
             class="btn-rsvp-status pending"
@@ -145,8 +143,10 @@ const actions = reactive<Action[]>([
   </section>
 
   <section id="bottleKeepBody">
-    <!-- <pre class="text-primaryText">{{ _bottle.bottleDatas }}</pre> -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div
+      v-if="_bottle.bottleDatas.length"
+      class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+    >
       <div
         v-for="(keepingData, index) in _bottle.bottleDatas"
         :key="index"
@@ -216,6 +216,18 @@ const actions = reactive<Action[]>([
           </div>
         </div>
       </div>
+    </div>
+    <div v-else class="text-center mt-10">
+      <NuxtImg
+        preload
+        src="/images/icon-not-found.svg"
+        class="m-auto"
+        width="160px"
+        loading="lazy"
+        quality="80"
+        alt="No Data"
+      />
+      <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
   </section>
 

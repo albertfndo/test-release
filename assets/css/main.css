@@ -271,7 +271,6 @@
   }
   .square-circle:after {
     animation-delay: -1.25s;
-    border-radius: 0;
   }
   @keyframes sc{
     0% {

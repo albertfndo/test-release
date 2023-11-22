@@ -34,6 +34,10 @@ export function isProduction() {
   return config.public.environment == "production";
 }
 
+export function getNextPage(page: string): number {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  return parseInt(nextPage);
+}
 // export function registerLocalStorageMeta() {
 // localStorage.setItem("APP_ENV", import.meta.env.VITE_APP_ENV);
 // localStorage.setItem("VERSION", import.meta.env.VITE_VERSION);

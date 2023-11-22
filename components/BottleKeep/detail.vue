@@ -4,13 +4,17 @@ import moment from "moment";
 import KeepingData from "~/models/KeepingData";
 
 const props = defineProps<{
-  bottleKeepDetail: KeepingData;
+  bottleKeepDetail: KeepingData | null;
   openDetailModal: boolean;
   isRekeep: boolean;
 }>();
 
 const emits = defineEmits(["close", "release", "rekeep"]);
 const modalDialog = ref(null);
+
+function getDate(date: string | undefined) {
+  return date ? moment(date).format("DD MMM YYYY, HH:mm") : "-";
+}
 
 onClickOutside(modalDialog, () => emits("close"));
 </script>
@@ -31,33 +35,31 @@ onClickOutside(modalDialog, () => emits("close"));
         <div class="bottle-detail">
           <div class="detail-items">
             <p class="detail-items-label">Bottle Name</p>
-            <p>: {{ props.bottleKeepDetail.bottleName }}</p>
+            <p>: {{ props.bottleKeepDetail?.bottleName }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Guest Name</p>
-            <p>: {{ props.bottleKeepDetail.customer?.name }}</p>
+            <p>: {{ props.bottleKeepDetail?.customer?.name }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Phone Number</p>
-            <p>: {{ props.bottleKeepDetail.customer?.phone }}</p>
+            <p>: {{ props.bottleKeepDetail?.customer?.phone }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Expired Date</p>
             <p>
               :
-              {{
-                moment(props.bottleKeepDetail.expiredAt).format("DD MMM YYYY")
-              }}
+              {{ getDate(props.bottleKeepDetail?.expiredAt) }}
             </p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Status</p>
-            <p>: {{ props.bottleKeepDetail.statusText }}</p>
+            <p>: {{ props.bottleKeepDetail?.statusText }}</p>
           </div>
         </div>
         <div
-          v-for="(history, index) in props.bottleKeepDetail.histories"
-          v-show="props.bottleKeepDetail.histories.length > 0"
+          v-for="(history, index) in props.bottleKeepDetail?.histories"
+          v-show="props.bottleKeepDetail?.histories.length"
           :key="index"
           class="bottle-detail"
         >
@@ -73,9 +75,7 @@ onClickOutside(modalDialog, () => emits("close"));
           <p class="brand mt-4">Keeping</p>
           <div class="detail-items">
             <p class="detail-items-label">Date</p>
-            <p>
-              : {{ moment(history.stored_at).format("DD MMM YYYY, HH:mm") }}
-            </p>
+            <p>: {{ getDate(history.stored_at) }}</p>
           </div>
           <p class="detail-items-label">Notes</p>
           <textarea
@@ -90,9 +90,7 @@ onClickOutside(modalDialog, () => emits("close"));
             <p class="detail-items-label">Date</p>
             <p>
               :
-              {{
-                moment(history.released_at).format("DD MMM YYYY, HH:mm") ?? "-"
-              }}
+              {{ getDate(history.released_at) }}
             </p>
           </div>
           <p class="detail-items-label">Notes</p>
@@ -106,25 +104,25 @@ onClickOutside(modalDialog, () => emits("close"));
         </div>
       </div>
       <div
-        v-show="props.bottleKeepDetail.histories.length"
+        v-show="props.bottleKeepDetail?.histories.length"
         class="sticky-button"
       >
         <button
           type="button"
           class="btn-full"
           :class="
-            props.bottleKeepDetail.status == 1 ? 'exit' : 'btn-full active'
+            props.bottleKeepDetail?.status == 1 ? 'exit' : 'btn-full active'
           "
-          :disabled="props.bottleKeepDetail.status == 1"
+          :disabled="props.bottleKeepDetail?.status == 1"
           @click="
-            props.bottleKeepDetail.status == 2
+            props.bottleKeepDetail?.status == 2
               ? emits('release')
               : emits('rekeep')
           "
         >
           {{
-            props.bottleKeepDetail.status == 2 ||
-            props.bottleKeepDetail.status == 1
+            props.bottleKeepDetail?.status == 2 ||
+            props.bottleKeepDetail?.status == 1
               ? "Release"
               : "Rekeep"
           }}

@@ -41,7 +41,7 @@ export const useApi = definePiniaStore("api", () => {
         params,
       })
         .then((response) => {
-          resolve({ data: response.data, response });
+          resolve({ data: response.data.value, response });
         })
         .catch((error) => reject(error));
     });
@@ -81,30 +81,26 @@ export const useApi = definePiniaStore("api", () => {
   //   });
   // }
 
-  // function uploadFile({ url, params = {} }: Request) {
-  //   const formData = new FormData();
-  //   const keys = Object.keys(params);
+  function uploadFile({ url, params = {} }: Request) {
+    const formData = new FormData();
+    const keys = Object.keys(params);
 
-  //   for (let i = 0; i < keys.length; i++) {
-  //     formData.append(keys[i], params![keys[i]]);
-  //   }
+    for (let i = 0; i < keys.length; i++) {
+      formData.append(keys[i], params![keys[i]]);
+    }
 
-  //   return new Promise((resolve, reject) => {
-  //     axios
-  //       .post(url, formData, {
-  //         headers: {
-  //           Accept: "application/json",
-  //           ContentType: "multipart/form-data",
-  //         },
-  //       })
-  //       .then((response) => {
-  //         resolve({ data: response.data.data, response });
-  //       })
-  //       .catch((error) => {
-  //         reject(error);
-  //       });
-  //   });
-  // }
+    return new Promise((resolve, reject) => {
+      useFetch(`${baseUrl}/${url}`, {
+        method: "POST",
+        headers: getHeaders(),
+        formData,
+      })
+        .then((response) => {
+          resolve({ data: response.data.value, response });
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
   function handleError(error: any): boolean {
     let handled = false;
@@ -196,6 +192,6 @@ export const useApi = definePiniaStore("api", () => {
     // download,
     // put,
     handleError,
-    // uploadFile,
+    uploadFile,
   };
 });
