@@ -41,7 +41,7 @@
   .modal-card button.danger {
     @apply bg-danger hover:bg-[#B35252] border-danger hover:border-[#B35252] text-primaryText;
   }
-  .modal-card button.exit {
+  .modal-card button.exit, .sticky-button button.exit {
     @apply w-full bg-[#8B8B8B] hover:bg-[#747373] border-[#8B8B8B] hover:border-[#747373] text-primaryBg;
   }
   .modal-card button.confirm {

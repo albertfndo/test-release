@@ -27,15 +27,15 @@
     @apply lg:ml-64 px-4 lg:px-6 mt-6 lg:mt-0;
   }
   ::-webkit-scrollbar {
-    @apply w-2;               /* width of the entire scrollbar */
+    @apply w-1.5;               /* width of the entire scrollbar */
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-secondaryText/30 rounded-r-lg;        /* color of the tracking area */
+    @apply bg-secondaryText/30 rounded-lg;        /* color of the tracking area */
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-brand rounded-r-lg;       /* color of the scroll thumb */
+    @apply bg-brand rounded-lg;       /* color of the scroll thumb */
   }
 }
 
@@ -151,7 +151,7 @@
     @apply text-xs md:text-sm font-poppins-r;
   }
   .rsvp-card-detail p.status {
-    @apply text-xs md:text-sm font-poppins-m;
+    @apply text-xs md:text-sm font-poppins-m ;
   }
 
   .bottle-detail{
@@ -200,13 +200,13 @@
     @apply block mb-1 text-secondaryText text-sm lg:text-base font-poppins-r;
   }
   form.form-new-guest .form-group input, form.form-new-guest .form-group textarea {
-    @apply block w-full p-2 bg-cardBg rounded-2xl outline-none focus:outline-brandSecondary text-primaryText placeholder:text-secondaryText/40 text-base font-poppins-r;
+    @apply block w-full p-2 bg-cardBg rounded-xl outline-none focus:outline-brandSecondary text-primaryText placeholder:text-secondaryText/40 text-base font-poppins-r;
   }
   form.form-new-guest .form-group .text-counter {
     @apply mt-1 text-right text-secondaryText text-sm font-poppins-r
   }
   form.form-new-guest .form-group .input-photo {
-    @apply border border-dashed border-secondaryText min-h-[150px] rounded-2xl hover:bg-cardBg/30 duration-200 flex justify-center items-center cursor-pointer;
+    @apply border border-dashed border-secondaryText min-h-[150px] rounded-xl hover:bg-cardBg/30 duration-200 flex justify-center items-center cursor-pointer;
   }
   form.form-new-guest .form-group .input-photo .items{
     @apply text-secondaryText text-sm font-poppins-r;
@@ -242,5 +242,64 @@
 @layer utilities {
   .translate-50 {
     transform: translate(-50%, -50%);
+  }
+
+  .asterisk::after{
+    @apply text-dangerCard text-sm;
+    content: "*";
+  }
+
+  /* custom loader */
+  .square-circle {
+    width: 65px;
+    aspect-ratio: 1;
+    position: relative;
+    transform: scale(1.7);
+  }
+  .square-circle:before,
+  .square-circle:after {
+    content: "";
+    position: absolute;
+    border-radius: 50px;
+    animation: sc 2.5s infinite;
+  }
+  .square-circle:before {
+    box-shadow: 0 0 0 3px inset #F3C76F;
+  }
+  .square-circle:after {
+    box-shadow: 0 0 0 3px inset #489B57;
+  }
+  .square-circle:after {
+    animation-delay: -1.25s;
+    border-radius: 0;
+  }
+  @keyframes sc{
+    0% {
+      inset: 0 35px 35px 0;
+    }
+    12.5% {
+      inset: 0 35px 0 0;
+    }
+    25% {
+      inset: 35px 35px 0 0;
+    }
+    37.5% {
+      inset: 35px 0 0 0;
+    }
+    50% {
+      inset: 35px 0 0 35px;
+    }
+    62.5% {
+      inset: 0 0 0 35px;
+    }
+    75% {
+      inset: 0 0 35px 35px;
+    }
+    87.5% {
+      inset: 0 0 35px 0;
+    }
+    100% {
+      inset: 0 35px 35px 0;
+    }
   }
 }

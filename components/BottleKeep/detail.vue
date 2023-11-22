@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onClickOutside } from "@vueuse/core";
+import moment from "moment";
+import KeepingData from "~/models/KeepingData";
 
 const props = defineProps<{
-  bottleKeepDetail: any;
+  bottleKeepDetail: KeepingData;
   openDetailModal: boolean;
   isRekeep: boolean;
 }>();
@@ -29,58 +31,103 @@ onClickOutside(modalDialog, () => emits("close"));
         <div class="bottle-detail">
           <div class="detail-items">
             <p class="detail-items-label">Bottle Name</p>
-            <p>: Rendhy Widjaja</p>
+            <p>: {{ props.bottleKeepDetail.bottleName }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Guest Name</p>
-            <p>: Rendhy Widjaja</p>
+            <p>: {{ props.bottleKeepDetail.customer?.name }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Phone Number</p>
-            <p>: +6282115831114</p>
+            <p>: {{ props.bottleKeepDetail.customer?.phone }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Expired Date</p>
-            <p>: 26 Nov 2023</p>
+            <p>
+              :
+              {{
+                moment(props.bottleKeepDetail.expiredAt).format("DD MMM YYYY")
+              }}
+            </p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Status</p>
-            <p>: Locked</p>
+            <p>: {{ props.bottleKeepDetail.statusText }}</p>
           </div>
         </div>
-
-        <div class="bottle-detail">
+        <div
+          v-for="(history, index) in props.bottleKeepDetail.histories"
+          v-show="props.bottleKeepDetail.histories.length > 0"
+          :key="index"
+          class="bottle-detail"
+        >
           <div class="detail-items">
-            <p>#1 Keeping</p>
+            <p>#{{ index + 1 }} Keeping</p>
           </div>
-          <div class="rounded-lg aspect-video w-full bg-gray-300 h-auto"></div>
+          <img
+            :src="history.imageUrl"
+            class="rounded-lg aspect-video w-full bg-gray-300 h-auto"
+            alt="Detail Photo"
+          />
 
           <p class="brand mt-4">Keeping</p>
           <div class="detail-items">
             <p class="detail-items-label">Date</p>
-            <p>: 26 Nov 2021</p>
+            <p>
+              : {{ moment(history.stored_at).format("DD MMM YYYY, HH:mm") }}
+            </p>
           </div>
           <p class="detail-items-label">Notes</p>
-          <textarea class="global-textarea" rows="5" readonly></textarea>
+          <textarea
+            v-model="history.description"
+            class="global-textarea"
+            rows="5"
+            readonly
+          ></textarea>
 
           <p class="brand mt-4">Pick Up</p>
           <div class="detail-items">
             <p class="detail-items-label">Date</p>
-            <p>: -</p>
+            <p>
+              :
+              {{
+                moment(history.released_at).format("DD MMM YYYY, HH:mm") ?? "-"
+              }}
+            </p>
           </div>
           <p class="detail-items-label">Notes</p>
-          <textarea class="global-textarea" rows="5" readonly></textarea>
+          <textarea
+            v-model="history.release_notes"
+            class="global-textarea"
+            rows="5"
+            readonly
+          ></textarea>
+          <div class="mb-14"></div>
         </div>
-
-        <div class="mb-14"></div>
       </div>
-      <div class="sticky-button">
+      <div
+        v-show="props.bottleKeepDetail.histories.length"
+        class="sticky-button"
+      >
         <button
           type="button"
-          class="btn-full active"
-          @click="!props.isRekeep ? emits('release') : emits('rekeep')"
+          class="btn-full"
+          :class="
+            props.bottleKeepDetail.status == 1 ? 'exit' : 'btn-full active'
+          "
+          :disabled="props.bottleKeepDetail.status == 1"
+          @click="
+            props.bottleKeepDetail.status == 2
+              ? emits('release')
+              : emits('rekeep')
+          "
         >
-          {{ !props.isRekeep ? "Release" : "Rekeep" }}
+          {{
+            props.bottleKeepDetail.status == 2 ||
+            props.bottleKeepDetail.status == 1
+              ? "Release"
+              : "Rekeep"
+          }}
         </button>
       </div>
     </div>
