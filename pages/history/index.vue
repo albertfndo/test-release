@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
+const searchKey = ref("");
 
 onMounted(() => {
   _bottle.$reset();
@@ -9,12 +10,8 @@ onMounted(() => {
   });
 });
 
-async function initializaData() {
-  await _bottle.getBottleDatas().then(() => {
-    _bottle.bottleDatas = _bottle.bottleDatas.filter(
-      (bottleData) => bottleData.status === 4
-    );
-  });
+async function initializaData(search?: string) {
+  await _bottle.getBottleDatas(search, true);
 }
 
 const actions = reactive<Action[]>([
@@ -26,6 +23,10 @@ const actions = reactive<Action[]>([
     click: async () => initializaData(),
   },
 ]);
+
+function searchData() {
+  initializaData(searchKey.value);
+}
 
 function selectBottleCard(bottleData: KeepingData) {
   openDetailModal.value = true;
@@ -40,6 +41,19 @@ function selectBottleCard(bottleData: KeepingData) {
       :use-actions="true"
       :actions="actions"
     />
+
+    <div class="menu-bar my-6">
+      <form class="ml-auto search w-1/4" @submit.prevent="searchData()">
+        <input
+          v-model="searchKey"
+          type="text"
+          placeholder="Search something..."
+        />
+        <button @click="searchData()">
+          <Iconify icon="material-symbols:search" class="text-xl" />
+        </button>
+      </form>
+    </div>
   </section>
   <section id="bottleKeepHistoryBody" class="page-body">
     <div

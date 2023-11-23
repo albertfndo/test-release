@@ -34,17 +34,33 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       outletId: <number>0,
     },
     releaseNotes: <string>"",
+    bottleStatus: <number>0,
   }),
   actions: {
-    async getBottleDatas(keyword: string = "") {
+    async getBottleDatas(keyword: string = "", isHistory: boolean = false) {
       const api = useApi();
       const _loading = useLoading();
-
       try {
         _loading.show();
+
+        let selectedStatus = [];
+        if (this.bottleStatus == 0) {
+          selectedStatus = [1, 2, 3];
+        } else {
+          selectedStatus = [this.bottleStatus];
+        }
+
+        if (isHistory) {
+          selectedStatus = [4];
+        }
+
         const { data } = await api.post({
           url: "api/v1/holyboard/bottles",
-          params: { paginate: 100, keyword: keyword },
+          params: {
+            paginate: 100,
+            keyword: keyword,
+            status: selectedStatus,
+          },
         });
 
         this.bottleDatas = data.data.map((bottleData: any) =>

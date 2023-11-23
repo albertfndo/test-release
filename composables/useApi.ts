@@ -56,7 +56,7 @@ export const useApi = definePiniaStore("api", () => {
       useFetch(`${baseUrl}/${url}`, {
         method: "POST",
         headers: getHeaders(),
-        params,
+        body: JSON.stringify(params),
       }).then((response) => {
         const data = response.data.value;
         const error = response.error.value;

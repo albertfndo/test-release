@@ -4,7 +4,6 @@ import { selectedBottleData } from "~/composables/useBottleKeeping";
 
 await nextTick();
 
-const bottleStatus = ref(0);
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
 const userData = useUserData();
@@ -12,22 +11,18 @@ const searchKey = ref("");
 const releaseModal = ref(false);
 
 onMounted(() => {
+  _bottle.$reset();
   nextTick(async () => {
     await initializaData();
   });
 });
 
 async function initializaData(status?: number, search?: string) {
-  _bottle.$reset();
-  await _bottle.getBottleDatas(search).then(() => {
-    _bottle.bottleDatas = _bottle.bottleDatas.filter((bottleData) =>
-      status ? bottleData.status === status : bottleData.status !== 4
-    );
-  });
+  await _bottle.getBottleDatas(search);
 }
 
 watch(
-  () => bottleStatus.value,
+  () => _bottle.bottleStatus,
   (newValue) => {
     initializaData(newValue);
   }
@@ -48,7 +43,7 @@ function selectBottleCard(bottleData: KeepingData) {
 }
 
 function searchData() {
-  initializaData(bottleStatus.value, searchKey.value);
+  initializaData(_bottle.bottleStatus, searchKey.value);
 }
 
 function showButton(status: number, buttonName: string) {
@@ -127,36 +122,36 @@ if (isAdmin()) {
           <button
             type="button"
             class="btn-rsvp-status pending"
-            :class="bottleStatus === 0 ? 'active' : ''"
+            :class="_bottle.bottleStatus === 0 ? 'active' : ''"
             data-hbid="res-status-pending"
-            @click="bottleStatus = 0"
+            @click="_bottle.bottleStatus = 0"
           >
             Show All
           </button>
           <button
             type="button"
             class="btn-rsvp-status confirmed"
-            :class="bottleStatus === 1 ? 'active' : ''"
+            :class="_bottle.bottleStatus === 1 ? 'active' : ''"
             data-hbid="res-status-confirmed"
-            @click="bottleStatus = 1"
+            @click="_bottle.bottleStatus = 1"
           >
             Locked
           </button>
           <button
             type="button"
             class="btn-rsvp-status arrived"
-            :class="bottleStatus === 2 ? 'active' : ''"
+            :class="_bottle.bottleStatus === 2 ? 'active' : ''"
             data-hbid="res-status-arrived"
-            @click="bottleStatus = 2"
+            @click="_bottle.bottleStatus = 2"
           >
             Unlocked
           </button>
           <button
             type="button"
             class="btn-rsvp-status"
-            :class="bottleStatus === 3 ? 'active' : ''"
+            :class="_bottle.bottleStatus === 3 ? 'active' : ''"
             data-hbid="res-status-arrived"
-            @click="bottleStatus = 3"
+            @click="_bottle.bottleStatus = 3"
           >
             Picked Up
           </button>
