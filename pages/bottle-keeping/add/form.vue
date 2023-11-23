@@ -118,7 +118,7 @@ function submitData() {
 
   <section id="addNewDataBody" class="page-body flex w-full justify-center">
     <div class="w-3/4">
-      <form class="form-new-guest">
+      <form class="form-new-guest" @submit.prevent="">
         <template v-if="!useMember">
           <div class="form-group">
             <label for="new-guest-name"
