@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick } from "vue";
+import { selectedBottleData } from "~/composables/useBottleKeeping";
 
 await nextTick();
 
@@ -8,6 +9,7 @@ const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
 const userData = useUserData();
 const searchKey = ref("");
+const releaseModal = ref(false);
 
 onMounted(() => {
   nextTick(async () => {
@@ -62,6 +64,31 @@ function showButton(status: number, buttonName: string) {
 
 function isAdmin() {
   return userData.value.roles?.includes("Superuser");
+}
+
+function releaseBottle(bottleData: KeepingData) {
+  if (openDetailModal.value) openDetailModal.value = false;
+
+  releaseModal.value = true;
+  _bottle.selectedBottle = bottleData;
+}
+
+function rekeepBottle(bottleData: KeepingData) {
+  const selectedBottle = selectedBottleData();
+  selectedBottle.value = bottleData;
+
+  navigateTo({
+    path: "/bottle-keeping/add/form",
+    query: {
+      use_member: bottleData.customer ? "true" : "false",
+    },
+  });
+}
+
+async function submitRelease() {
+  await _bottle.releaseBottleData();
+  releaseModal.value = false;
+  initializaData();
 }
 
 const actions = reactive<Action[]>([
@@ -228,6 +255,7 @@ if (isAdmin()) {
             <button
               v-show="showButton(keepingData.status, 'Release')"
               class="btn-general w-full"
+              @click="releaseBottle(keepingData)"
             >
               <p>Release</p>
             </button>
@@ -240,6 +268,7 @@ if (isAdmin()) {
             <button
               v-show="showButton(keepingData.status, 'Lock')"
               class="btn-danger w-full"
+              @click="_bottle.lockBottleData(keepingData)"
             >
               <p>Lock</p>
             </button>
@@ -273,5 +302,25 @@ if (isAdmin()) {
     :open-detail-modal="openDetailModal"
     :is-rekeep="false"
     @close="openDetailModal = false"
+    @release="releaseBottle(_bottle.selectedBottle)"
+    @rekeep="rekeepBottle(_bottle.selectedBottle)"
   />
+
+  <Modal
+    v-show="releaseModal"
+    :open-global-modal="releaseModal"
+    :form-mode="true"
+    :use-button="true"
+    @submit="submitRelease()"
+    @close="releaseModal = false"
+  >
+    <h2>Release Bottle</h2>
+    <p>Are you sure want to release this bottle?</p>
+    <textarea
+      v-model="_bottle.releaseNotes"
+      placeholder="Release Note"
+      rows="5"
+      class="global-textarea mt-2"
+    ></textarea>
+  </Modal>
 </template>

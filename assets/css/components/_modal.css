@@ -60,6 +60,6 @@
     @apply text-primaryText text-xl text-center font-poppins-m;
   }
   .modal-wrapper .sticky-button {
-    @apply fixed bottom-5 w-5/6 md:w-3/4 lg:w-2/5 xl:w-1/3 bg-cardBg border-b border-x border-brand rounded-b-lg px-6 py-4;
+    @apply fixed bottom-5 w-5/6 md:w-3/4 lg:w-2/5 xl:w-1/3 bg-[#464646] p-6 rounded-b-lg -translate-x-1/2 left-1/2 border-x border-b border-brand;
   }
 }

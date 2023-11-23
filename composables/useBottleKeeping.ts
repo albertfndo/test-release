@@ -1,3 +1,4 @@
+import { useLocalStorage, type RemovableRef } from "@vueuse/core";
 import KeepingData from "~/models/KeepingData";
 
 type BottleKeepRequest = {
@@ -8,6 +9,15 @@ type BottleKeepRequest = {
   description: string;
   image_url: any;
   outlet_id: number;
+};
+
+export const selectedBottleData = () => {
+  const data = useLocalStorage(
+    "selected_bottle_data",
+    {}
+  ) as RemovableRef<KeepingData>;
+
+  return data;
 };
 
 export const useBottleKeeping = definePiniaStore("bottleKeeping", {
@@ -23,6 +33,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       imageUrl: <any>"",
       outletId: <number>0,
     },
+    releaseNotes: <string>"",
   }),
   actions: {
     async getBottleDatas(keyword: string = "") {
@@ -51,6 +62,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       const _loading = useLoading();
       const customerData = guestStorage();
       const userData = useUserData();
+      const _snackbar = useSnackbar();
 
       try {
         _loading.show();
@@ -82,7 +94,10 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         }
 
         await api.post(requestData);
+
         _loading.hide();
+        _snackbar.success("Success", "Bottle has been kept successfully", true);
+
         return navigateTo("/bottle-keeping");
       } catch (error) {
         api.handleError(error);
@@ -102,6 +117,83 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         return data.data.path;
       } catch (error) {
         api.handleError(error);
+      }
+    },
+
+    async releaseBottleData() {
+      const api = useApi();
+      const _loading = useLoading();
+      const _snackbar = useSnackbar();
+
+      try {
+        _loading.show();
+        await api.put({
+          url: `api/v1/holyboard/bottles/release/${this.selectedBottle?.id}`,
+          params: { release_notes: this.releaseNotes },
+        });
+
+        this.$reset();
+
+        _loading.hide();
+        _snackbar.success(
+          "Success",
+          "Bottle status has been updated to Release",
+          true
+        );
+        return navigateTo("/bottle-keeping");
+      } catch (error) {
+        api.handleError(error);
+        _loading.hide();
+      }
+    },
+
+    async rekeepBottleData() {
+      const api = useApi();
+      const _loading = useLoading();
+      const _snackbar = useSnackbar();
+
+      try {
+        _loading.show();
+
+        const imageFile = await this.processUploadImage();
+        if (!imageFile) {
+          _loading.hide();
+          return;
+        }
+
+        await api.put({
+          url: `api/v1/holyboard/bottles/rekeep/${this.selectedBottle?.id}`,
+          params: {
+            image_url: imageFile,
+            description: this.form.description,
+          },
+        });
+
+        _loading.hide();
+        _snackbar.success("Success", "Bottle has been Rekeeped", true);
+        return navigateTo("/bottle-keeping");
+      } catch (error) {
+        api.handleError(error);
+        _loading.hide();
+      }
+    },
+
+    async lockBottleData(bottleData: KeepingData) {
+      const api = useApi();
+      const _loading = useLoading();
+      const _snackbar = useSnackbar();
+      try {
+        _loading.show();
+        await api.put({
+          url: `api/v1/bottle/lock/${bottleData?.id}`,
+        });
+
+        _loading.hide();
+        _snackbar.success("Success", "Bottle has been locked", true);
+        return navigateTo("/bottle-keeping");
+      } catch (error) {
+        api.handleError(error);
+        _loading.hide();
       }
     },
   },

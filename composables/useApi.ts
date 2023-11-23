@@ -68,25 +68,22 @@ export const useApi = definePiniaStore("api", () => {
     });
   }
 
-  // function download({ url, params = {} }: Request): Promise<Response> {
-  //   setHeader();
-  //   return new Promise((resolve, reject) => {
-  //     axios
-  //       .get(url, { params, responseType: "blob" })
-  //       .then((response) => resolve({ data: response.data.data, response }))
-  //       .catch((error) => reject(error));
-  //   });
-  // }
-
-  // function put({ url, params = {} }: Request): Promise<any> {
-  //   setHeader();
-  //   return new Promise((resolve, reject) => {
-  //     axios
-  //       .put(url, params)
-  //       .then((response) => resolve({ data: response.data.data, response }))
-  //       .catch((error) => reject(error));
-  //   });
-  // }
+  function put({ url, params = {} }: Request): Promise<any> {
+    return new Promise((resolve, reject) => {
+      useFetch(`${baseUrl}/${url}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        params,
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
+    });
+  }
 
   function uploadFile({ url, params = {} }: Request): Promise<Response> {
     const formData = new FormData();
@@ -111,6 +108,16 @@ export const useApi = definePiniaStore("api", () => {
       });
     });
   }
+
+  // function download({ url, params = {} }: Request): Promise<Response> {
+  //   setHeader();
+  //   return new Promise((resolve, reject) => {
+  //     axios
+  //       .get(url, { params, responseType: "blob" })
+  //       .then((response) => resolve({ data: response.data.data, response }))
+  //       .catch((error) => reject(error));
+  //   });
+  // }
 
   function handleError(error: any): boolean {
     let handled = false;
@@ -195,9 +202,9 @@ export const useApi = definePiniaStore("api", () => {
   return {
     get,
     post,
-    // download,
-    // put,
-    handleError,
+    put,
     uploadFile,
+    // download,
+    handleError,
   };
 });

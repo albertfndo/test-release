@@ -106,31 +106,39 @@ onClickOutside(modalDialog, () => emits("close"));
           ></textarea>
           <div class="mb-14"></div>
         </div>
-      </div>
-      <div
-        v-show="props.bottleKeepDetail?.histories.length"
-        class="sticky-button"
-      >
-        <button
-          type="button"
-          class="btn-full"
-          :class="
-            props.bottleKeepDetail?.status == 1 ? 'exit' : 'btn-full active'
-          "
-          :disabled="props.bottleKeepDetail?.status == 1"
-          @click="
-            props.bottleKeepDetail?.status == 2
-              ? emits('release')
-              : emits('rekeep')
-          "
+        <div
+          v-show="props.bottleKeepDetail?.histories.length"
+          class="sticky-button"
         >
-          {{
-            props.bottleKeepDetail?.status == 2 ||
-            props.bottleKeepDetail?.status == 1
-              ? "Release"
-              : "Rekeep"
-          }}
-        </button>
+          <button
+            v-show="[1, 2].includes(props.bottleKeepDetail?.status)"
+            type="button"
+            class="btn-full"
+            :class="
+              props.bottleKeepDetail?.status == 1
+                ? 'exit'
+                : 'btn-full active border-none'
+            "
+            :disabled="props.bottleKeepDetail?.status == 1"
+            @click="emits('release')"
+          >
+            Release
+          </button>
+          <button
+            v-show="props.bottleKeepDetail?.status == 3"
+            type="button"
+            class="btn-full"
+            :class="
+              props.bottleKeepDetail?.status == 1
+                ? 'exit'
+                : 'btn-full active  border-none'
+            "
+            :disabled="props.bottleKeepDetail?.status == 1"
+            @click="emits('rekeep')"
+          >
+            Rekeep
+          </button>
+        </div>
       </div>
     </div>
   </Transition>

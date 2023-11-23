@@ -66,11 +66,11 @@ function selectBottleCard(bottleData: KeepingData) {
           <div class="flex flex-col gap-y-3 gap-x-2">
             <div class="rsvp-card-detail">
               <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-              <p>{{ expiredData.customer?.name }}</p>
+              <p>{{ expiredData.userFullName }}</p>
             </div>
             <div class="rsvp-card-detail">
               <Iconify icon="ic:outline-phone" class="text-xl" />
-              <p>{{ expiredData.customer?.phone }}</p>
+              <p>{{ expiredData.phoneNumber }}</p>
             </div>
             <div class="rsvp-card-detail">
               <Iconify icon="ic:outline-access-time" class="text-xl" />

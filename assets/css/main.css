@@ -202,6 +202,9 @@
   form.form-new-guest .form-group input, form.form-new-guest .form-group textarea {
     @apply block w-full p-2 bg-cardBg rounded-xl outline-none focus:outline-brandSecondary text-primaryText placeholder:text-secondaryText/40 text-base font-poppins-r;
   }
+  form.form-new-guest .form-group input:disabled {
+    @apply text-disabled;
+  }
   form.form-new-guest .form-group .text-counter {
     @apply mt-1 text-right text-secondaryText text-sm font-poppins-r
   }

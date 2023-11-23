@@ -3,6 +3,7 @@ const route = useRoute();
 const _guest = useGuest();
 const _bottle = useBottleKeeping();
 const guestData = guestStorage();
+const selectedBottle = selectedBottleData();
 const useMember = ref(false);
 const openCameraModal = ref(false);
 const displayedPhoto = ref("");
@@ -10,16 +11,27 @@ const displayedPhoto = ref("");
 onMounted(async () => {
   _guest.$reset();
   await fetchGuest();
+  await fetchBottleData();
 });
 
 onBeforeRouteLeave(() => {
   guestData.value = null;
+  selectedBottle.value = null;
 });
 
 function fetchGuest() {
   if (route.query.use_member === "true") {
     useMember.value = true;
     return guestData.value;
+  }
+}
+
+function fetchBottleData() {
+  if (selectedBottle.value) {
+    _bottle.selectedBottle = selectedBottle.value;
+    _bottle.form.bottleName = selectedBottle.value.bottleName;
+    _bottle.form.userFullname = selectedBottle.value.userFullName;
+    _bottle.form.phoneNumber = selectedBottle.value.phoneNumber;
   }
 }
 
@@ -73,6 +85,10 @@ function formatPhoneNumber(event: any) {
 }
 
 function submitData() {
+  if (selectedBottle.value.bottleName) {
+    _bottle.rekeepBottleData();
+    return;
+  }
   _bottle.submitBottleData(useMember.value);
 }
 </script>
@@ -90,7 +106,13 @@ function submitData() {
           class="text-primaryText text-2xl"
         />
       </button>
-      <h1 class="subtitle-2 text-primaryText">Add Bottle Keeping</h1>
+      <h1 class="subtitle-2 text-primaryText">
+        {{
+          selectedBottle.bottleName
+            ? "Rekeep Bottle " + selectedBottle.bottleName
+            : "Add Bottle Keeping"
+        }}
+      </h1>
     </div>
   </section>
 
@@ -107,6 +129,7 @@ function submitData() {
               v-model="_bottle.form.userFullname"
               type="text"
               placeholder="Type here..."
+              :disabled="selectedBottle.bottleName ? true : false"
               autofocus
             />
           </div>
@@ -119,6 +142,7 @@ function submitData() {
               v-model="_bottle.form.phoneNumber"
               type="text"
               placeholder="Ex. 6287896395385"
+              :disabled="selectedBottle.bottleName ? true : false"
               @input="formatPhoneNumber($event)"
             />
           </div>
@@ -126,28 +150,45 @@ function submitData() {
         <template v-else>
           <div class="guest-card mb-3">
             <div class="guest-name bg-brand">
-              <p>{{ fetchGuest()?.name }}</p>
+              <p>{{ fetchGuest()?.name ?? selectedBottle.customer?.name }}</p>
             </div>
             <div class="guest-data">
               <div class="grid grid-cols-2 gap-y-5">
                 <div class="guest-detail">
                   <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                  <p>{{ fetchGuest()?.membershipTypeText }}</p>
+                  <p>
+                    {{
+                      fetchGuest()?.membershipTypeText ??
+                      selectedBottle.customer?.membershipTypeText
+                    }}
+                  </p>
                 </div>
                 <div class="guest-detail">
                   <Iconify
                     icon="ic:outline-workspace-premium"
                     class="text-xl"
                   />
-                  <p>{{ fetchGuest()?.typeText }}</p>
+                  <p>
+                    {{
+                      fetchGuest()?.typeText ??
+                      selectedBottle.customer?.typeText
+                    }}
+                  </p>
                 </div>
                 <div class="guest-detail">
                   <Iconify icon="ic:outline-phone" class="text-xl" />
-                  <p>+{{ fetchGuest()?.phone }}</p>
+                  <p>
+                    +{{ fetchGuest()?.phone ?? selectedBottle.customer?.phone }}
+                  </p>
                 </div>
                 <div class="guest-detail">
                   <Iconify icon="ic:round-people-outline" class="text-xl" />
-                  <p>{{ fetchGuest()?.genderText }}</p>
+                  <p>
+                    {{
+                      fetchGuest()?.genderText ??
+                      selectedBottle.customer?.genderText
+                    }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -163,6 +204,7 @@ function submitData() {
             v-model="_bottle.form.bottleName"
             type="text"
             placeholder="Type here..."
+            :disabled="selectedBottle.bottleName ? true : false"
             data-hbid="gl-tt-incoming-pax"
           />
         </div>
