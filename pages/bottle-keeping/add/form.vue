@@ -64,7 +64,7 @@ function processDataUrl(dataUrl: any) {
   for (let i = 0; i < blobBin.length; i++) {
     array.push(blobBin.charCodeAt(i));
   }
-  const file = new Blob([new Uint8Array(array)], { type: "image/png" });
+  const file = new Blob([new Uint8Array(array)], { type: "image/webp" });
   _bottle.form.imageUrl = file;
 }
 

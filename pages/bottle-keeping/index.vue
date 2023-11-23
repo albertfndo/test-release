@@ -54,6 +54,7 @@ function showButton(status: number, buttonName: string) {
     1: ["Unlock"],
     2: ["Release", "Lock"],
     3: [""],
+    4: [""],
   };
 
   return statusMap[status as keyof typeof statusMap].includes(buttonName);
