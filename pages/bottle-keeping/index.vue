@@ -7,6 +7,7 @@ const bottleStatus = ref(0);
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
 const userData = useUserData();
+const searchKey = ref("");
 
 onMounted(() => {
   nextTick(async () => {
@@ -14,9 +15,9 @@ onMounted(() => {
   });
 });
 
-async function initializaData(status?: number | null) {
+async function initializaData(status?: number, search?: string) {
   _bottle.$reset();
-  await _bottle.getBottleDatas().then(() => {
+  await _bottle.getBottleDatas(search).then(() => {
     _bottle.bottleDatas = _bottle.bottleDatas.filter((bottleData) =>
       status ? bottleData.status === status : bottleData.status !== 4
     );
@@ -44,6 +45,24 @@ function selectBottleCard(bottleData: KeepingData) {
   _bottle.selectedBottle = bottleData;
 }
 
+function searchData() {
+  initializaData(bottleStatus.value, searchKey.value);
+}
+
+function showButton(status: number, buttonName: string) {
+  const statusMap = {
+    1: ["Unlock"],
+    2: ["Release", "Lock"],
+    3: [""],
+  };
+
+  return statusMap[status as keyof typeof statusMap].includes(buttonName);
+}
+
+function isAdmin() {
+  return userData.value.roles?.includes("Superuser");
+}
+
 const actions = reactive<Action[]>([
   {
     text: "Refresh",
@@ -52,14 +71,17 @@ const actions = reactive<Action[]>([
     hbid: "res-refresh",
     click: async () => initializaData(),
   },
-  {
+]);
+
+if (isAdmin()) {
+  actions.push({
     text: "Export",
     icon: "ic:outline-file-upload",
     color: "white",
     hbid: "res-export",
     click: async () => initializaData(),
-  },
-]);
+  });
+}
 </script>
 
 <template>
@@ -114,12 +136,16 @@ const actions = reactive<Action[]>([
       </div>
 
       <div class="flex gap-2 lg:w-1/3">
-        <div class="search">
-          <input type="text" placeholder="Enter Name / Phone" />
-          <button>
+        <form class="search" @submit.prevent="searchData()">
+          <input
+            v-model="searchKey"
+            type="text"
+            placeholder="Search something..."
+          />
+          <button @click="searchData()">
             <Iconify icon="material-symbols:search" class="text-xl" />
           </button>
-        </div>
+        </form>
         <div class="devider hidden md:block"></div>
         <button
           type="button"
@@ -169,11 +195,11 @@ const actions = reactive<Action[]>([
             <div class="flex flex-col gap-y-5 gap-x-2">
               <div class="rsvp-card-detail">
                 <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>{{ keepingData.customer?.name }}</p>
+                <p>{{ keepingData.userFullName }}</p>
               </div>
               <div class="rsvp-card-detail">
                 <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>{{ keepingData.customer?.phone }}</p>
+                <p>{{ keepingData?.phoneNumber }}</p>
               </div>
               <div class="rsvp-card-detail">
                 <Iconify icon="ic:outline-access-time" class="text-xl" />
@@ -196,21 +222,30 @@ const actions = reactive<Action[]>([
             </div>
           </div>
         </div>
-        <div
-          v-show="userData.roles?.includes('Developer')"
-          class="rsvp-card-footer"
-        >
-          <div class="flex justify-between gap-2 py-4">
-            <button class="btn-general w-full">
+        <div class="rsvp-card-footer">
+          <div v-show="isAdmin()" class="flex justify-between gap-2 py-4">
+            <button
+              v-show="showButton(keepingData.status, 'Release')"
+              class="btn-general w-full"
+            >
               <p>Release</p>
             </button>
-            <button v-show="false" class="btn-general w-full">
+            <button
+              v-show="showButton(keepingData.status, 'Unlock')"
+              class="btn-general w-full"
+            >
               <p>Unlock</p>
             </button>
-            <button v-show="true" class="btn-danger w-full">
+            <button
+              v-show="showButton(keepingData.status, 'Lock')"
+              class="btn-danger w-full"
+            >
               <p>Lock</p>
             </button>
-            <button class="btn-full no-bg">
+            <button
+              class="btn-full no-bg"
+              @click="selectBottleCard(keepingData)"
+            >
               <p>Detail</p>
             </button>
           </div>

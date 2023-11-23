@@ -13,7 +13,9 @@ export default class KeepingData {
     public outlet: Outlet | null,
     public histories: Histories[],
     public status: number,
-    public statusText: string
+    public statusText: string,
+    public userFullName: string,
+    public phoneNumber: string
   ) {}
 
   public static fromJson(json: any): KeepingData {
@@ -29,7 +31,9 @@ export default class KeepingData {
         ? json.histories.map((history: any) => Histories.fromJson(history))
         : [],
       json.status,
-      json.status_text
+      json.status_text,
+      json.user_fullname,
+      json.phone_number
     );
   }
 }

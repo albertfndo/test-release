@@ -19,6 +19,7 @@ export const useApi = definePiniaStore("api", () => {
     const headers = {
       Accept: "application/json",
       ContentType: "application/json",
+      Authorization: "",
     };
 
     const token =
@@ -39,11 +40,14 @@ export const useApi = definePiniaStore("api", () => {
         method: "GET",
         headers: getHeaders(),
         params,
-      })
-        .then((response) => {
-          resolve({ data: response.data.value, response });
-        })
-        .catch((error) => reject(error));
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
     });
   }
 
@@ -53,11 +57,14 @@ export const useApi = definePiniaStore("api", () => {
         method: "POST",
         headers: getHeaders(),
         params,
-      })
-        .then((response) => {
-          resolve({ data: response.data.value, response });
-        })
-        .catch((error) => reject(error));
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
     });
   }
 
@@ -81,7 +88,7 @@ export const useApi = definePiniaStore("api", () => {
   //   });
   // }
 
-  function uploadFile({ url, params = {} }: Request) {
+  function uploadFile({ url, params = {} }: Request): Promise<Response> {
     const formData = new FormData();
     const keys = Object.keys(params);
 
@@ -93,12 +100,15 @@ export const useApi = definePiniaStore("api", () => {
       useFetch(`${baseUrl}/${url}`, {
         method: "POST",
         headers: getHeaders(),
-        formData,
-      })
-        .then((response) => {
-          resolve({ data: response.data.value, response });
-        })
-        .catch((error) => reject(error));
+        body: formData,
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
     });
   }
 
@@ -106,19 +116,9 @@ export const useApi = definePiniaStore("api", () => {
     let handled = false;
     const snackbar = useSnackbar();
     const auth = useAuth();
-    console.error(error);
 
-    if (!error.response) {
-      snackbar.error({
-        title: "Error",
-        message: "Failed to fetch data",
-        autoClose: true,
-      });
-
-      return true;
-    }
-    if (error.response?.status == 422) {
-      const errors = error.response.data.errors ?? error.response.data;
+    if (error.data?.status == 422) {
+      const errors = error.data;
       const message: string[] = [];
 
       Object.keys(errors).forEach((key) => {
@@ -133,7 +133,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status == 503) {
+    } else if (error.data?.status == 503) {
       throw createError({
         statusCode: 503,
         statusMessage: "Server under maintenance. Please try again later.",
@@ -141,7 +141,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status >= 500) {
+    } else if (error.data?.status >= 500) {
       snackbar.error({
         title: "Error",
         message: "Server error. Please try again later.",
@@ -149,7 +149,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status == 401) {
+    } else if (error.data?.status == 401) {
       snackbar.error({
         title: "Session Expired",
         message: "Try to login again.",
@@ -165,22 +165,28 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status == 400) {
-      const code = error.response.data.data.code;
+    } else if (error.data?.status == 400) {
+      const code = error.data.code;
       if (code == "refresh_required") {
         window.location.reload();
         return true;
       } else {
         snackbar.error({
           title: "Error",
-          message: error.response.data.data.message,
+          message: error.data.message,
           autoClose: true,
         });
 
         handled = true;
       }
     } else {
-      // Handle other error
+      snackbar.error({
+        title: "Error",
+        message: "Failed to fetch data",
+        autoClose: true,
+      });
+
+      return true;
     }
 
     return handled;

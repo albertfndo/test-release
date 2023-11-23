@@ -5,6 +5,7 @@ const _bottle = useBottleKeeping();
 const guestData = guestStorage();
 const useMember = ref(false);
 const openCameraModal = ref(false);
+const displayedPhoto = ref("");
 
 onMounted(async () => {
   _guest.$reset();
@@ -28,8 +29,8 @@ const cameraFeed = ref(null);
 function openCamera() {
   openCameraModal.value = true;
 
-  if (_bottle.form.image_url) {
-    _bottle.form.image_url = "";
+  if (_bottle.form.imageUrl) {
+    _bottle.form.imageUrl = "";
   }
 
   navigator.mediaDevices
@@ -51,8 +52,28 @@ function capture() {
   context.drawImage(cameraFeed.value, 0, 0, canvas.width, canvas.height);
 
   const photoDataURL = canvas.toDataURL("image/webp");
-  _bottle.form.image_url = photoDataURL;
+  displayedPhoto.value = photoDataURL;
+  processDataUrl(photoDataURL);
+
   openCameraModal.value = false;
+}
+
+function processDataUrl(dataUrl: any) {
+  const blobBin = atob(dataUrl.split(",")[1]);
+  const array = [];
+  for (let i = 0; i < blobBin.length; i++) {
+    array.push(blobBin.charCodeAt(i));
+  }
+  const file = new Blob([new Uint8Array(array)], { type: "image/png" });
+  _bottle.form.imageUrl = file;
+}
+
+function formatPhoneNumber(event: any) {
+  _bottle.form.phoneNumber = event.target?.value.replace(/[^0-9]/g, "");
+}
+
+function submitData() {
+  _bottle.submitBottleData(useMember.value);
 }
 </script>
 
@@ -83,6 +104,7 @@ function capture() {
             ></label>
             <input
               id="new-guest-name"
+              v-model="_bottle.form.userFullname"
               type="text"
               placeholder="Type here..."
               autofocus
@@ -94,8 +116,10 @@ function capture() {
             ></label>
             <input
               id="new-guest-phone"
+              v-model="_bottle.form.phoneNumber"
               type="text"
               placeholder="Ex. 6287896395385"
+              @input="formatPhoneNumber($event)"
             />
           </div>
         </template>
@@ -136,6 +160,7 @@ function capture() {
           ></label>
           <input
             id="new-guest-pax1"
+            v-model="_bottle.form.bottleName"
             type="text"
             placeholder="Type here..."
             data-hbid="gl-tt-incoming-pax"
@@ -145,14 +170,18 @@ function capture() {
           <label for="new-guest-pax2"
             >Notes <span class="asterisk"></span
           ></label>
-          <textarea rows="5" placeholder="Type here..."></textarea>
+          <textarea
+            v-model="_bottle.form.description"
+            rows="5"
+            placeholder="Type here..."
+          ></textarea>
         </div>
         <div class="form-group">
           <label for="new-guest-pax2"
             >Photo <span class="asterisk"></span
           ></label>
           <div
-            v-if="!_bottle.form.image_url"
+            v-if="!_bottle.form.imageUrl"
             class="input-photo"
             @click="openCamera"
           >
@@ -162,10 +191,14 @@ function capture() {
             </div>
           </div>
           <div v-else class="input-photo">
-            <img
-              :src="_bottle.form.image_url"
+            <NuxtImg
+              preload
+              :src="displayedPhoto"
               class="rounded-xl"
               alt="Captured Photo"
+              quality="100"
+              loading="lazy"
+              :placeholder="[50, 25, 75]"
               @click="openCamera"
             />
           </div>
@@ -184,6 +217,7 @@ function capture() {
               type="button"
               class="btn-full active"
               data-hbid="gl-tt-save"
+              @click="submitData()"
             >
               Submit
             </button>

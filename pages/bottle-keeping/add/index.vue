@@ -69,6 +69,7 @@ function getGuestData(isMember: boolean, guest?: Customer) {
             type="text"
             placeholder="Enter Name / Phone"
             data-hbid="gl-tt-name"
+            autofocus
           />
           <div class="devider hidden md:block"></div>
           <button

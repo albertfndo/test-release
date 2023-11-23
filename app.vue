@@ -1,5 +1,5 @@
 <template>
-  <!-- <Snackbar /> -->
+  <Snackbar />
   <Dialog />
   <Loading />
 

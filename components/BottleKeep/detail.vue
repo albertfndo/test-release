@@ -39,11 +39,11 @@ onClickOutside(modalDialog, () => emits("close"));
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Guest Name</p>
-            <p>: {{ props.bottleKeepDetail?.customer?.name }}</p>
+            <p>: {{ props.bottleKeepDetail?.userFullName }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Phone Number</p>
-            <p>: {{ props.bottleKeepDetail?.customer?.phone }}</p>
+            <p>: {{ props.bottleKeepDetail?.phoneNumber }}</p>
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Expired Date</p>
@@ -66,10 +66,14 @@ onClickOutside(modalDialog, () => emits("close"));
           <div class="detail-items">
             <p>#{{ index + 1 }} Keeping</p>
           </div>
-          <img
+          <NuxtImg
+            preload
             :src="history.imageUrl"
-            class="rounded-lg aspect-video w-full bg-gray-300 h-auto"
-            alt="Detail Photo"
+            class="rounded-lg aspect-video w-full bg-gray-300 object-cover"
+            loading="lazy"
+            quality="100"
+            alt="Bottle Image"
+            :placeholder="[50, 25, 75]"
           />
 
           <p class="brand mt-4">Keeping</p>
