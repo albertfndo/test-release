@@ -43,7 +43,7 @@ function selectBottleCard(bottleData: KeepingData) {
     />
 
     <div class="menu-bar my-6">
-      <form class="ml-auto search w-1/4" @submit.prevent="searchData()">
+      <form class="ml-auto search md:w-1/4" @submit.prevent="searchData()">
         <input
           v-model="searchKey"
           type="text"
