@@ -30,7 +30,7 @@
     @apply px-4 py-2 rounded-lg border duration-200 font-poppins-m;
   }
   .modal-card button.video {
-    @apply absolute bottom-2 bg-brand border-none p-2 text-primaryBg text-center transform -translate-x-1/2 ml-auto mr-auto left-1/2 rounded-full text-cardBg;
+    @apply absolute bottom-2 bg-brand border-none p-2 transform -translate-x-1/2  left-1/2 rounded-full text-cardBg;
   }
   .modal-card button.close {
     @apply p-0 border-none text-primaryText self-baseline;
