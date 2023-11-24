@@ -16,6 +16,13 @@ function getDate(date: string | undefined) {
   return date ? moment(date).format("DD MMM YYYY, HH:mm") : "-";
 }
 
+function showButton() {
+  return (
+    props.bottleKeepDetail?.histories.length &&
+    props.bottleKeepDetail.status != 4
+  );
+}
+
 onClickOutside(modalDialog, () => emits("close"));
 </script>
 
@@ -104,12 +111,9 @@ onClickOutside(modalDialog, () => emits("close"));
             rows="5"
             readonly
           ></textarea>
-          <div class="mb-14"></div>
+          <div v-show="showButton()" class="mb-14"></div>
         </div>
-        <div
-          v-show="props.bottleKeepDetail?.histories.length"
-          class="sticky-button"
-        >
+        <div v-show="showButton()" class="sticky-button">
           <button
             v-show="[1, 2].includes(props.bottleKeepDetail?.status)"
             type="button"
