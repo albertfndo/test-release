@@ -57,10 +57,6 @@ function showButton(status: number, buttonName: string) {
   return statusMap[status as keyof typeof statusMap].includes(buttonName);
 }
 
-function isAdmin() {
-  return userData.value.roles?.includes("Superuser");
-}
-
 function releaseBottle(bottleData: KeepingData) {
   if (openDetailModal.value) openDetailModal.value = false;
 
@@ -158,7 +154,7 @@ if (isAdmin()) {
         </div>
       </div>
 
-      <div class="flex gap-2 lg:w-1/3">
+      <div class="flex gap-2 md:w-2/5 lg:w-1/4">
         <form class="search" @submit.prevent="searchData()">
           <input
             v-model="searchKey"
@@ -192,87 +188,154 @@ if (isAdmin()) {
   </section>
 
   <section id="bottleKeepBody">
-    <div
-      v-if="_bottle.bottleDatas.length"
-      class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-    >
-      <div
-        v-for="(keepingData, index) in _bottle.bottleDatas"
-        :key="index"
-        class="rsvp-card"
-      >
-        <div @click="selectBottleCard(keepingData)">
-          <div class="rsvp-card-head bg-[#A38954]">
-            <h1 class="text-primaryText font-poppins-sb">
-              {{ keepingData.bottleName }}
-            </h1>
-            <Iconify
-              icon="game-icons:beer-bottle"
-              class="text-2xl text-primaryText"
-            />
-          </div>
-          <div
-            class="rsvp-card-body"
-            :class="!userData.roles?.includes('Developer') ? 'pb-3' : ''"
-          >
-            <div class="flex flex-col gap-y-5 gap-x-2">
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>{{ keepingData.userFullName }}</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>{{ keepingData?.phoneNumber }}</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-access-time" class="text-xl" />
-                <p>Expired in {{ keepingData.expiredText }}</p>
-              </div>
-              <div class="rsvp-card-detail">
+    <div v-if="_bottle.bottleDatas.length" class="mt-8">
+      <table class="hidden md:table">
+        <thead>
+          <tr>
+            <th class="w-[3%] text-center">No</th>
+            <th class="w-1/5">Bottle Name</th>
+            <th class="w-1/6">User Name</th>
+            <th class="w-1/6">Phone Number</th>
+            <th class="w-1/6">Expired</th>
+            <th class="w-[10%]">Status</th>
+            <th v-show="isAdmin()" class="w-1/4 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(bottleData, index) in _bottle.bottleDatas" :key="index">
+            <td class="text-center">{{ index + 1 }}</td>
+            <td>{{ bottleData.bottleName }}</td>
+            <td>{{ bottleData.userFullName }}</td>
+            <td>{{ bottleData.phoneNumber }}</td>
+            <td>{{ bottleData.expiredText }}</td>
+            <td>
+              <div class="flex gap-1 items-center">
                 <Iconify
                   icon="ic:round-lens"
                   class="text-xl"
-                  :class="getColor(keepingData.status)"
+                  :class="getColor(bottleData.status)"
                 />
-                <p class="status" :class="getColor(keepingData.status)">
+                <p class="status" :class="getColor(bottleData.status)">
                   {{
-                    keepingData.status !== 3
-                      ? keepingData.statusText
+                    bottleData.status !== 3
+                      ? bottleData.statusText
                       : "Picked Up"
                   }}
                 </p>
               </div>
+            </td>
+            <td v-show="isAdmin()">
+              <div class="flex justify-between gap-2">
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Release')"
+                  class="btn-general w-full"
+                  @click="releaseBottle(bottleData)"
+                >
+                  <p>Release</p>
+                </button>
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Unlock')"
+                  class="btn-general w-full"
+                >
+                  <p>Unlock</p>
+                </button>
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Lock')"
+                  class="btn-danger w-full"
+                  @click="_bottle.lockBottleData(bottleData)"
+                >
+                  <p>Lock</p>
+                </button>
+                <button
+                  class="btn-full no-bg"
+                  @click="selectBottleCard(bottleData)"
+                >
+                  <p>Detail</p>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:hidden">
+        <div
+          v-for="(keepingData, index) in _bottle.bottleDatas"
+          :key="index"
+          class="rsvp-card"
+        >
+          <div @click="selectBottleCard(keepingData)">
+            <div class="rsvp-card-head bg-[#A38954]">
+              <h1 class="text-primaryText font-poppins-sb">
+                {{ keepingData.bottleName }}
+              </h1>
+              <Iconify
+                icon="game-icons:beer-bottle"
+                class="text-2xl text-primaryText"
+              />
+            </div>
+            <div
+              class="rsvp-card-body"
+              :class="!userData.roles?.includes('Developer') ? 'pb-3' : ''"
+            >
+              <div class="flex flex-col gap-y-5 gap-x-2">
+                <div class="rsvp-card-detail">
+                  <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                  <p>{{ keepingData.userFullName }}</p>
+                </div>
+                <div class="rsvp-card-detail">
+                  <Iconify icon="ic:outline-phone" class="text-xl" />
+                  <p>{{ keepingData?.phoneNumber }}</p>
+                </div>
+                <div class="rsvp-card-detail">
+                  <Iconify icon="ic:outline-access-time" class="text-xl" />
+                  <p>Expired in {{ keepingData.expiredText }}</p>
+                </div>
+                <div class="rsvp-card-detail">
+                  <Iconify
+                    icon="ic:round-lens"
+                    class="text-xl"
+                    :class="getColor(keepingData.status)"
+                  />
+                  <p class="status" :class="getColor(keepingData.status)">
+                    {{
+                      keepingData.status !== 3
+                        ? keepingData.statusText
+                        : "Picked Up"
+                    }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="rsvp-card-footer">
-          <div v-show="isAdmin()" class="flex justify-between gap-2 py-4">
-            <button
-              v-show="showButton(keepingData.status, 'Release')"
-              class="btn-general w-full"
-              @click="releaseBottle(keepingData)"
-            >
-              <p>Release</p>
-            </button>
-            <button
-              v-show="showButton(keepingData.status, 'Unlock')"
-              class="btn-general w-full"
-            >
-              <p>Unlock</p>
-            </button>
-            <button
-              v-show="showButton(keepingData.status, 'Lock')"
-              class="btn-danger w-full"
-              @click="_bottle.lockBottleData(keepingData)"
-            >
-              <p>Lock</p>
-            </button>
-            <button
-              class="btn-full no-bg"
-              @click="selectBottleCard(keepingData)"
-            >
-              <p>Detail</p>
-            </button>
+          <div class="rsvp-card-footer">
+            <div v-show="isAdmin()" class="flex justify-between gap-2 py-4">
+              <button
+                v-show="showButton(keepingData.status, 'Release')"
+                class="btn-general w-full"
+                @click="releaseBottle(keepingData)"
+              >
+                <p>Release</p>
+              </button>
+              <button
+                v-show="showButton(keepingData.status, 'Unlock')"
+                class="btn-general w-full"
+              >
+                <p>Unlock</p>
+              </button>
+              <button
+                v-show="showButton(keepingData.status, 'Lock')"
+                class="btn-danger w-full"
+                @click="_bottle.lockBottleData(keepingData)"
+              >
+                <p>Lock</p>
+              </button>
+              <button
+                class="btn-full no-bg"
+                @click="selectBottleCard(keepingData)"
+              >
+                <p>Detail</p>
+              </button>
+            </div>
           </div>
         </div>
       </div>

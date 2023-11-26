@@ -40,6 +40,22 @@
 }
 
 @layer components {
+  table {
+    @apply table-auto w-full bg-cardBg shadow-card rounded-[20px] overflow-hidden;
+  }
+  table thead tr {
+    @apply shadow-md;
+  }
+  table thead tr th {
+    @apply bg-brand py-2 px-4 text-left text-primaryBg text-base font-poppins-sb;
+  }
+  table tbody tr {
+    @apply shadow-md;
+  }
+  table tbody tr td{
+    @apply py-2 px-4 text-sm text-primaryText font-poppins-r;
+  }
+
   .search {
     @apply flex items-center w-full;
   }
@@ -150,8 +166,8 @@
   .rsvp-card-detail p:not(.status) {
     @apply text-xs md:text-sm font-poppins-r;
   }
-  .rsvp-card-detail p.status {
-    @apply text-xs md:text-sm font-poppins-m ;
+  .status {
+    @apply text-sm font-poppins-m;
   }
 
   .bottle-detail{

@@ -56,43 +56,76 @@ function selectBottleCard(bottleData: KeepingData) {
     </div>
   </section>
   <section id="bottleKeepHistoryBody" class="page-body">
-    <div
-      v-if="_bottle.bottleDatas.length"
-      class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-    >
-      <div
-        v-for="(expiredData, index) in _bottle.bottleDatas"
-        :key="index"
-        class="rsvp-card"
-        @click="selectBottleCard(expiredData)"
-      >
-        <div class="rsvp-card-head bg-[#A38954]">
-          <h1 class="text-primaryText font-poppins-sb">
-            {{ expiredData.bottleName }}
-          </h1>
-          <Iconify
-            icon="game-icons:beer-bottle"
-            class="text-2xl text-primaryText"
-          />
-        </div>
+    <div v-if="_bottle.bottleDatas.length" class="mt-8">
+      <table class="hidden md:table">
+        <thead>
+          <tr>
+            <th class="w-[3%]">No</th>
+            <th class="w-1/5">Bottle Name</th>
+            <th class="w-1/5">User Name</th>
+            <th class="w-1/5">Phone Number</th>
+            <th class="w-1/6">Expired</th>
+            <th class="w-[10%]">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(bottleData, index) in _bottle.bottleDatas"
+            :key="index"
+            class="cursor-pointer hover:bg-primaryBg/40"
+            @click="selectBottleCard(bottleData)"
+          >
+            <td class="text-center">{{ index + 1 }}</td>
+            <td>{{ bottleData.bottleName }}</td>
+            <td>{{ bottleData.userFullName }}</td>
+            <td>{{ bottleData.phoneNumber }}</td>
+            <td>{{ bottleData.expiredText }}</td>
+            <td>
+              <div class="flex gap-1 items-center">
+                <Iconify icon="ic:round-lens" class="text-xl" />
+                <p>
+                  {{ bottleData.statusText }}
+                </p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:hidden">
+        <div
+          v-for="(expiredData, index) in _bottle.bottleDatas"
+          :key="index"
+          class="rsvp-card"
+          @click="selectBottleCard(expiredData)"
+        >
+          <div class="rsvp-card-head bg-[#A38954]">
+            <h1 class="text-primaryText font-poppins-sb">
+              {{ expiredData.bottleName }}
+            </h1>
+            <Iconify
+              icon="game-icons:beer-bottle"
+              class="text-2xl text-primaryText"
+            />
+          </div>
 
-        <div class="rsvp-card-body pb-3">
-          <div class="flex flex-col gap-y-3 gap-x-2">
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-              <p>{{ expiredData.userFullName }}</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-phone" class="text-xl" />
-              <p>{{ expiredData.phoneNumber }}</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-access-time" class="text-xl" />
-              <p>Expired {{ expiredData.expiredText }}</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:round-lens" class="text-xl" />
-              <p class="status">Expired</p>
+          <div class="rsvp-card-body pb-3">
+            <div class="flex flex-col gap-y-3 gap-x-2">
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+                <p>{{ expiredData.userFullName }}</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-phone" class="text-xl" />
+                <p>{{ expiredData.phoneNumber }}</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:outline-access-time" class="text-xl" />
+                <p>Expired {{ expiredData.expiredText }}</p>
+              </div>
+              <div class="rsvp-card-detail">
+                <Iconify icon="ic:round-lens" class="text-xl" />
+                <p class="status">Expired</p>
+              </div>
             </div>
           </div>
         </div>

@@ -1,4 +1,7 @@
 import numeral from "numeral";
+import { permissionConstants } from "./PermissionConstant";
+
+const userData = useUserData();
 
 export function fuzzySearch(text: string, haystack: string) {
   const hay = text.toLowerCase();
@@ -37,6 +40,12 @@ export function isProduction() {
 export function getNextPage(page: string): number {
   const nextPage = page?.split("page=")[1].split("&")[0];
   return parseInt(nextPage);
+}
+
+export function isAdmin() {
+  return userData.value.roles?.some((role) =>
+    permissionConstants.includes(role)
+  );
 }
 // export function registerLocalStorageMeta() {
 // localStorage.setItem("APP_ENV", import.meta.env.VITE_APP_ENV);
