@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import moment from "moment";
+
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
 const searchKey = ref("");
@@ -10,8 +12,8 @@ onMounted(() => {
   });
 });
 
-async function initializaData(search?: string) {
-  await _bottle.getBottleDatas(search, true);
+async function initializaData(search?: string, page?: number) {
+  await _bottle.getBottleDatas(search, true, page);
 }
 
 const actions = reactive<Action[]>([
@@ -31,6 +33,11 @@ function searchData() {
 function selectBottleCard(bottleData: KeepingData) {
   openDetailModal.value = true;
   _bottle.selectedBottle = bottleData;
+}
+
+async function changePage(page: any) {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  await initializaData("", nextPage);
 }
 </script>
 
@@ -55,17 +62,20 @@ function selectBottleCard(bottleData: KeepingData) {
       </form>
     </div>
   </section>
+
   <section id="bottleKeepHistoryBody" class="page-body">
-    <div v-if="_bottle.bottleDatas.length" class="mt-8">
-      <table class="hidden md:table">
+    <div v-if="_bottle.bottleDatas.length" class="mt-8 overflow-x-auto">
+      <table :class="isAdmin() ? 'w-[110%]' : 'w-full'">
         <thead>
           <tr>
-            <th class="w-[3%]">No</th>
-            <th class="w-1/5">Bottle Name</th>
-            <th class="w-1/5">User Name</th>
-            <th class="w-1/5">Phone Number</th>
-            <th class="w-1/6">Expired</th>
-            <th class="w-[10%]">Status</th>
+            <th class="text-center">No</th>
+            <th>Bottle Name</th>
+            <th>User Name</th>
+            <th>Phone Number</th>
+            <th v-show="isAdmin()" class="text-center">Stored At</th>
+            <th class="text-center">Expired At</th>
+            <th v-show="isAdmin()">Outlet</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -75,11 +85,20 @@ function selectBottleCard(bottleData: KeepingData) {
             class="cursor-pointer hover:bg-primaryBg/40"
             @click="selectBottleCard(bottleData)"
           >
-            <td class="text-center">{{ index + 1 }}</td>
+            <td class="text-center">{{ _bottle.meta.from + index }}</td>
             <td>{{ bottleData.bottleName }}</td>
             <td>{{ bottleData.userFullName }}</td>
             <td>{{ bottleData.phoneNumber }}</td>
-            <td>{{ bottleData.expiredText }}</td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ moment(bottleData.storedAt).format("DD MMM YYYY") }}
+            </td>
+            <td class="text-center">
+              {{ moment(bottleData.expiredAt).format("DD MMM YYYY") }}
+              <p class="table-expired-text">({{ bottleData.expiredText }})</p>
+            </td>
+            <td v-show="isAdmin()">
+              {{ bottleData.outlet?.name }}
+            </td>
             <td>
               <div class="flex gap-1 items-center">
                 <Iconify icon="ic:round-lens" class="text-xl" />
@@ -91,45 +110,6 @@ function selectBottleCard(bottleData: KeepingData) {
           </tr>
         </tbody>
       </table>
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:hidden">
-        <div
-          v-for="(expiredData, index) in _bottle.bottleDatas"
-          :key="index"
-          class="rsvp-card"
-          @click="selectBottleCard(expiredData)"
-        >
-          <div class="rsvp-card-head bg-[#A38954]">
-            <h1 class="text-primaryText font-poppins-sb">
-              {{ expiredData.bottleName }}
-            </h1>
-            <Iconify
-              icon="game-icons:beer-bottle"
-              class="text-2xl text-primaryText"
-            />
-          </div>
-
-          <div class="rsvp-card-body pb-3">
-            <div class="flex flex-col gap-y-3 gap-x-2">
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>{{ expiredData.userFullName }}</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>{{ expiredData.phoneNumber }}</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-access-time" class="text-xl" />
-                <p>Expired {{ expiredData.expiredText }}</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:round-lens" class="text-xl" />
-                <p class="status">Expired</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <div v-else class="text-center mt-10">
       <NuxtImg
@@ -143,6 +123,17 @@ function selectBottleCard(bottleData: KeepingData) {
       />
       <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
+
+    <Pagination
+      v-show="_bottle.bottleDatas.length"
+      :from="_bottle.meta.from"
+      :to="_bottle.meta.to"
+      :total="_bottle.meta.total"
+      :prev="_bottle.links.prev"
+      :next="_bottle.links.next"
+      :links="_bottle.meta.links"
+      @changepage="changePage"
+    />
   </section>
 
   <BottleKeepDetail

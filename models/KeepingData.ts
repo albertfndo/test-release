@@ -14,6 +14,7 @@ export default class KeepingData {
     public histories: Histories[],
     public status: number,
     public statusText: string,
+    public remainingKeeps: number,
     public userFullName: string,
     public phoneNumber: string
   ) {}
@@ -32,6 +33,7 @@ export default class KeepingData {
         : [],
       json.status,
       json.status_text,
+      json.remaining_keeps,
       json.user_fullname,
       json.phone_number
     );

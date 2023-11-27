@@ -1,5 +1,6 @@
 import { useLocalStorage, type RemovableRef } from "@vueuse/core";
 import KeepingData from "~/models/KeepingData";
+import type { PageMeta, Links } from "~/models/Pagination";
 
 type BottleKeepRequest = {
   name: string; //Bottle Name
@@ -35,9 +36,15 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
     },
     releaseNotes: <string>"",
     bottleStatus: <number>0,
+    meta: <PageMeta>{},
+    links: <Links>{},
   }),
   actions: {
-    async getBottleDatas(keyword: string = "", isHistory: boolean = false) {
+    async getBottleDatas(
+      keyword: string = "",
+      isHistory: boolean = false,
+      page: number = 1
+    ) {
       const api = useApi();
       const _loading = useLoading();
       try {
@@ -57,15 +64,19 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         const { data } = await api.post({
           url: "api/v1/holyboard/bottles",
           params: {
-            paginate: 100,
+            paginate: 20,
             keyword: keyword,
             status: selectedStatus,
+            page: page,
           },
         });
 
         this.bottleDatas = data.data.map((bottleData: any) =>
           KeepingData.fromJson(bottleData)
         );
+
+        this.meta = data.meta;
+        this.links = data.links;
 
         _loading.hide();
       } catch (error) {

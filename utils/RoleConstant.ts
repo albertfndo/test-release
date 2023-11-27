@@ -1,4 +1,4 @@
-export const permissionConstants = [
+export const roleConstants = [
   "Customer Admin",
   "Developer",
   "Superuser",

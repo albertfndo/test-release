@@ -1,5 +1,5 @@
 import numeral from "numeral";
-import { permissionConstants } from "./PermissionConstant";
+import { roleConstants } from "./RoleConstant";
 
 const userData = useUserData();
 
@@ -43,9 +43,7 @@ export function getNextPage(page: string): number {
 }
 
 export function isAdmin() {
-  return userData.value.roles?.some((role) =>
-    permissionConstants.includes(role)
-  );
+  return userData.value.roles?.some((role) => roleConstants.includes(role));
 }
 // export function registerLocalStorageMeta() {
 // localStorage.setItem("APP_ENV", import.meta.env.VITE_APP_ENV);

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import moment from "moment";
+import { _ } from "numeral";
 import { nextTick } from "vue";
 import { selectedBottleData } from "~/composables/useBottleKeeping";
 
@@ -6,7 +8,6 @@ await nextTick();
 
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
-const userData = useUserData();
 const searchKey = ref("");
 const releaseModal = ref(false);
 
@@ -17,14 +18,20 @@ onMounted(() => {
   });
 });
 
-async function initializaData(status?: number, search?: string) {
-  await _bottle.getBottleDatas(search);
+async function initializaData(search?: string, page?: number) {
+  await _bottle.getBottleDatas(search, false, page);
+}
+
+async function changePage(page: any) {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  await initializaData((page = nextPage));
 }
 
 watch(
   () => _bottle.bottleStatus,
   (newValue) => {
-    initializaData(newValue);
+    _bottle.bottleStatus = newValue;
+    initializaData(searchKey.value);
   }
 );
 
@@ -43,7 +50,7 @@ function selectBottleCard(bottleData: KeepingData) {
 }
 
 function searchData() {
-  initializaData(_bottle.bottleStatus, searchKey.value);
+  initializaData(searchKey.value);
 }
 
 function showButton(status: number, buttonName: string) {
@@ -101,6 +108,8 @@ if (isAdmin()) {
     click: async () => initializaData(),
   });
 }
+
+const numberIndex = ref(_bottle.meta.from);
 </script>
 
 <template>
@@ -154,7 +163,7 @@ if (isAdmin()) {
         </div>
       </div>
 
-      <div class="flex gap-2 md:w-2/5 lg:w-1/4">
+      <div class="flex gap-2 md:w-2/5 lg:w-1/3">
         <form class="search" @submit.prevent="searchData()">
           <input
             v-model="searchKey"
@@ -188,26 +197,46 @@ if (isAdmin()) {
   </section>
 
   <section id="bottleKeepBody">
-    <div v-if="_bottle.bottleDatas.length" class="mt-8">
-      <table class="hidden md:table">
+    <div v-if="_bottle.bottleDatas.length" class="mt-8 overflow-x-auto">
+      <table :class="isAdmin() ? 'w-[110%]' : 'w-full'">
         <thead>
           <tr>
-            <th class="w-[3%] text-center">No</th>
-            <th class="w-1/5">Bottle Name</th>
-            <th class="w-1/6">User Name</th>
-            <th class="w-1/6">Phone Number</th>
-            <th class="w-1/6">Expired</th>
-            <th class="w-[10%]">Status</th>
-            <th v-show="isAdmin()" class="w-1/4 text-center">Action</th>
+            <th class="text-center">No</th>
+            <th>Bottle Name</th>
+            <th>User Name</th>
+            <th>Phone Number</th>
+            <th v-show="isAdmin()" class="text-center">Stored At</th>
+            <th class="text-center">Expired At</th>
+            <th v-show="isAdmin()" class="text-center">Remainings</th>
+            <th v-show="isAdmin()">Outlet</th>
+            <th>Status</th>
+            <th v-show="isAdmin()" class="text-center">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(bottleData, index) in _bottle.bottleDatas" :key="index">
-            <td class="text-center">{{ index + 1 }}</td>
+          <tr
+            v-for="(bottleData, index) in _bottle.bottleDatas"
+            :key="index"
+            :class="!isAdmin() ? 'hover:bg-primaryBg/40 cursor-pointer' : ''"
+            @click="!isAdmin() ? selectBottleCard(bottleData) : ''"
+          >
+            <td class="text-center">{{ _bottle.meta.from + index }}</td>
             <td>{{ bottleData.bottleName }}</td>
             <td>{{ bottleData.userFullName }}</td>
             <td>{{ bottleData.phoneNumber }}</td>
-            <td>{{ bottleData.expiredText }}</td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ moment(bottleData.storedAt).format("DD MMM YYYY") }}
+            </td>
+            <td class="text-center">
+              {{ moment(bottleData.expiredAt).format("DD MMM YYYY") }}
+              <p class="table-expired-text">({{ bottleData.expiredText }})</p>
+            </td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ bottleData.remainingKeeps }}
+            </td>
+            <td v-show="isAdmin()">
+              {{ bottleData.outlet?.name }}
+            </td>
             <td>
               <div class="flex gap-1 items-center">
                 <Iconify
@@ -257,88 +286,6 @@ if (isAdmin()) {
           </tr>
         </tbody>
       </table>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:hidden">
-        <div
-          v-for="(keepingData, index) in _bottle.bottleDatas"
-          :key="index"
-          class="rsvp-card"
-        >
-          <div @click="selectBottleCard(keepingData)">
-            <div class="rsvp-card-head bg-[#A38954]">
-              <h1 class="text-primaryText font-poppins-sb">
-                {{ keepingData.bottleName }}
-              </h1>
-              <Iconify
-                icon="game-icons:beer-bottle"
-                class="text-2xl text-primaryText"
-              />
-            </div>
-            <div
-              class="rsvp-card-body"
-              :class="!userData.roles?.includes('Developer') ? 'pb-3' : ''"
-            >
-              <div class="flex flex-col gap-y-5 gap-x-2">
-                <div class="rsvp-card-detail">
-                  <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                  <p>{{ keepingData.userFullName }}</p>
-                </div>
-                <div class="rsvp-card-detail">
-                  <Iconify icon="ic:outline-phone" class="text-xl" />
-                  <p>{{ keepingData?.phoneNumber }}</p>
-                </div>
-                <div class="rsvp-card-detail">
-                  <Iconify icon="ic:outline-access-time" class="text-xl" />
-                  <p>Expired in {{ keepingData.expiredText }}</p>
-                </div>
-                <div class="rsvp-card-detail">
-                  <Iconify
-                    icon="ic:round-lens"
-                    class="text-xl"
-                    :class="getColor(keepingData.status)"
-                  />
-                  <p class="status" :class="getColor(keepingData.status)">
-                    {{
-                      keepingData.status !== 3
-                        ? keepingData.statusText
-                        : "Picked Up"
-                    }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="rsvp-card-footer">
-            <div v-show="isAdmin()" class="flex justify-between gap-2 py-4">
-              <button
-                v-show="showButton(keepingData.status, 'Release')"
-                class="btn-general w-full"
-                @click="releaseBottle(keepingData)"
-              >
-                <p>Release</p>
-              </button>
-              <button
-                v-show="showButton(keepingData.status, 'Unlock')"
-                class="btn-general w-full"
-              >
-                <p>Unlock</p>
-              </button>
-              <button
-                v-show="showButton(keepingData.status, 'Lock')"
-                class="btn-danger w-full"
-                @click="_bottle.lockBottleData(keepingData)"
-              >
-                <p>Lock</p>
-              </button>
-              <button
-                class="btn-full no-bg"
-                @click="selectBottleCard(keepingData)"
-              >
-                <p>Detail</p>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <div v-else class="text-center mt-10">
       <NuxtImg
@@ -352,6 +299,17 @@ if (isAdmin()) {
       />
       <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
+
+    <Pagination
+      v-show="_bottle.bottleDatas.length"
+      :from="_bottle.meta.from"
+      :to="_bottle.meta.to"
+      :total="_bottle.meta.total"
+      :prev="_bottle.links.prev"
+      :next="_bottle.links.next"
+      :links="_bottle.meta.links"
+      @changepage="changePage"
+    />
   </section>
 
   <BottleKeepDetail

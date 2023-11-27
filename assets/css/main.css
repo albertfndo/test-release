@@ -41,19 +41,22 @@
 
 @layer components {
   table {
-    @apply table-auto w-full bg-cardBg shadow-card rounded-[20px] overflow-hidden;
+    @apply table-auto bg-cardBg shadow-card rounded-xl overflow-hidden;
   }
   table thead tr {
     @apply shadow-md;
   }
   table thead tr th {
-    @apply bg-brand py-2 px-4 text-left text-primaryBg text-base font-poppins-sb;
+    @apply bg-brand py-3 px-4 text-left text-primaryBg text-base font-poppins-sb uppercase;
   }
   table tbody tr {
     @apply shadow-md;
   }
   table tbody tr td{
-    @apply py-2 px-4 text-sm text-primaryText font-poppins-r;
+    @apply p-4 text-sm text-primaryText font-poppins-r;
+  }
+  table tbody tr td p.table-expired-text{
+    @apply text-primaryText/60 text-xs font-poppins-r;
   }
 
   .search {
@@ -255,6 +258,19 @@
   }
   .menu-bar p{
     @apply my-auto text-primaryText font-poppins-r
+  }
+
+  .pagination-wrapper {
+    @apply flex flex-row cursor-pointer gap-3;
+  }
+  .pagination {
+		@apply text-primaryText font-poppins-r rounded-md border border-brand hover:bg-brand hover:text-primaryBg duration-200 py-1 px-3;
+	}
+  .pagination.active {
+    @apply text-primaryBg font-poppins-r rounded-md  border border-brand bg-brand hover:bg-brand duration-200 py-1 px-3;
+  }
+  .pagination-mobile {
+    @apply text-primaryBg font-poppins-r rounded-md border border-brand bg-brand hover:bg-brandSecondary duration-200 py-1 px-3;
   }
 }
 
