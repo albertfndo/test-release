@@ -31,11 +31,11 @@
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-secondaryText/30 rounded-lg;        /* color of the tracking area */
+    @apply md:bg-secondaryText/30 rounded-lg;        /* color of the tracking area */
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-brand rounded-lg;       /* color of the scroll thumb */
+    @apply md:bg-brand rounded-lg;       /* color of the scroll thumb */
   }
 }
 

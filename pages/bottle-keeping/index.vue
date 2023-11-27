@@ -131,8 +131,6 @@ if (isAdmin()) {
     click: async () => initializaData(),
   });
 }
-
-const numberIndex = ref(_bottle.meta.from);
 </script>
 
 <template>
@@ -322,7 +320,7 @@ const numberIndex = ref(_bottle.meta.from);
     </div>
 
     <Pagination
-      v-show="_bottle.bottleDatas.length"
+      v-if="_bottle.meta.total > 10"
       :from="_bottle.meta.from"
       :to="_bottle.meta.to"
       :total="_bottle.meta.total"
