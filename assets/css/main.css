@@ -59,6 +59,10 @@
     @apply text-primaryText/60 text-xs font-poppins-r;
   }
 
+  .status-pill {
+    @apply py-1 px-2 rounded-full text-primaryBg font-poppins-m
+  }
+
   .search {
     @apply flex items-center w-full;
   }

@@ -2,6 +2,13 @@ import Customer from "./Customer";
 import Histories from "./Histories";
 import Outlet from "./Outlet";
 
+export enum BottleStatus {
+  lock = 1,
+  unlock = 2,
+  release = 3,
+  history = 4,
+}
+
 export default class KeepingData {
   constructor(
     public id: number,

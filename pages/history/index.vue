@@ -75,7 +75,7 @@ async function changePage(page: any) {
             <th v-show="isAdmin()" class="text-center">Stored At</th>
             <th class="text-center">Expired At</th>
             <th v-show="isAdmin()">Outlet</th>
-            <th>Status</th>
+            <th class="text-center">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -99,13 +99,10 @@ async function changePage(page: any) {
             <td v-show="isAdmin()">
               {{ bottleData.outlet?.name }}
             </td>
-            <td>
-              <div class="flex gap-1 items-center">
-                <Iconify icon="ic:round-lens" class="text-xl" />
-                <p>
-                  {{ bottleData.statusText }}
-                </p>
-              </div>
+            <td class="text-center">
+              <span class="status-pill bg-primaryText">
+                {{ bottleData.statusText }}
+              </span>
             </td>
           </tr>
         </tbody>

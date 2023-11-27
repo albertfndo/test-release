@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import moment from "moment";
-import { _ } from "numeral";
+import { BottleStatus } from "~/models/KeepingData";
 import { nextTick } from "vue";
 import { selectedBottleData } from "~/composables/useBottleKeeping";
 
@@ -10,6 +10,7 @@ const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
 const searchKey = ref("");
 const releaseModal = ref(false);
+const _dialog = useDialog();
 
 onMounted(() => {
   _bottle.$reset();
@@ -37,8 +38,9 @@ watch(
 
 function getColor(status: number) {
   const colorMap = {
-    1: "text-[#FF5D97]",
-    2: "text-success",
+    1: "bg-[#FF5D97]",
+    2: "bg-success",
+    3: "bg-primaryText",
   };
 
   return colorMap[status as keyof typeof colorMap];
@@ -84,9 +86,30 @@ function rekeepBottle(bottleData: KeepingData) {
 }
 
 async function submitRelease() {
-  await _bottle.releaseBottleData();
   releaseModal.value = false;
+  await _bottle.releaseBottleData();
   initializaData();
+}
+
+function updateStatus(bottleData: KeepingData, status: number) {
+  _dialog.show({
+    title: "Confirmation",
+    content: "Are you sure you want to update this bottle status?",
+    callback: {
+      onTapBack() {
+        _dialog.hideDialog();
+      },
+      onTapConfirm() {
+        _bottle.updateBottleStatus(bottleData, status).then(() => {
+          _dialog.hideDialog();
+          initializaData();
+        });
+      },
+    },
+    backText: "Cancel",
+    confirmText: "Confirm",
+    showBack: true,
+  });
 }
 
 const actions = reactive<Action[]>([
@@ -136,27 +159,31 @@ const numberIndex = ref(_bottle.meta.from);
           <button
             type="button"
             class="btn-rsvp-status confirmed"
-            :class="_bottle.bottleStatus === 1 ? 'active' : ''"
+            :class="_bottle.bottleStatus === BottleStatus.lock ? 'active' : ''"
             data-hbid="res-status-confirmed"
-            @click="_bottle.bottleStatus = 1"
+            @click="_bottle.bottleStatus = BottleStatus.lock"
           >
             Locked
           </button>
           <button
             type="button"
             class="btn-rsvp-status arrived"
-            :class="_bottle.bottleStatus === 2 ? 'active' : ''"
+            :class="
+              _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
+            "
             data-hbid="res-status-arrived"
-            @click="_bottle.bottleStatus = 2"
+            @click="_bottle.bottleStatus = BottleStatus.unlock"
           >
             Unlocked
           </button>
           <button
             type="button"
             class="btn-rsvp-status"
-            :class="_bottle.bottleStatus === 3 ? 'active' : ''"
+            :class="
+              _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
+            "
             data-hbid="res-status-arrived"
-            @click="_bottle.bottleStatus = 3"
+            @click="_bottle.bottleStatus = BottleStatus.release"
           >
             Picked Up
           </button>
@@ -209,7 +236,7 @@ const numberIndex = ref(_bottle.meta.from);
             <th class="text-center">Expired At</th>
             <th v-show="isAdmin()" class="text-center">Remainings</th>
             <th v-show="isAdmin()">Outlet</th>
-            <th>Status</th>
+            <th class="text-center">Status</th>
             <th v-show="isAdmin()" class="text-center">Action</th>
           </tr>
         </thead>
@@ -237,21 +264,14 @@ const numberIndex = ref(_bottle.meta.from);
             <td v-show="isAdmin()">
               {{ bottleData.outlet?.name }}
             </td>
-            <td>
-              <div class="flex gap-1 items-center">
-                <Iconify
-                  icon="ic:round-lens"
-                  class="text-xl"
-                  :class="getColor(bottleData.status)"
-                />
-                <p class="status" :class="getColor(bottleData.status)">
-                  {{
-                    bottleData.status !== 3
-                      ? bottleData.statusText
-                      : "Picked Up"
-                  }}
-                </p>
-              </div>
+            <td class="text-center">
+              <span class="status-pill" :class="getColor(bottleData.status)">
+                {{
+                  bottleData.status !== BottleStatus.release
+                    ? bottleData.statusText
+                    : "Picked Up"
+                }}
+              </span>
             </td>
             <td v-show="isAdmin()">
               <div class="flex justify-between gap-2">
@@ -265,13 +285,14 @@ const numberIndex = ref(_bottle.meta.from);
                 <button
                   v-show="isAdmin() && showButton(bottleData.status, 'Unlock')"
                   class="btn-general w-full"
+                  @click="updateStatus(bottleData, BottleStatus.unlock)"
                 >
                   <p>Unlock</p>
                 </button>
                 <button
                   v-show="isAdmin() && showButton(bottleData.status, 'Lock')"
                   class="btn-danger w-full"
-                  @click="_bottle.lockBottleData(bottleData)"
+                  @click="updateStatus(bottleData, BottleStatus.lock)"
                 >
                   <p>Lock</p>
                 </button>

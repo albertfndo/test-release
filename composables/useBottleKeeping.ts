@@ -64,7 +64,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         const { data } = await api.post({
           url: "api/v1/holyboard/bottles",
           params: {
-            paginate: 20,
+            paginate: 10,
             keyword: keyword,
             status: selectedStatus,
             page: page,
@@ -205,18 +205,20 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       }
     },
 
-    async lockBottleData(bottleData: KeepingData) {
+    async updateBottleStatus(bottleData: KeepingData, status: number) {
       const api = useApi();
       const _loading = useLoading();
       const _snackbar = useSnackbar();
+
       try {
         _loading.show();
         await api.put({
-          url: `api/v1/bottle/lock/${bottleData?.id}`,
+          url: `api/v1/holyboard/bottles/update/${bottleData?.id}`,
+          params: { status: status },
         });
 
         _loading.hide();
-        _snackbar.success("Success", "Bottle has been locked", true);
+        _snackbar.success("Success", "Bottle status has been change.", true);
         return navigateTo("/bottle-keeping");
       } catch (error) {
         api.handleError(error);
