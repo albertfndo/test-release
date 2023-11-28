@@ -80,6 +80,10 @@ function capture() {
   displayedPhoto.value = photoDataURL;
   processDataUrl(photoDataURL);
 
+  closeCameraModal();
+}
+
+function closeCameraModal() {
   stream.getVideoTracks()[0].stop();
   openCameraModal.value = false;
 }
@@ -315,7 +319,7 @@ function submitData() {
     :open-global-modal="openCameraModal"
     :form-mode="false"
     :use-button="false"
-    @close="openCameraModal = false"
+    @close="closeCameraModal()"
   >
     <div class="relative w-full">
       <video ref="cameraFeed" class="w-full rounded-lg" autoplay></video>
