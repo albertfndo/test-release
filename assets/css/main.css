@@ -216,6 +216,9 @@
   form.form-new-guest .form-group .input-photo .items{
     @apply text-secondaryText text-sm font-poppins-r;
   }
+  input[type="file"] {
+    @apply block w-full p-2 bg-primaryBg rounded-xl outline-none focus:outline-brandSecondary text-primaryText placeholder:text-secondaryText/40 text-base font-poppins-r;
+  }
 
   .guest-card {
     @apply bg-cardBg rounded-xl shadow-accent cursor-pointer;
@@ -254,6 +257,13 @@
   }
   .pagination-mobile {
     @apply text-primaryBg font-poppins-r rounded-md border border-brand bg-brand hover:bg-brandSecondary duration-200 py-1 px-3;
+  }
+
+  .media-type-button {
+    @apply w-full py-4 px-2 mx-auto rounded-lg shadow-accent text-center cursor-pointer hover:bg-secondaryBg/50 duration-200;
+  }
+  .media-type-button .type-icon {
+    @apply mx-auto text-6xl text-primaryText;
   }
 }
 

@@ -1,6 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      baseUrl: "https://customer.holywings.id",
+      environment: "production",
+      version: "0.0.1",
+    },
+  },
   app: {
     head: {
       title: "Bottle Keeping - Customer",
@@ -28,13 +35,6 @@ export default defineNuxtConfig({
         { rel: "prefetch", as: "image", href: "/images/watermark.webp" },
         { rel: "prefetch", as: "image", href: "/images/logo/hwg-logo.svg" },
       ],
-    },
-  },
-  runtimeConfig: {
-    public: {
-      baseUrl: "https://customer.holywings.id",
-      environment: "production",
-      version: "0.0.1",
     },
   },
   modules: [

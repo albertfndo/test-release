@@ -5,7 +5,9 @@ const _bottle = useBottleKeeping();
 const guestData = guestStorage();
 const selectedBottle = selectedBottleData();
 const useMember = ref(false);
+const openMediaType = ref(false);
 const openCameraModal = ref(false);
+const openUploadFile = ref(false);
 const displayedPhoto = ref("");
 
 const characterCount = computed(() => {
@@ -59,7 +61,7 @@ function openCamera() {
   }
 
   navigator.mediaDevices
-    .getUserMedia({ video: true })
+    .getUserMedia({ video: { facingMode: "environment" } })
     .then((content) => {
       stream = content;
       cameraFeed.value.srcObject = stream as MediaStream;
@@ -84,7 +86,9 @@ function capture() {
 }
 
 function closeCameraModal() {
-  stream.getVideoTracks()[0].stop();
+  if (stream) {
+    stream.getVideoTracks()[0].stop();
+  }
   openCameraModal.value = false;
 }
 
@@ -102,11 +106,22 @@ function formatPhoneNumber(event: any) {
   _bottle.form.phoneNumber = event.target?.value.replace(/[^0-9]/g, "");
 }
 
+function setFile(e: any) {
+  const files = e.target.files || e.dataTransfer.files;
+  if (!files.length) return;
+
+  displayedPhoto.value = URL.createObjectURL(files[0]);
+  _bottle.form.imageUrl = files[0];
+
+  openUploadFile.value = false;
+}
+
 function submitData() {
   if (selectedBottle.value.bottleName) {
     _bottle.rekeepBottleData();
     return;
   }
+
   _bottle.submitBottleData(useMember.value);
 }
 </script>
@@ -265,7 +280,7 @@ function submitData() {
           <div
             v-if="!_bottle.form.imageUrl"
             class="input-photo"
-            @click="openCamera"
+            @click="openMediaType = true"
           >
             <div class="items">
               <Iconify icon="mdi:plus-circle" class="text-4xl mx-auto" />
@@ -281,7 +296,7 @@ function submitData() {
               quality="100"
               loading="lazy"
               :placeholder="[50, 25, 75]"
-              @click="openCamera"
+              @click="openMediaType = true"
             />
           </div>
         </div>
@@ -313,6 +328,50 @@ function submitData() {
       </form>
     </div>
   </section>
+
+  <Modal
+    v-show="openMediaType"
+    :open-global-modal="openMediaType"
+    :form-mode="false"
+    :use-button="false"
+    @close="openMediaType = false"
+  >
+    <h2 class="text-center">Pilih Media</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div
+        class="media-type-button"
+        @click="
+          openMediaType = false;
+          openUploadFile = true;
+        "
+      >
+        <Iconify icon="material-symbols:upload-file" class="type-icon" />
+        <p>Upload Gambar</p>
+      </div>
+      <div
+        class="media-type-button"
+        @click="
+          openMediaType = false;
+          openCamera();
+        "
+      >
+        <Iconify icon="material-symbols:photo-camera" class="type-icon" />
+        <p>Buka Kamera</p>
+      </div>
+    </div>
+  </Modal>
+
+  <Modal
+    v-show="openUploadFile"
+    :open-global-modal="openUploadFile"
+    :form-mode="false"
+    :use-button="false"
+  >
+    <h2 class="text-center">Upload Gambar</h2>
+    <div class="form-group">
+      <input type="file" @change="setFile($event)" />
+    </div>
+  </Modal>
 
   <Modal
     v-show="openCameraModal"
