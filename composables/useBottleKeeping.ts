@@ -1,5 +1,6 @@
 import { useLocalStorage, type RemovableRef } from "@vueuse/core";
 import KeepingData from "~/models/KeepingData";
+import type { PageMeta, Links } from "~/models/Pagination";
 
 type BottleKeepRequest = {
   name: string; //Bottle Name
@@ -9,6 +10,9 @@ type BottleKeepRequest = {
   description: string;
   image_url: any;
   outlet_id: number;
+  gram: number;
+  mililiter: number;
+  unlimited_expired: boolean;
 };
 
 export const selectedBottleData = () => {
@@ -32,24 +36,53 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       description: <string>"",
       imageUrl: <any>"",
       outletId: <number>0,
+      gram: <number>0,
+      miliLiter: <number>0,
+      unlimitedExpired: <boolean>false,
     },
     releaseNotes: <string>"",
+    bottleStatus: <number>0,
+    meta: <PageMeta>{},
+    links: <Links>{},
   }),
   actions: {
-    async getBottleDatas(keyword: string = "") {
+    async getBottleDatas(
+      keyword: string = "",
+      isHistory: boolean = false,
+      page: number = 1
+    ) {
       const api = useApi();
       const _loading = useLoading();
-
       try {
         _loading.show();
+
+        let selectedStatus = [];
+        if (this.bottleStatus == 0) {
+          selectedStatus = [1, 2, 3];
+        } else {
+          selectedStatus = [this.bottleStatus];
+        }
+
+        if (isHistory) {
+          selectedStatus = [4];
+        }
+
         const { data } = await api.post({
           url: "api/v1/holyboard/bottles",
-          params: { paginate: 100, keyword: keyword },
+          params: {
+            paginate: 10,
+            keyword: keyword,
+            status: selectedStatus,
+            page: page,
+          },
         });
 
         this.bottleDatas = data.data.map((bottleData: any) =>
           KeepingData.fromJson(bottleData)
         );
+
+        this.meta = data.meta;
+        this.links = data.links;
 
         _loading.hide();
       } catch (error) {
@@ -86,6 +119,9 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
             description: this.form.description,
             image_url: imageFile,
             outlet_id: userData.value.user?.outlet.id,
+            gram: this.form.gram,
+            mililiter: this.form.miliLiter,
+            unlimited_expired: this.form.unlimitedExpired,
           },
         };
 
@@ -96,7 +132,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         await api.post(requestData);
 
         _loading.hide();
-        _snackbar.success("Success", "Bottle has been kept successfully", true);
+        _snackbar.success("Berhasil", "Botol berhasil disimpan", true);
 
         return navigateTo("/bottle-keeping");
       } catch (error) {
@@ -136,8 +172,8 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
 
         _loading.hide();
         _snackbar.success(
-          "Success",
-          "Bottle status has been updated to Release",
+          "Berhasil",
+          "Status botol berhasil diubah menjadi released",
           true
         );
         return navigateTo("/bottle-keeping");
@@ -170,7 +206,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         });
 
         _loading.hide();
-        _snackbar.success("Success", "Bottle has been Rekeeped", true);
+        _snackbar.success("Berhasil", "Botol berhasil disimpan kembali", true);
         return navigateTo("/bottle-keeping");
       } catch (error) {
         api.handleError(error);
@@ -178,18 +214,20 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       }
     },
 
-    async lockBottleData(bottleData: KeepingData) {
+    async updateBottleStatus(bottleData: KeepingData, status: number) {
       const api = useApi();
       const _loading = useLoading();
       const _snackbar = useSnackbar();
+
       try {
         _loading.show();
         await api.put({
-          url: `api/v1/bottle/lock/${bottleData?.id}`,
+          url: `api/v1/holyboard/bottles/update/${bottleData?.id}`,
+          params: { status: status },
         });
 
         _loading.hide();
-        _snackbar.success("Success", "Bottle has been locked", true);
+        _snackbar.success("Berhasil", "Status botol berhasil diubah", true);
         return navigateTo("/bottle-keeping");
       } catch (error) {
         api.handleError(error);

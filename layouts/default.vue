@@ -1,6 +1,6 @@
 <template>
   <NuxtLoadingIndicator />
-  <Watermark v-if="!isProduction()" />
+  <!-- <Watermark v-if="!isProduction()" /> -->
 
   <header>
     <Navbar />

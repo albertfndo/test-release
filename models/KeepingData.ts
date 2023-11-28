@@ -2,7 +2,22 @@ import Customer from "./Customer";
 import Histories from "./Histories";
 import Outlet from "./Outlet";
 
+export enum BottleStatus {
+  lock = 1,
+  unlock = 2,
+  release = 3,
+  history = 4,
+}
+
+export enum BottleStatusIndonesianText {
+  terkunci = 1,
+  terbuka = 2,
+  diambil = 3,
+  expired = 4,
+}
+
 export default class KeepingData {
+  public BottleStatus;
   constructor(
     public id: number,
     public bottleName: string,
@@ -14,9 +29,18 @@ export default class KeepingData {
     public histories: Histories[],
     public status: number,
     public statusText: string,
+    public remainingKeeps: number,
     public userFullName: string,
     public phoneNumber: string
-  ) {}
+  ) {
+    this.BottleStatus = BottleStatusIndonesianText;
+  }
+
+  public get bottleStatusIndoText() {
+    return Object.entries(this.BottleStatus)
+      .find(([, value]) => value === this.status)?.[0]
+      .toUpperCase();
+  }
 
   public static fromJson(json: any): KeepingData {
     return new KeepingData(
@@ -32,6 +56,7 @@ export default class KeepingData {
         : [],
       json.status,
       json.status_text,
+      json.remaining_keeps,
       json.user_fullname,
       json.phone_number
     );

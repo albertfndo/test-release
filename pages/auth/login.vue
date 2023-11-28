@@ -59,7 +59,6 @@ function isValid() {
               v-model="_controller.form.username"
               type="text"
               placeholder="User ID"
-              data-hbid="user-id"
               autofocus
             />
             <small>{{ errorMessage.username }}</small>
@@ -69,14 +68,9 @@ function isValid() {
               v-model="_controller.form.password"
               :type="showPassword ? `text` : 'password'"
               placeholder="Password"
-              data-hbid="password"
             />
 
-            <button
-              type="button"
-              data-hbid="toggle-vis"
-              @click="showPassword = !showPassword"
-            >
+            <button type="button" @click="showPassword = !showPassword">
               <Iconify
                 :icon="
                   showPassword
@@ -92,12 +86,7 @@ function isValid() {
 
           <div class="flex justify-between items-center">
             <h2 class="bodytext-2 text-primaryText">Sign In</h2>
-            <button
-              type="button"
-              class="btn-login"
-              data-hbid="login-button"
-              @click="login()"
-            >
+            <button type="button" class="btn-login" @click="login()">
               <Iconify icon="ic:outline-arrow-forward" class="text-3xl" />
             </button>
           </div>

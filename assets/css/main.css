@@ -31,15 +31,45 @@
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-secondaryText/30 rounded-lg;        /* color of the tracking area */
+    @apply md:bg-secondaryText/30 rounded-lg;        /* color of the tracking area */
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-brand rounded-lg;       /* color of the scroll thumb */
+    @apply md:bg-brand rounded-lg;       /* color of the scroll thumb */
   }
 }
 
 @layer components {
+  table {
+    @apply table-auto bg-cardBg shadow-card rounded-xl overflow-hidden;
+  }
+  table thead tr {
+    @apply shadow-md;
+  }
+  table thead tr th {
+    @apply bg-brand py-3 px-4 text-left text-primaryBg text-base font-poppins-sb uppercase;
+  }
+  table tbody tr {
+    @apply shadow-md;
+  }
+  table tbody tr td{
+    @apply p-4 text-sm text-primaryText font-poppins-r;
+  }
+  table tbody tr td p.table-expired-text{
+    @apply text-primaryText/60 text-xs font-poppins-r;
+  }
+
+  input[type='checkbox']{
+    @apply rounded-md w-5 h-auto
+  }
+  input[type='checkbox']:checked{
+    @apply accent-brand
+  }
+
+  .status-pill {
+    @apply py-1 px-2 rounded-full text-primaryBg font-poppins-m
+  }
+
   .search {
     @apply flex items-center w-full;
   }
@@ -122,36 +152,8 @@
     @apply flex items-center gap-2;
   }
 
-  /* reservation page */
-  .rsvp-card {
-    @apply bg-cardBg rounded-xl shadow-card cursor-pointer;
-  }
-  .rsvp-card .rsvp-card-head {
-    @apply p-3 flex justify-between items-center rounded-t-xl;
-  }
-  .rsvp-card .rsvp-card-head p {
-    @apply text-base text-primaryBg font-poppins-sb;
-  }
-  .rsvp-card-badge {
-    @apply py-1 px-2 rounded-full text-xs font-poppins-r;
-  }
-  .rsvp-card .rsvp-card-body {
-    @apply px-3 pt-3;
-  }
-  .rsvp-card .rsvp-card-footer {
-    @apply px-3 rounded-b-xl;
-  }
-  .rsvp-card .rsvp-card-footer .rsvp-footer-items {
-    @apply flex justify-between gap-2 py-4;
-  }
-  .rsvp-card-detail {
-    @apply flex items-center gap-3 text-primaryText;
-  }
-  .rsvp-card-detail p:not(.status) {
-    @apply text-xs md:text-sm font-poppins-r;
-  }
-  .rsvp-card-detail p.status {
-    @apply text-xs md:text-sm font-poppins-m ;
+  .status {
+    @apply text-sm font-poppins-m;
   }
 
   .bottle-detail{
@@ -239,6 +241,19 @@
   }
   .menu-bar p{
     @apply my-auto text-primaryText font-poppins-r
+  }
+
+  .pagination-wrapper {
+    @apply flex flex-row cursor-pointer gap-3;
+  }
+  .pagination {
+		@apply text-primaryText font-poppins-r rounded-md border border-brand hover:bg-brand hover:text-primaryBg duration-200 py-1 px-3;
+	}
+  .pagination.active {
+    @apply text-primaryBg font-poppins-r rounded-md  border border-brand bg-brand hover:bg-brand duration-200 py-1 px-3;
+  }
+  .pagination-mobile {
+    @apply text-primaryBg font-poppins-r rounded-md border border-brand bg-brand hover:bg-brandSecondary duration-200 py-1 px-3;
   }
 }
 

@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import moment from "moment";
+
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
+const searchKey = ref("");
 
 onMounted(() => {
   _bottle.$reset();
@@ -9,12 +12,8 @@ onMounted(() => {
   });
 });
 
-async function initializaData() {
-  await _bottle.getBottleDatas().then(() => {
-    _bottle.bottleDatas = _bottle.bottleDatas.filter(
-      (bottleData) => bottleData.status === 4
-    );
-  });
+async function initializaData(search?: string, page?: number) {
+  await _bottle.getBottleDatas(search, true, page);
 }
 
 const actions = reactive<Action[]>([
@@ -22,14 +21,22 @@ const actions = reactive<Action[]>([
     text: "Refresh",
     icon: "ic:round-refresh",
     color: "white",
-    hbid: "res-refresh",
     click: async () => initializaData(),
   },
 ]);
 
+function searchData() {
+  initializaData(searchKey.value);
+}
+
 function selectBottleCard(bottleData: KeepingData) {
   openDetailModal.value = true;
   _bottle.selectedBottle = bottleData;
+}
+
+async function changePage(page: any) {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  await initializaData("", nextPage);
 }
 </script>
 
@@ -40,49 +47,61 @@ function selectBottleCard(bottleData: KeepingData) {
       :use-actions="true"
       :actions="actions"
     />
-  </section>
-  <section id="bottleKeepHistoryBody" class="page-body">
-    <div
-      v-if="_bottle.bottleDatas.length"
-      class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-    >
-      <div
-        v-for="(expiredData, index) in _bottle.bottleDatas"
-        :key="index"
-        class="rsvp-card"
-        @click="selectBottleCard(expiredData)"
-      >
-        <div class="rsvp-card-head bg-[#A38954]">
-          <h1 class="text-primaryText font-poppins-sb">
-            {{ expiredData.bottleName }}
-          </h1>
-          <Iconify
-            icon="game-icons:beer-bottle"
-            class="text-2xl text-primaryText"
-          />
-        </div>
 
-        <div class="rsvp-card-body pb-3">
-          <div class="flex flex-col gap-y-3 gap-x-2">
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-              <p>{{ expiredData.userFullName }}</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-phone" class="text-xl" />
-              <p>{{ expiredData.phoneNumber }}</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:outline-access-time" class="text-xl" />
-              <p>Expired {{ expiredData.expiredText }}</p>
-            </div>
-            <div class="rsvp-card-detail">
-              <Iconify icon="ic:round-lens" class="text-xl" />
-              <p class="status">Expired</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="menu-bar my-6">
+      <form class="ml-auto search md:w-1/4" @submit.prevent="searchData()">
+        <input v-model="searchKey" type="text" placeholder="Cari sesuatu..." />
+        <button @click="searchData()">
+          <Iconify icon="material-symbols:search" class="text-xl" />
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <section id="bottleKeepHistoryBody" class="page-body">
+    <div v-if="_bottle.bottleDatas.length" class="mt-8 overflow-x-auto">
+      <table :class="isAdmin() ? 'w-[110%]' : 'w-full'">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th>Nama Botol</th>
+            <th>Nama Tamu</th>
+            <th>No. Tlpn</th>
+            <th v-show="isAdmin()" class="text-center">Tgl Simpan</th>
+            <th class="text-center">Tgl Expired</th>
+            <th v-show="isAdmin()">Outlet</th>
+            <th class="text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(bottleData, index) in _bottle.bottleDatas"
+            :key="index"
+            class="cursor-pointer hover:bg-primaryBg/40"
+            @click="selectBottleCard(bottleData)"
+          >
+            <td class="text-center">{{ _bottle.meta.from + index }}</td>
+            <td>{{ bottleData.bottleName }}</td>
+            <td>{{ bottleData.userFullName }}</td>
+            <td>{{ bottleData.phoneNumber }}</td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ moment(bottleData.storedAt).format("DD MMM YYYY") }}
+            </td>
+            <td class="text-center">
+              {{ moment(bottleData.expiredAt).format("DD MMM YYYY") }}
+              <p class="table-expired-text">({{ bottleData.expiredText }})</p>
+            </td>
+            <td v-show="isAdmin()">
+              {{ bottleData.outlet?.name }}
+            </td>
+            <td class="text-center">
+              <span class="status-pill bg-primaryText">
+                {{ bottleData.bottleStatusIndoText }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div v-else class="text-center mt-10">
       <NuxtImg
@@ -96,6 +115,17 @@ function selectBottleCard(bottleData: KeepingData) {
       />
       <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
+
+    <Pagination
+      v-if="_bottle.meta.total > 10"
+      :from="_bottle.meta.from"
+      :to="_bottle.meta.to"
+      :total="_bottle.meta.total"
+      :prev="_bottle.links.prev"
+      :next="_bottle.links.next"
+      :links="_bottle.meta.links"
+      @changepage="changePage"
+    />
   </section>
 
   <BottleKeepDetail

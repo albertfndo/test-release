@@ -13,7 +13,6 @@ function exit() {
         <div
           class="small-modal-card"
           :class="_controller.isSuccess ? 'bg-success' : 'bg-danger'"
-          :data-hbid="_controller.isSuccess ? 'snackbar-success' : 'snackbar-error'"
         >
           <div class="flex items-center gap-4">
             <Iconify

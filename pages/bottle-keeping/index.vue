@@ -1,42 +1,46 @@
 <script setup lang="ts">
+import moment from "moment";
+import { BottleStatus } from "~/models/KeepingData";
 import { nextTick } from "vue";
 import { selectedBottleData } from "~/composables/useBottleKeeping";
 
 await nextTick();
 
-const bottleStatus = ref(0);
 const openDetailModal = ref(false);
 const _bottle = useBottleKeeping();
-const userData = useUserData();
 const searchKey = ref("");
 const releaseModal = ref(false);
+const _dialog = useDialog();
 
 onMounted(() => {
+  _bottle.$reset();
   nextTick(async () => {
     await initializaData();
   });
 });
 
-async function initializaData(status?: number, search?: string) {
-  _bottle.$reset();
-  await _bottle.getBottleDatas(search).then(() => {
-    _bottle.bottleDatas = _bottle.bottleDatas.filter((bottleData) =>
-      status ? bottleData.status === status : bottleData.status !== 4
-    );
-  });
+async function initializaData(search?: string, page?: number) {
+  await _bottle.getBottleDatas(search, false, page);
+}
+
+async function changePage(page: any) {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  await initializaData((page = nextPage));
 }
 
 watch(
-  () => bottleStatus.value,
+  () => _bottle.bottleStatus,
   (newValue) => {
-    initializaData(newValue);
+    _bottle.bottleStatus = newValue;
+    initializaData(searchKey.value);
   }
 );
 
 function getColor(status: number) {
   const colorMap = {
-    1: "text-[#FF5D97]",
-    2: "text-success",
+    1: "bg-[#FF5D97]",
+    2: "bg-success",
+    3: "bg-primaryText",
   };
 
   return colorMap[status as keyof typeof colorMap];
@@ -48,7 +52,7 @@ function selectBottleCard(bottleData: KeepingData) {
 }
 
 function searchData() {
-  initializaData(bottleStatus.value, searchKey.value);
+  initializaData(searchKey.value);
 }
 
 function showButton(status: number, buttonName: string) {
@@ -60,10 +64,6 @@ function showButton(status: number, buttonName: string) {
   };
 
   return statusMap[status as keyof typeof statusMap].includes(buttonName);
-}
-
-function isAdmin() {
-  return userData.value.roles?.includes("Superuser");
 }
 
 function releaseBottle(bottleData: KeepingData) {
@@ -86,9 +86,30 @@ function rekeepBottle(bottleData: KeepingData) {
 }
 
 async function submitRelease() {
-  await _bottle.releaseBottleData();
   releaseModal.value = false;
+  await _bottle.releaseBottleData();
   initializaData();
+}
+
+function updateStatus(bottleData: KeepingData, status: number) {
+  _dialog.show({
+    title: "Konfirmasi",
+    content: "Apakah anda yakin ingin mengubah status botol?",
+    callback: {
+      onTapBack() {
+        _dialog.hideDialog();
+      },
+      onTapConfirm() {
+        _bottle.updateBottleStatus(bottleData, status).then(() => {
+          _dialog.hideDialog();
+          initializaData();
+        });
+      },
+    },
+    backText: "Batal",
+    confirmText: "Konfirmasi",
+    showBack: true,
+  });
 }
 
 const actions = reactive<Action[]>([
@@ -96,7 +117,6 @@ const actions = reactive<Action[]>([
     text: "Refresh",
     icon: "ic:round-refresh",
     color: "white",
-    hbid: "res-refresh",
     click: async () => initializaData(),
   },
 ]);
@@ -106,7 +126,6 @@ if (isAdmin()) {
     text: "Export",
     icon: "ic:outline-file-upload",
     color: "white",
-    hbid: "res-export",
     click: async () => initializaData(),
   });
 }
@@ -127,48 +146,48 @@ if (isAdmin()) {
           <button
             type="button"
             class="btn-rsvp-status pending"
-            :class="bottleStatus === 0 ? 'active' : ''"
-            data-hbid="res-status-pending"
-            @click="bottleStatus = 0"
+            :class="_bottle.bottleStatus === 0 ? 'active' : ''"
+            @click="_bottle.bottleStatus = 0"
           >
-            Show All
+            Semua
           </button>
           <button
             type="button"
             class="btn-rsvp-status confirmed"
-            :class="bottleStatus === 1 ? 'active' : ''"
-            data-hbid="res-status-confirmed"
-            @click="bottleStatus = 1"
+            :class="_bottle.bottleStatus === BottleStatus.lock ? 'active' : ''"
+            @click="_bottle.bottleStatus = BottleStatus.lock"
           >
-            Locked
+            Terkunci
           </button>
           <button
             type="button"
             class="btn-rsvp-status arrived"
-            :class="bottleStatus === 2 ? 'active' : ''"
-            data-hbid="res-status-arrived"
-            @click="bottleStatus = 2"
+            :class="
+              _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
+            "
+            @click="_bottle.bottleStatus = BottleStatus.unlock"
           >
-            Unlocked
+            Terbuka
           </button>
           <button
             type="button"
             class="btn-rsvp-status"
-            :class="bottleStatus === 3 ? 'active' : ''"
-            data-hbid="res-status-arrived"
-            @click="bottleStatus = 3"
+            :class="
+              _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
+            "
+            @click="_bottle.bottleStatus = BottleStatus.release"
           >
-            Picked Up
+            Diambil
           </button>
         </div>
       </div>
 
-      <div class="flex gap-2 lg:w-1/3">
+      <div class="flex gap-2 md:w-2/5 lg:w-1/3">
         <form class="search" @submit.prevent="searchData()">
           <input
             v-model="searchKey"
             type="text"
-            placeholder="Search something..."
+            placeholder="Cari sesuatu..."
           />
           <button @click="searchData()">
             <Iconify icon="material-symbols:search" class="text-xl" />
@@ -178,12 +197,11 @@ if (isAdmin()) {
         <button
           type="button"
           class="btn-add-guest"
-          data-hbid="gl-tt-addnew-button"
           @click="navigateTo('/bottle-keeping/add')"
         >
           <div class="new">
             <Iconify icon="mdi:plus-circle" class="text-primaryBg text-xl" />
-            <p>Add Data</p>
+            <p>Tambah Data</p>
           </div>
           <p class="block lg:hidden">
             <Iconify
@@ -197,90 +215,85 @@ if (isAdmin()) {
   </section>
 
   <section id="bottleKeepBody">
-    <div
-      v-if="_bottle.bottleDatas.length"
-      class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-    >
-      <div
-        v-for="(keepingData, index) in _bottle.bottleDatas"
-        :key="index"
-        class="rsvp-card"
-      >
-        <div @click="selectBottleCard(keepingData)">
-          <div class="rsvp-card-head bg-[#A38954]">
-            <h1 class="text-primaryText font-poppins-sb">
-              {{ keepingData.bottleName }}
-            </h1>
-            <Iconify
-              icon="game-icons:beer-bottle"
-              class="text-2xl text-primaryText"
-            />
-          </div>
-          <div
-            class="rsvp-card-body"
-            :class="!userData.roles?.includes('Developer') ? 'pb-3' : ''"
+    <div v-if="_bottle.bottleDatas.length" class="mt-8 overflow-x-auto">
+      <table :class="isAdmin() ? 'w-[110%]' : 'w-full'">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th>Nama Botol</th>
+            <th>Nama Tamu</th>
+            <th>No. Tlpn</th>
+            <th v-show="isAdmin()" class="text-center">Tgl Simpan</th>
+            <th class="text-center">Tgl Expired</th>
+            <th v-show="isAdmin()" class="text-center">Sisa Simpan</th>
+            <th v-show="isAdmin()">Outlet</th>
+            <th class="text-center">Status</th>
+            <th v-show="isAdmin()" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(bottleData, index) in _bottle.bottleDatas"
+            :key="index"
+            :class="!isAdmin() ? 'hover:bg-primaryBg/40 cursor-pointer' : ''"
+            @click="!isAdmin() ? selectBottleCard(bottleData) : ''"
           >
-            <div class="flex flex-col gap-y-5 gap-x-2">
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>{{ keepingData.userFullName }}</p>
+            <td class="text-center">{{ _bottle.meta.from + index }}</td>
+            <td>{{ bottleData.bottleName }}</td>
+            <td>{{ bottleData.userFullName }}</td>
+            <td>{{ bottleData.phoneNumber }}</td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ moment(bottleData.storedAt).format("DD MMM YYYY") }}
+            </td>
+            <td class="text-center">
+              {{ moment(bottleData.expiredAt).format("DD MMM YYYY") }}
+              <p class="table-expired-text">({{ bottleData.expiredText }})</p>
+            </td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ bottleData.remainingKeeps }}
+            </td>
+            <td v-show="isAdmin()">
+              {{ bottleData.outlet?.name }}
+            </td>
+            <td class="text-center">
+              <span class="status-pill" :class="getColor(bottleData.status)">
+                {{ bottleData.bottleStatusIndoText }}
+              </span>
+            </td>
+            <td v-show="isAdmin()">
+              <div class="flex justify-between gap-2">
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Release')"
+                  class="btn-general w-full"
+                  @click="releaseBottle(bottleData)"
+                >
+                  <p>Rilis</p>
+                </button>
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Unlock')"
+                  class="btn-general w-full"
+                  @click="updateStatus(bottleData, BottleStatus.unlock)"
+                >
+                  <p>Buka</p>
+                </button>
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Lock')"
+                  class="btn-danger w-full"
+                  @click="updateStatus(bottleData, BottleStatus.lock)"
+                >
+                  <p>Kunci</p>
+                </button>
+                <button
+                  class="btn-full no-bg"
+                  @click="selectBottleCard(bottleData)"
+                >
+                  <p>Detail</p>
+                </button>
               </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>{{ keepingData?.phoneNumber }}</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-access-time" class="text-xl" />
-                <p>Expired in {{ keepingData.expiredText }}</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify
-                  icon="ic:round-lens"
-                  class="text-xl"
-                  :class="getColor(keepingData.status)"
-                />
-                <p class="status" :class="getColor(keepingData.status)">
-                  {{
-                    keepingData.status !== 3
-                      ? keepingData.statusText
-                      : "Picked Up"
-                  }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="rsvp-card-footer">
-          <div v-show="isAdmin()" class="flex justify-between gap-2 py-4">
-            <button
-              v-show="showButton(keepingData.status, 'Release')"
-              class="btn-general w-full"
-              @click="releaseBottle(keepingData)"
-            >
-              <p>Release</p>
-            </button>
-            <button
-              v-show="showButton(keepingData.status, 'Unlock')"
-              class="btn-general w-full"
-            >
-              <p>Unlock</p>
-            </button>
-            <button
-              v-show="showButton(keepingData.status, 'Lock')"
-              class="btn-danger w-full"
-              @click="_bottle.lockBottleData(keepingData)"
-            >
-              <p>Lock</p>
-            </button>
-            <button
-              class="btn-full no-bg"
-              @click="selectBottleCard(keepingData)"
-            >
-              <p>Detail</p>
-            </button>
-          </div>
-        </div>
-      </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div v-else class="text-center mt-10">
       <NuxtImg
@@ -294,6 +307,17 @@ if (isAdmin()) {
       />
       <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
+
+    <Pagination
+      v-if="_bottle.meta.total > 10"
+      :from="_bottle.meta.from"
+      :to="_bottle.meta.to"
+      :total="_bottle.meta.total"
+      :prev="_bottle.links.prev"
+      :next="_bottle.links.next"
+      :links="_bottle.meta.links"
+      @changepage="changePage"
+    />
   </section>
 
   <BottleKeepDetail
@@ -314,11 +338,11 @@ if (isAdmin()) {
     @submit="submitRelease()"
     @close="releaseModal = false"
   >
-    <h2>Release Bottle</h2>
-    <p>Are you sure want to release this bottle?</p>
+    <h2>Pelepasan Botol</h2>
+    <p>Apakah anda yakin ingin melepas botol ini?</p>
     <textarea
       v-model="_bottle.releaseNotes"
-      placeholder="Release Note"
+      placeholder="Catatan Pelepasan"
       rows="5"
       class="global-textarea mt-2"
     ></textarea>

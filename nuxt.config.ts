@@ -10,7 +10,7 @@ export default defineNuxtConfig({
           name: "viewport",
           content: "width=device-width, initial-scale=1.0, shrink-to-fit=no",
         },
-        { name: "description", content: "Welcome to Outlet Management Tools" },
+        { name: "description", content: "Welcome to Bottle Keeping System" },
         { name: "keyword", content: "" },
         { name: "robots", content: "noindex" },
       ],
@@ -18,7 +18,13 @@ export default defineNuxtConfig({
         lang: "en",
       },
       charset: "utf-8",
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      link: [
+        {
+          rel: "icon",
+          type: "image/x-icon",
+          href: "/images/logo/hwg-logo.svg",
+        },
+      ],
     },
   },
   runtimeConfig: {
