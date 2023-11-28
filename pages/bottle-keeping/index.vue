@@ -235,7 +235,11 @@ if (isAdmin()) {
           <tr
             v-for="(bottleData, index) in _bottle.bottleDatas"
             :key="index"
-            :class="!isAdmin() ? 'hover:bg-primaryBg/40 cursor-pointer' : ''"
+            :class="
+              !isAdmin()
+                ? 'hover:bg-primaryBg/40 cursor-pointer duration-200'
+                : ''
+            "
             @click="!isAdmin() ? selectBottleCard(bottleData) : ''"
           >
             <td class="text-center">{{ _bottle.meta.from + index }}</td>

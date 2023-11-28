@@ -77,7 +77,7 @@ async function changePage(page: any) {
           <tr
             v-for="(bottleData, index) in _bottle.bottleDatas"
             :key="index"
-            class="cursor-pointer hover:bg-primaryBg/40"
+            class="cursor-pointer hover:bg-primaryBg/40 duration-200"
             @click="selectBottleCard(bottleData)"
           >
             <td class="text-center">{{ _bottle.meta.from + index }}</td>

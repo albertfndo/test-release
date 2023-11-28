@@ -33,7 +33,7 @@ function logout() {
   showMobileNavbar.value = false;
   _dialog.show({
     title: "Log Out",
-    content: "Are you sure you want to log out?",
+    content: "Apakah anda yakin ingin melakukan Log Out?",
     callback: {
       onTapBack() {
         _dialog.hideDialog();
@@ -46,8 +46,8 @@ function logout() {
         });
       },
     },
-    backText: "Cancel",
-    confirmText: "Confirm",
+    backText: "Batal",
+    confirmText: "Konfirmasi",
     showBack: true,
   });
   return;
