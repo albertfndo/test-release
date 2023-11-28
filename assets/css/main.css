@@ -31,11 +31,11 @@
   }
   
   ::-webkit-scrollbar-track {
-    @apply md:bg-secondaryText/30 rounded-lg;        /* color of the tracking area */
+    @apply md:bg-black/30 rounded-lg;        /* color of the tracking area */
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply md:bg-brand rounded-lg;       /* color of the scroll thumb */
+    @apply md:bg-[#666] rounded-lg;       /* color of the scroll thumb */
   }
 }
 
@@ -43,11 +43,11 @@
   table {
     @apply table-auto bg-cardBg shadow-card rounded-xl overflow-hidden;
   }
-  table thead tr {
-    @apply shadow-md;
+  table thead  {
+    @apply bg-primaryText shadow-md;
   }
   table thead tr th {
-    @apply bg-brand py-3 px-4 text-left text-primaryBg text-base font-poppins-sb uppercase;
+    @apply py-3 px-4 text-left text-primaryBg text-base font-poppins-sb uppercase;
   }
   table tbody tr {
     @apply shadow-md;

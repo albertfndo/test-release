@@ -48,8 +48,8 @@ function fetchBottleData() {
   }
 }
 
-let stream;
-const cameraFeed = ref(null);
+let stream: MediaStream;
+const cameraFeed = ref();
 
 function openCamera() {
   openCameraModal.value = true;
@@ -60,9 +60,9 @@ function openCamera() {
 
   navigator.mediaDevices
     .getUserMedia({ video: true })
-    .then((s) => {
-      stream = s;
-      cameraFeed.value.srcObject = stream;
+    .then((content) => {
+      stream = content;
+      cameraFeed.value.srcObject = stream as MediaStream;
     })
     .catch((error) => {
       console.error("Error accessing the camera:", error);
@@ -74,12 +74,13 @@ function capture() {
   canvas.width = cameraFeed.value.videoWidth;
   canvas.height = cameraFeed.value.videoHeight;
   const context = canvas.getContext("2d");
-  context.drawImage(cameraFeed.value, 0, 0, canvas.width, canvas.height);
+  context!.drawImage(cameraFeed.value, 0, 0, canvas.width, canvas.height);
 
   const photoDataURL = canvas.toDataURL("image/webp");
   displayedPhoto.value = photoDataURL;
   processDataUrl(photoDataURL);
 
+  stream.getVideoTracks()[0].stop();
   openCameraModal.value = false;
 }
 
