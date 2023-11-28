@@ -366,6 +366,7 @@ function submitData() {
     :open-global-modal="openUploadFile"
     :form-mode="false"
     :use-button="false"
+    @close="openUploadFile = false"
   >
     <h2 class="text-center">Upload Gambar</h2>
     <div class="form-group">
