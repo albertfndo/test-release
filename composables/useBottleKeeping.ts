@@ -10,6 +10,9 @@ type BottleKeepRequest = {
   description: string;
   image_url: any;
   outlet_id: number;
+  gram: number;
+  mililiter: number;
+  unlimited_expired: boolean;
 };
 
 export const selectedBottleData = () => {
@@ -33,6 +36,9 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       description: <string>"",
       imageUrl: <any>"",
       outletId: <number>0,
+      gram: <number>0,
+      miliLiter: <number>0,
+      unlimitedExpired: <boolean>false,
     },
     releaseNotes: <string>"",
     bottleStatus: <number>0,
@@ -113,6 +119,9 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
             description: this.form.description,
             image_url: imageFile,
             outlet_id: userData.value.user?.outlet.id,
+            gram: this.form.gram,
+            mililiter: this.form.miliLiter,
+            unlimited_expired: this.form.unlimitedExpired,
           },
         };
 
@@ -123,7 +132,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         await api.post(requestData);
 
         _loading.hide();
-        _snackbar.success("Success", "Bottle has been kept successfully", true);
+        _snackbar.success("Berhasil", "Botol berhasil disimpan", true);
 
         return navigateTo("/bottle-keeping");
       } catch (error) {
@@ -163,8 +172,8 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
 
         _loading.hide();
         _snackbar.success(
-          "Success",
-          "Bottle status has been updated to Release",
+          "Berhasil",
+          "Status botol berhasil diubah menjadi released",
           true
         );
         return navigateTo("/bottle-keeping");
@@ -197,7 +206,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         });
 
         _loading.hide();
-        _snackbar.success("Success", "Bottle has been Rekeeped", true);
+        _snackbar.success("Berhasil", "Botol berhasil disimpan kembali", true);
         return navigateTo("/bottle-keeping");
       } catch (error) {
         api.handleError(error);
@@ -218,7 +227,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
         });
 
         _loading.hide();
-        _snackbar.success("Success", "Bottle status has been change.", true);
+        _snackbar.success("Berhasil", "Status botol berhasil diubah", true);
         return navigateTo("/bottle-keeping");
       } catch (error) {
         api.handleError(error);

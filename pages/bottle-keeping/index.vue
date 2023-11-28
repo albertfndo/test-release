@@ -93,8 +93,8 @@ async function submitRelease() {
 
 function updateStatus(bottleData: KeepingData, status: number) {
   _dialog.show({
-    title: "Confirmation",
-    content: "Are you sure you want to update this bottle status?",
+    title: "Konfirmasi",
+    content: "Apakah anda yakin ingin mengubah status botol?",
     callback: {
       onTapBack() {
         _dialog.hideDialog();
@@ -106,8 +106,8 @@ function updateStatus(bottleData: KeepingData, status: number) {
         });
       },
     },
-    backText: "Cancel",
-    confirmText: "Confirm",
+    backText: "Batal",
+    confirmText: "Konfirmasi",
     showBack: true,
   });
 }
@@ -117,7 +117,6 @@ const actions = reactive<Action[]>([
     text: "Refresh",
     icon: "ic:round-refresh",
     color: "white",
-    hbid: "res-refresh",
     click: async () => initializaData(),
   },
 ]);
@@ -127,7 +126,6 @@ if (isAdmin()) {
     text: "Export",
     icon: "ic:outline-file-upload",
     color: "white",
-    hbid: "res-export",
     click: async () => initializaData(),
   });
 }
@@ -149,19 +147,17 @@ if (isAdmin()) {
             type="button"
             class="btn-rsvp-status pending"
             :class="_bottle.bottleStatus === 0 ? 'active' : ''"
-            data-hbid="res-status-pending"
             @click="_bottle.bottleStatus = 0"
           >
-            Show All
+            Semua
           </button>
           <button
             type="button"
             class="btn-rsvp-status confirmed"
             :class="_bottle.bottleStatus === BottleStatus.lock ? 'active' : ''"
-            data-hbid="res-status-confirmed"
             @click="_bottle.bottleStatus = BottleStatus.lock"
           >
-            Locked
+            Terkunci
           </button>
           <button
             type="button"
@@ -169,10 +165,9 @@ if (isAdmin()) {
             :class="
               _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
             "
-            data-hbid="res-status-arrived"
             @click="_bottle.bottleStatus = BottleStatus.unlock"
           >
-            Unlocked
+            Terbuka
           </button>
           <button
             type="button"
@@ -180,10 +175,9 @@ if (isAdmin()) {
             :class="
               _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
             "
-            data-hbid="res-status-arrived"
             @click="_bottle.bottleStatus = BottleStatus.release"
           >
-            Picked Up
+            Diambil
           </button>
         </div>
       </div>
@@ -193,7 +187,7 @@ if (isAdmin()) {
           <input
             v-model="searchKey"
             type="text"
-            placeholder="Search something..."
+            placeholder="Cari sesuatu..."
           />
           <button @click="searchData()">
             <Iconify icon="material-symbols:search" class="text-xl" />
@@ -203,12 +197,11 @@ if (isAdmin()) {
         <button
           type="button"
           class="btn-add-guest"
-          data-hbid="gl-tt-addnew-button"
           @click="navigateTo('/bottle-keeping/add')"
         >
           <div class="new">
             <Iconify icon="mdi:plus-circle" class="text-primaryBg text-xl" />
-            <p>Add Data</p>
+            <p>Tambah Data</p>
           </div>
           <p class="block lg:hidden">
             <Iconify
@@ -227,12 +220,12 @@ if (isAdmin()) {
         <thead>
           <tr>
             <th class="text-center">No</th>
-            <th>Bottle Name</th>
-            <th>User Name</th>
-            <th>Phone Number</th>
-            <th v-show="isAdmin()" class="text-center">Stored At</th>
-            <th class="text-center">Expired At</th>
-            <th v-show="isAdmin()" class="text-center">Remainings</th>
+            <th>Nama Botol</th>
+            <th>Nama Tamu</th>
+            <th>No. Tlpn</th>
+            <th v-show="isAdmin()" class="text-center">Tgl Simpan</th>
+            <th class="text-center">Tgl Expired</th>
+            <th v-show="isAdmin()" class="text-center">Sisa Simpan</th>
             <th v-show="isAdmin()">Outlet</th>
             <th class="text-center">Status</th>
             <th v-show="isAdmin()" class="text-center">Action</th>
@@ -264,11 +257,7 @@ if (isAdmin()) {
             </td>
             <td class="text-center">
               <span class="status-pill" :class="getColor(bottleData.status)">
-                {{
-                  bottleData.status !== BottleStatus.release
-                    ? bottleData.statusText
-                    : "Picked Up"
-                }}
+                {{ bottleData.bottleStatusIndoText }}
               </span>
             </td>
             <td v-show="isAdmin()">
@@ -278,21 +267,21 @@ if (isAdmin()) {
                   class="btn-general w-full"
                   @click="releaseBottle(bottleData)"
                 >
-                  <p>Release</p>
+                  <p>Rilis</p>
                 </button>
                 <button
                   v-show="isAdmin() && showButton(bottleData.status, 'Unlock')"
                   class="btn-general w-full"
                   @click="updateStatus(bottleData, BottleStatus.unlock)"
                 >
-                  <p>Unlock</p>
+                  <p>Buka</p>
                 </button>
                 <button
                   v-show="isAdmin() && showButton(bottleData.status, 'Lock')"
                   class="btn-danger w-full"
                   @click="updateStatus(bottleData, BottleStatus.lock)"
                 >
-                  <p>Lock</p>
+                  <p>Kunci</p>
                 </button>
                 <button
                   class="btn-full no-bg"
@@ -349,11 +338,11 @@ if (isAdmin()) {
     @submit="submitRelease()"
     @close="releaseModal = false"
   >
-    <h2>Release Bottle</h2>
-    <p>Are you sure want to release this bottle?</p>
+    <h2>Pelepasan Botol</h2>
+    <p>Apakah anda yakin ingin melepas botol ini?</p>
     <textarea
       v-model="_bottle.releaseNotes"
-      placeholder="Release Note"
+      placeholder="Catatan Pelepasan"
       rows="5"
       class="global-textarea mt-2"
     ></textarea>

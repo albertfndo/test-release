@@ -8,11 +8,24 @@ const useMember = ref(false);
 const openCameraModal = ref(false);
 const displayedPhoto = ref("");
 
+const characterCount = computed(() => {
+  return _bottle.form.description.length + "/200";
+});
+
 onMounted(async () => {
   _guest.$reset();
   await fetchGuest();
   await fetchBottleData();
 });
+
+watch(
+  () => _bottle.form.description,
+  (newValue) => {
+    if (newValue.length > 200) {
+      _bottle.form.description = newValue.slice(0, 200);
+    }
+  }
+);
 
 onBeforeRouteLeave(() => {
   guestData.value = null;
@@ -122,20 +135,20 @@ function submitData() {
         <template v-if="!useMember">
           <div class="form-group">
             <label for="new-guest-name"
-              >Guest's Name <span class="asterisk"></span
+              >Nama Tamu <span class="asterisk"></span
             ></label>
             <input
               id="new-guest-name"
               v-model="_bottle.form.userFullname"
               type="text"
-              placeholder="Type here..."
+              placeholder="Ketik disini..."
               :disabled="selectedBottle.bottleName ? true : false"
               autofocus
             />
           </div>
           <div class="form-group">
             <label for="new-guest-phone"
-              >Phone Number <span class="asterisk"></span
+              >No Telepon <span class="asterisk"></span
             ></label>
             <input
               id="new-guest-phone"
@@ -196,31 +209,53 @@ function submitData() {
         </template>
 
         <div class="form-group">
-          <label for="new-guest-pax1"
-            >Bottle Name <span class="asterisk"></span
+          <label for="bottleName"
+            >Nama Botol <span class="asterisk"></span
           ></label>
           <input
-            id="new-guest-pax1"
+            id="bottleName"
             v-model="_bottle.form.bottleName"
             type="text"
-            placeholder="Type here..."
+            placeholder="Ketik disini..."
             :disabled="selectedBottle.bottleName ? true : false"
-            data-hbid="gl-tt-incoming-pax"
           />
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group w-full">
+            <label for="gram">Gram (Gr)</label>
+            <input
+              id="gram"
+              v-model="_bottle.form.gram"
+              type="number"
+              placeholder="Ketik disini..."
+              :disabled="selectedBottle.bottleName ? true : false"
+            />
+          </div>
+          <div class="form-group w-full">
+            <label for="miliLiter">Mili Liter (Ml)</label>
+            <input
+              id="miliLiter"
+              v-model="_bottle.form.miliLiter"
+              type="number"
+              placeholder="Ketik disini..."
+              :disabled="selectedBottle.bottleName ? true : false"
+            />
+          </div>
+        </div>
         <div class="form-group">
-          <label for="new-guest-pax2"
-            >Notes <span class="asterisk"></span
+          <label for="description"
+            >Catatan <span class="asterisk"></span
           ></label>
           <textarea
             v-model="_bottle.form.description"
             rows="5"
-            placeholder="Type here..."
+            placeholder="Ketik disini..."
           ></textarea>
+          <p class="text-primaryText text-end">{{ characterCount }}</p>
         </div>
         <div class="form-group">
-          <label for="new-guest-pax2"
-            >Photo <span class="asterisk"></span
+          <label for="description"
+            >Foto Botol <span class="asterisk"></span
           ></label>
           <div
             v-if="!_bottle.form.imageUrl"
@@ -229,7 +264,7 @@ function submitData() {
           >
             <div class="items">
               <Iconify icon="mdi:plus-circle" class="text-4xl mx-auto" />
-              <p>Add Photo</p>
+              <p>Tambah Foto</p>
             </div>
           </div>
           <div v-else class="input-photo">
@@ -245,23 +280,28 @@ function submitData() {
             />
           </div>
         </div>
+        <div class="flex gap-1 text-primaryText">
+          <input
+            id="unlimitedExpired"
+            v-model="_bottle.form.unlimitedExpired"
+            type="checkbox"
+          />
+          <label for="unlimitedExpired" class="font-poppins-m"
+            >Unlimited Expired
+          </label>
+          <p class="font-poppins-r">(Opsional)</p>
+        </div>
         <div class="mt-10">
           <div class="grid grid-cols-2 gap-4">
             <button
               type="button"
               class="btn-full disabled"
-              data-hbid="gl-tt-cancel"
               @click="navigateTo('/bottle-keeping')"
             >
-              Cancel
+              Batal
             </button>
-            <button
-              type="button"
-              class="btn-full active"
-              data-hbid="gl-tt-save"
-              @click="submitData()"
-            >
-              Submit
+            <button type="button" class="btn-full active" @click="submitData()">
+              Simpan
             </button>
           </div>
         </div>

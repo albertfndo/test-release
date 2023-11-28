@@ -27,7 +27,6 @@ onClickOutside(dropdown, () => (showDropdown.value = false));
           type="button"
           class="btn-outline-head"
           :class="action.color"
-          :data-hbid="action.hbid"
           @click="action.click"
         >
           <Iconify
@@ -60,7 +59,6 @@ onClickOutside(dropdown, () => (showDropdown.value = false));
                 type="button"
                 class="btn-head-mobile"
                 :class="action.color"
-                :data-hbid="action.hbid"
                 @click="action.click"
               >
                 <div class="flex items-center gap-2">

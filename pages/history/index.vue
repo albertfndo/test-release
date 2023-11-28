@@ -21,7 +21,6 @@ const actions = reactive<Action[]>([
     text: "Refresh",
     icon: "ic:round-refresh",
     color: "white",
-    hbid: "res-refresh",
     click: async () => initializaData(),
   },
 ]);
@@ -51,11 +50,7 @@ async function changePage(page: any) {
 
     <div class="menu-bar my-6">
       <form class="ml-auto search md:w-1/4" @submit.prevent="searchData()">
-        <input
-          v-model="searchKey"
-          type="text"
-          placeholder="Search something..."
-        />
+        <input v-model="searchKey" type="text" placeholder="Cari sesuatu..." />
         <button @click="searchData()">
           <Iconify icon="material-symbols:search" class="text-xl" />
         </button>
@@ -69,11 +64,11 @@ async function changePage(page: any) {
         <thead>
           <tr>
             <th class="text-center">No</th>
-            <th>Bottle Name</th>
-            <th>User Name</th>
-            <th>Phone Number</th>
-            <th v-show="isAdmin()" class="text-center">Stored At</th>
-            <th class="text-center">Expired At</th>
+            <th>Nama Botol</th>
+            <th>Nama Tamu</th>
+            <th>No. Tlpn</th>
+            <th v-show="isAdmin()" class="text-center">Tgl Simpan</th>
+            <th class="text-center">Tgl Expired</th>
             <th v-show="isAdmin()">Outlet</th>
             <th class="text-center">Status</th>
           </tr>
@@ -101,7 +96,7 @@ async function changePage(page: any) {
             </td>
             <td class="text-center">
               <span class="status-pill bg-primaryText">
-                {{ bottleData.statusText }}
+                {{ bottleData.bottleStatusIndoText }}
               </span>
             </td>
           </tr>

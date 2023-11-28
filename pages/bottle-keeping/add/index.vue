@@ -48,7 +48,6 @@ function getGuestData(isMember: boolean, guest?: Customer) {
       <button
         type="button"
         class="btn-regular-nav"
-        data-hbid="gl-tt-back"
         @click="navigateTo('/bottle-keeping')"
       >
         <Iconify
@@ -56,7 +55,7 @@ function getGuestData(isMember: boolean, guest?: Customer) {
           class="text-primaryText text-2xl"
         />
       </button>
-      <h1 class="subtitle-2 text-primaryText">Add Bottle Keeping</h1>
+      <h1 class="subtitle-2 text-primaryText">Tambah Bottle Keeping</h1>
     </div>
   </section>
 
@@ -67,20 +66,18 @@ function getGuestData(isMember: boolean, guest?: Customer) {
           <input
             v-model="_guest.form.searchKey"
             type="text"
-            placeholder="Enter Name / Phone"
-            data-hbid="gl-tt-name"
+            placeholder="Masukan Nama / No. Tlpn"
             autofocus
           />
           <div class="devider hidden md:block"></div>
           <button
             type="button"
             class="btn-add-guest"
-            data-hbid="gl-tt-addnew-button"
             @click="getGuestData(false)"
           >
             <div class="hidden lg:flex justify-center items-center gap-2">
               <Iconify icon="mdi:plus-circle" />
-              <p>Add New</p>
+              <p>Tambah Baru</p>
             </div>
             <p class="block lg:hidden">
               <Iconify icon="mdi:plus-circle" class="text-xl mx-auto" />

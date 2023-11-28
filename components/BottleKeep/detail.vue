@@ -41,19 +41,19 @@ onClickOutside(modalDialog, () => emits("close"));
 
         <div class="bottle-detail">
           <div class="detail-items">
-            <p class="detail-items-label">Bottle Name</p>
+            <p class="detail-items-label">Nama Botol</p>
             <p>: {{ props.bottleKeepDetail?.bottleName }}</p>
           </div>
           <div class="detail-items">
-            <p class="detail-items-label">Guest Name</p>
+            <p class="detail-items-label">Nama Tamu</p>
             <p>: {{ props.bottleKeepDetail?.userFullName }}</p>
           </div>
           <div class="detail-items">
-            <p class="detail-items-label">Phone Number</p>
+            <p class="detail-items-label">No. Tlpn</p>
             <p>: {{ props.bottleKeepDetail?.phoneNumber }}</p>
           </div>
           <div class="detail-items">
-            <p class="detail-items-label">Expired Date</p>
+            <p class="detail-items-label">Tanggal Expired</p>
             <p>
               :
               {{ getDate(props.bottleKeepDetail?.expiredAt) }}
@@ -61,7 +61,7 @@ onClickOutside(modalDialog, () => emits("close"));
           </div>
           <div class="detail-items">
             <p class="detail-items-label">Status</p>
-            <p>: {{ props.bottleKeepDetail?.statusText }}</p>
+            <p>: {{ props.bottleKeepDetail?.bottleStatusIndoText }}</p>
           </div>
         </div>
         <div
@@ -71,7 +71,7 @@ onClickOutside(modalDialog, () => emits("close"));
           class="bottle-detail"
         >
           <div class="detail-items">
-            <p>#{{ index + 1 }} Keeping</p>
+            <p>Penyimpanan #{{ index + 1 }}</p>
           </div>
           <NuxtImg
             preload
@@ -83,12 +83,12 @@ onClickOutside(modalDialog, () => emits("close"));
             :placeholder="[50, 25, 75]"
           />
 
-          <p class="brand mt-4">Keeping</p>
+          <p class="brand mt-4">Penyimpanan</p>
           <div class="detail-items">
-            <p class="detail-items-label">Date</p>
+            <p class="detail-items-label">Tanggal</p>
             <p>: {{ getDate(history.stored_at) }}</p>
           </div>
-          <p class="detail-items-label">Notes</p>
+          <p class="detail-items-label">Catatan</p>
           <textarea
             v-model="history.description"
             class="global-textarea"
@@ -96,15 +96,15 @@ onClickOutside(modalDialog, () => emits("close"));
             readonly
           ></textarea>
 
-          <p class="brand mt-4">Pick Up</p>
+          <p class="brand mt-4">Pengambilan</p>
           <div class="detail-items">
-            <p class="detail-items-label">Date</p>
+            <p class="detail-items-label">Tanggal</p>
             <p>
               :
               {{ getDate(history.released_at) }}
             </p>
           </div>
-          <p class="detail-items-label">Notes</p>
+          <p class="detail-items-label">Catatan</p>
           <textarea
             v-model="history.release_notes"
             class="global-textarea"

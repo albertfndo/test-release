@@ -17,7 +17,7 @@
     @apply bg-transparent border border-brand hover:bg-brand text-primaryText hover:text-primaryBg;
   }
   .btn-full {
-    @apply w-full p-2 rounded-lg duration-200 text-sm lg:text-base font-poppins-m;
+    @apply flex items-center justify-center gap-1 w-full p-2 rounded-lg duration-200 text-sm lg:text-base font-poppins-m;
   }
   .btn-full.disabled {
     @apply bg-disabled hover:bg-disabled/60 text-primaryText;
