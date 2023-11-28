@@ -217,7 +217,10 @@
     @apply text-secondaryText text-sm font-poppins-r;
   }
   input[type="file"] {
-    @apply block w-full p-2 bg-primaryBg rounded-xl outline-none focus:outline-brandSecondary text-primaryText placeholder:text-secondaryText/40 text-base font-poppins-r;
+    @apply text-base text-primaryText font-poppins-r border border-primaryText shadow-card bg-primaryBg/70  w-full p-2 focus:outline-brandSecondary rounded-xl ;
+  }
+  input::-webkit-file-upload-button {
+    @apply text-base text-primaryBg font-poppins-r border border-primaryText hover:border-brand bg-primaryText hover:bg-brand rounded-md duration-200;
   }
 
   .guest-card {
