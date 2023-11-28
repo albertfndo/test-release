@@ -15,7 +15,7 @@ const emits = defineEmits(["changepage"]);
 
 <template>
   <div class="my-3">
-    <div class="hidden md:flex justify-between items-center">
+    <div class="flex justify-between items-center">
       <div class="text-sm lg:text-base">
         <div class="text-primaryText font-poppins-r">
           Showing
@@ -25,7 +25,7 @@ const emits = defineEmits(["changepage"]);
         </div>
       </div>
 
-      <div class="text-sm lg:text-base">
+      <div class="hidden lg:flex text-sm lg:text-base">
         <ul class="pagination-wrapper">
           <template v-for="(page, index) in props.links" :key="index">
             <li
@@ -39,11 +39,7 @@ const emits = defineEmits(["changepage"]);
           </template>
         </ul>
       </div>
-    </div>
-
-    <div class="flex md:hidden justify-between items-center">
-      <div class="spacer"></div>
-      <div class="flex gap-2">
+      <div class="flex lg:hidden gap-2">
         <button
           v-if="props.prev != null"
           type="button"
