@@ -7,6 +7,7 @@ export enum BottleStatus {
   unlock = 2,
   release = 3,
   history = 4,
+  waitingExpired = 5,
 }
 
 export enum BottleStatusIndonesianText {
@@ -14,6 +15,7 @@ export enum BottleStatusIndonesianText {
   terbuka = 2,
   diambil = 3,
   expired = 4,
+  menunggu_expired = 5,
 }
 
 export default class KeepingData {

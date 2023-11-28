@@ -179,6 +179,19 @@ if (isAdmin()) {
           >
             Diambil
           </button>
+          <button
+            v-show="false"
+            type="button"
+            class="btn-rsvp-status border-gray-500"
+            :class="
+              _bottle.bottleStatus === BottleStatus.waitingExpired
+                ? 'bg-gray-500 text-primaryText'
+                : ''
+            "
+            @click="_bottle.bottleStatus = BottleStatus.waitingExpired"
+          >
+            Menunggu Expired
+          </button>
         </div>
       </div>
 
