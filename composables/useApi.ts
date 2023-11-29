@@ -140,7 +140,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data?.status == 503) {
+    } else if (error.data.data?.status == 503 || error.data?.status == 503) {
       throw createError({
         statusCode: 503,
         statusMessage: "Server under maintenance. Please try again later.",
@@ -148,7 +148,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data?.status >= 500) {
+    } else if (error.data.data?.status > 500 || error.data?.status > 500) {
       snackbar.error({
         title: "Error",
         message: "Server error. Please try again later.",
@@ -156,7 +156,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data?.status == 401) {
+    } else if (error.data.data?.status == 401 || error.data?.status == 401) {
       snackbar.error({
         title: "Session Expired",
         message: "Try to login again.",
@@ -172,20 +172,19 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data?.status == 400) {
+    } else if (error.data.data?.status == 400 || error.data?.status == 400) {
       const code = error.data.code;
       if (code == "refresh_required") {
         window.location.reload();
         return true;
-      } else {
-        snackbar.error({
-          title: "Error",
-          message: error.data.message,
-          autoClose: true,
-        });
-
-        handled = true;
       }
+      snackbar.error({
+        title: "Error",
+        message: error.data.data?.message,
+        autoClose: true,
+      });
+
+      handled = true;
     } else {
       snackbar.error({
         title: "Error",
