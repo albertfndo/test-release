@@ -11,6 +11,8 @@ const props = defineProps<{
 
 const emits = defineEmits(["close", "release", "rekeep"]);
 const modalDialog = ref(null);
+const detailModal = ref(props.openDetailModal);
+const showLogs = ref(false);
 
 function getDate(date: string | undefined) {
   return date ? moment(date).format("DD MMM YYYY, HH:mm") : "-";
@@ -23,14 +25,19 @@ function showButton() {
   );
 }
 
+function logsAction() {
+  detailModal.value = !detailModal.value;
+  showLogs.value = !showLogs.value;
+}
+
 onClickOutside(modalDialog, () => emits("close"));
 </script>
 
 <template>
-  <div v-show="props.openDetailModal" class="overlay"></div>
+  <div v-show="detailModal || showLogs" class="overlay"></div>
 
   <Transition name="fade">
-    <div v-show="props.openDetailModal" class="modal-wrapper">
+    <div v-if="detailModal" class="modal-wrapper">
       <div ref="modalDialog" class="modal-card">
         <div class="flex items-center justify-between">
           <h2>Detail</h2>
@@ -62,6 +69,15 @@ onClickOutside(modalDialog, () => emits("close"));
           <div class="detail-items">
             <p class="detail-items-label">Status</p>
             <p>: {{ props.bottleKeepDetail?.bottleStatusIndoText }}</p>
+          </div>
+          <div class="detail-items">
+            <button class="btn-xs general w-max" @click="logsAction()">
+              <Iconify
+                icon="ant-design:file-search-outlined"
+                class="text-base"
+              />
+              <span>Lihat Logs</span>
+            </button>
           </div>
         </div>
         <div
@@ -143,6 +159,30 @@ onClickOutside(modalDialog, () => emits("close"));
             Rekeep
           </button>
         </div>
+      </div>
+    </div>
+    <div v-else class="modal-wrapper">
+      <div ref="modalDialog" class="modal-card">
+        <h2>Logs</h2>
+        <table class="w-full bg-black/30">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Action</th>
+              <th>Catatan</th>
+              <th>Dibuat Oleh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Expired</td>
+              <td>Test Notes</td>
+              <td>Albert</td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="exit mt-4" @click="logsAction()">Tutup</button>
       </div>
     </div>
   </Transition>

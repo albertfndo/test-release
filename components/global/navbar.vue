@@ -105,6 +105,10 @@ function logout() {
         <Iconify icon="ic:outline-access-time" class="text-2xl" />
         <p>Riwayat Bottle Keep</p>
       </NuxtLink>
+      <NuxtLink to="" active-class="active" class="nav-link">
+        <Iconify icon="solar:delivery-bold" class="text-2xl" />
+        <p>Pengiriman Botol</p>
+      </NuxtLink>
     </nav>
 
     <div class="logout-btn" @click="logout()">
