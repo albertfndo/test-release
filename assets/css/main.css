@@ -59,11 +59,25 @@
     @apply text-primaryText/60 text-xs font-poppins-r;
   }
 
+  .card {
+    @apply bg-cardBg shadow-card rounded-xl overflow-hidden;
+  }
+  .card .card-header {
+    @apply bg-brand/60 p-4 flex items-center justify-start text-primaryText text-lg rounded-t-xl font-poppins-m mb-4 gap-2;
+  }
+  .card .card-body {
+    @apply px-4 pb-4 flex flex-col gap-4;
+  }
+
   input[type='checkbox']{
     @apply rounded-md w-5 h-auto
   }
   input[type='checkbox']:checked{
     @apply accent-brand
+  }
+
+  .form-select {
+    @apply block w-full p-2 bg-[#212121] rounded outline-none text-primaryText font-poppins-r;
   }
 
   .status-pill {
