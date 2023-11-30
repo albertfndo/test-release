@@ -24,28 +24,32 @@ const actions = reactive<Action[]>([
         <p>Status:</p>
         <div class="button-group">
           <button type="button" class="btn-rsvp-status pending">Semua</button>
-          <button type="button" class="btn-rsvp-status new">
-            <Pic></Pic>ublish
-          </button>
+          <button type="button" class="btn-rsvp-status new">Publish</button>
           <button type="button" class="btn-rsvp-status arrived">Selesai</button>
           <button type="button" class="btn-rsvp-status">Draft</button>
         </div>
       </div>
 
-      <div class="flex justify-end gap-2 md:w-1/2">
+      <div class="search-row">
+        <form class="search" @submit.prevent="console.log(1)">
+          <input
+            v-model="searchKey"
+            type="text"
+            placeholder="Cari sesuatu..."
+          />
+          <button @click="console.log(1)">
+            <Iconify icon="material-symbols:search" class="text-xl" />
+          </button>
+        </form>
         <button type="button" class="btn-add-guest" @click="filterModal = true">
           <div class="new">
             <Iconify icon="mdi:filter" class="text-primaryBg text-xl" />
             <p>Filter</p>
           </div>
           <p class="block lg:hidden">
-            <Iconify
-              icon="mdi:plus-circle"
-              class="mx-auto text-primaryBg text-xl"
-            />
+            <Iconify icon="mdi:filter" class="mx-auto text-primaryBg text-xl" />
           </p>
         </button>
-
         <div class="devider hidden md:block"></div>
         <button
           type="button"
@@ -54,7 +58,7 @@ const actions = reactive<Action[]>([
         >
           <div class="new">
             <Iconify icon="mdi:plus-circle" class="text-primaryBg text-xl" />
-            <p>Tambah</p>
+            <p>Tambah Data</p>
           </div>
           <p class="block lg:hidden">
             <Iconify
@@ -140,25 +144,22 @@ const actions = reactive<Action[]>([
   <Modal
     v-if="filterModal"
     :use-button="true"
+    :use-small-modal="true"
     :form-mode="true"
     :open-global-modal="filterModal"
     @close="filterModal = false"
   >
-    <h2>Filter</h2>
-    <form @submit.prevent="">
-      <div class="flex flex-col w-full mb-4">
+    <form class="filter-form" @submit.prevent="">
+      <h2>Filter</h2>
+      <div class="form-group">
         <label class="text-primaryText">No Surat</label>
-        <input
-          type="text"
-          class="p-2 bg-primaryBg/70 rounded-md focus:outline-brandSecondary placeholder-secondaryText/70"
-          placeholder="Masukkan No Surat"
-        />
+        <input type="text" class="" placeholder="Masukkan No Surat" />
       </div>
-      <div class="w-full mb-4">
+      <div class="form-group">
         <label class="text-primaryText" for="date">Tanggal</label>
         <Datepicker dark placeholder="Pilih Tanggal" class="w-1/4" />
       </div>
-      <div class="w-full mb-4">
+      <div class="form-group">
         <label class="text-primaryText" for="date">Outlet</label>
         <select class="form-select">
           <option disabled selected>Pilih Outlet</option>

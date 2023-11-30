@@ -133,11 +133,7 @@ if (isAdmin()) {
 
 <template>
   <section id="bottleKeepHead">
-    <Topbar
-      page-title="Bottle Keeping"
-      :use-actions="true"
-      :actions="actions"
-    />
+    <Topbar page-title="Bottle Keep" :use-actions="true" :actions="actions" />
 
     <div class="menu-bar my-6">
       <div class="flex gap-2 mb-4 md:mb-0">
@@ -162,9 +158,7 @@ if (isAdmin()) {
           <button
             type="button"
             class="btn-rsvp-status arrived"
-            :class="
-              _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
-            "
+            :class="_bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''"
             @click="_bottle.bottleStatus = BottleStatus.unlock"
           >
             Terbuka
@@ -172,9 +166,7 @@ if (isAdmin()) {
           <button
             type="button"
             class="btn-rsvp-status"
-            :class="
-              _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
-            "
+            :class="_bottle.bottleStatus === BottleStatus.release ? 'active' : ''"
             @click="_bottle.bottleStatus = BottleStatus.release"
           >
             Diambil
@@ -195,13 +187,9 @@ if (isAdmin()) {
         </div>
       </div>
 
-      <div class="flex gap-2 md:w-2/5 lg:w-1/3">
+      <div class="search-row">
         <form class="search" @submit.prevent="searchData()">
-          <input
-            v-model="searchKey"
-            type="text"
-            placeholder="Cari sesuatu..."
-          />
+          <input v-model="searchKey" type="text" placeholder="Cari sesuatu..." />
           <button @click="searchData()">
             <Iconify icon="material-symbols:search" class="text-xl" />
           </button>
@@ -217,10 +205,7 @@ if (isAdmin()) {
             <p>Tambah Data</p>
           </div>
           <p class="block lg:hidden">
-            <Iconify
-              icon="mdi:plus-circle"
-              class="mx-auto text-primaryBg text-xl"
-            />
+            <Iconify icon="mdi:plus-circle" class="mx-auto text-primaryBg text-xl" />
           </p>
         </button>
       </div>
@@ -248,11 +233,7 @@ if (isAdmin()) {
           <tr
             v-for="(bottleData, index) in _bottle.bottleDatas"
             :key="index"
-            :class="
-              !isAdmin()
-                ? 'hover:bg-primaryBg/40 cursor-pointer duration-200'
-                : ''
-            "
+            :class="!isAdmin() ? 'hover:bg-primaryBg/40 cursor-pointer duration-200' : ''"
             @click="!isAdmin() ? selectBottleCard(bottleData) : ''"
           >
             <td class="text-center">{{ _bottle.meta.from + index }}</td>
@@ -300,10 +281,7 @@ if (isAdmin()) {
                 >
                   <p>Kunci</p>
                 </button>
-                <button
-                  class="btn-full no-bg"
-                  @click="selectBottleCard(bottleData)"
-                >
+                <button class="btn-full no-bg" @click="selectBottleCard(bottleData)">
                   <p>Detail</p>
                 </button>
               </div>

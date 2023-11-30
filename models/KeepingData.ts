@@ -1,5 +1,6 @@
 import Customer from "./Customer";
 import Histories from "./Histories";
+import Logs from "./Logs";
 import Outlet from "./Outlet";
 
 export enum BottleStatus {
@@ -33,7 +34,8 @@ export default class KeepingData {
     public statusText: string,
     public remainingKeeps: number,
     public userFullName: string,
-    public phoneNumber: string
+    public phoneNumber: string,
+    public logs: Logs[] | []
   ) {
     this.BottleStatus = BottleStatusIndonesianText;
   }
@@ -60,7 +62,8 @@ export default class KeepingData {
       json.status_text,
       json.remaining_keeps,
       json.user_fullname,
-      json.phone_number
+      json.phone_number,
+      json.logs ? json.logs.map((log: any) => Logs.fromJson(log)) : []
     );
   }
 }

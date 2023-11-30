@@ -71,7 +71,11 @@ onClickOutside(modalDialog, () => emits("close"));
             <p>: {{ props.bottleKeepDetail?.bottleStatusIndoText }}</p>
           </div>
           <div class="detail-items">
-            <button class="btn-xs general w-max" @click="logsAction()">
+            <button
+              v-show="isAdmin()"
+              class="btn-xs general w-mwwwwax"
+              @click="logsAction()"
+            >
               <Iconify
                 icon="ant-design:file-search-outlined"
                 class="text-base"
@@ -164,21 +168,24 @@ onClickOutside(modalDialog, () => emits("close"));
     <div v-else class="modal-wrapper">
       <div ref="modalDialog" class="modal-card">
         <h2>Logs</h2>
-        <table class="w-full bg-black/30">
+        <table class="w-full bg-primaryBg/20">
           <thead>
             <tr>
               <th>No</th>
               <th>Action</th>
               <th>Catatan</th>
-              <th>Dibuat Oleh</th>
+              <th>Dibuat oleh</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Expired</td>
-              <td>Test Notes</td>
-              <td>Albert</td>
+            <tr
+              v-for="(log, index) in props.bottleKeepDetail?.logs"
+              :key="index"
+            >
+              <td class="text-center">{{ index + 1 }}</td>
+              <td>{{ log.actionText }}</td>
+              <td>{{ log.notes }}</td>
+              <td>{{ log.createdBy }}</td>
             </tr>
           </tbody>
         </table>
