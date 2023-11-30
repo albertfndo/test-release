@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import Datepicker from "@vuepic/vue-datepicker";
 const searchKey = ref("");
+const filterModal = ref(false);
 const actions = reactive<Action[]>([
   {
     text: "Refresh",
@@ -22,29 +24,28 @@ const actions = reactive<Action[]>([
         <p>Status:</p>
         <div class="button-group">
           <button type="button" class="btn-rsvp-status pending">Semua</button>
-          <button type="button" class="btn-rsvp-status new">Dipublish</button>
+          <button type="button" class="btn-rsvp-status new">
+            <Pic></Pic>ublish
+          </button>
           <button type="button" class="btn-rsvp-status arrived">Selesai</button>
           <button type="button" class="btn-rsvp-status">Draft</button>
         </div>
       </div>
 
       <div class="flex justify-end gap-2 md:w-1/2">
-        <select class="form-select w-1/3">
-          <option disabled selected>Pilih Outlet</option>
-          <option value="newest">Terbaru</option>
-          <option value="oldest">Terlama</option>
-          <option value="name">Nama</option>
-        </select>
-        <form class="search w-1/3" @submit.prevent="searchData()">
-          <input
-            v-model="searchKey"
-            type="text"
-            placeholder="Cari sesuatu..."
-          />
-          <button @click="searchData()">
-            <Iconify icon="material-symbols:search" class="text-xl" />
-          </button>
-        </form>
+        <button type="button" class="btn-add-guest" @click="filterModal = true">
+          <div class="new">
+            <Iconify icon="mdi:filter" class="text-primaryBg text-xl" />
+            <p>Filter</p>
+          </div>
+          <p class="block lg:hidden">
+            <Iconify
+              icon="mdi:plus-circle"
+              class="mx-auto text-primaryBg text-xl"
+            />
+          </p>
+        </button>
+
         <div class="devider hidden md:block"></div>
         <button
           type="button"
@@ -53,7 +54,7 @@ const actions = reactive<Action[]>([
         >
           <div class="new">
             <Iconify icon="mdi:plus-circle" class="text-primaryBg text-xl" />
-            <p>Tambah Data</p>
+            <p>Tambah</p>
           </div>
           <p class="block lg:hidden">
             <Iconify
@@ -89,7 +90,7 @@ const actions = reactive<Action[]>([
             <td>12/12/2021</td>
             <td>Outlet 1</td>
             <td class="text-center">
-              <span class="status-pill bg-success">Complete</span>
+              <span class="status-pill bg-success">Selesai</span>
             </td>
           </tr>
           <tr
@@ -117,7 +118,7 @@ const actions = reactive<Action[]>([
             <td>12/12/2021</td>
             <td>Outlet 1</td>
             <td class="text-center">
-              <span class="status-pill bg-success">Complete</span>
+              <span class="status-pill bg-success">Selesai</span>
             </td>
           </tr>
         </tbody>
@@ -136,4 +137,36 @@ const actions = reactive<Action[]>([
       <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div> -->
   </section>
+  <Modal
+    v-if="filterModal"
+    :use-button="true"
+    :form-mode="true"
+    :open-global-modal="filterModal"
+    @close="filterModal = false"
+  >
+    <h2>Filter</h2>
+    <form @submit.prevent="">
+      <div class="flex flex-col w-full mb-4">
+        <label class="text-primaryText">No Surat</label>
+        <input
+          type="text"
+          class="p-2 bg-primaryBg/70 rounded-md focus:outline-brandSecondary placeholder-secondaryText/70"
+          placeholder="Masukkan No Surat"
+        />
+      </div>
+      <div class="w-full mb-4">
+        <label class="text-primaryText" for="date">Tanggal</label>
+        <Datepicker dark placeholder="Pilih Tanggal" class="w-1/4" />
+      </div>
+      <div class="w-full mb-4">
+        <label class="text-primaryText" for="date">Outlet</label>
+        <select class="form-select">
+          <option disabled selected>Pilih Outlet</option>
+          <option value="newest">Terbaru</option>
+          <option value="oldest">Terlama</option>
+          <option value="name">Nama</option>
+        </select>
+      </div>
+    </form>
+  </Modal>
 </template>
