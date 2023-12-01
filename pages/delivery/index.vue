@@ -1,7 +1,29 @@
 <script setup lang="ts">
 import Datepicker from "@vuepic/vue-datepicker";
+import moment from "moment";
+import Outlet from "~/models/Outlet";
+
+const _outlet = useOutlet();
+
+const date = ref("");
 const searchKey = ref("");
 const filterModal = ref(false);
+const selectedOption = ref(null);
+const outletsOptions = ref<Outlet[]>([]);
+
+await nextTick();
+
+onMounted(() => {
+  nextTick(async () => {
+    await initializaData();
+  });
+});
+
+async function initializaData() {
+  await _outlet.getOutlets();
+  outletsOptions.value = _outlet.outlets;
+}
+
 const actions = reactive<Action[]>([
   {
     text: "Refresh",
@@ -10,6 +32,25 @@ const actions = reactive<Action[]>([
     click: async () => initializaData(),
   },
 ]);
+
+const format = (date: any) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
+function setDate() {
+  // date.value = moment(date.value).format("DD-MM-YYYY");
+}
+
+function searchOutlet(search: string) {
+  const filtered = _outlet.outlets.filter((option) =>
+    fuzzySearch(option.name, search)
+  );
+  outletsOptions.value = filtered;
+}
 </script>
 <template>
   <section id="deliveryHead">
@@ -54,7 +95,7 @@ const actions = reactive<Action[]>([
         <button
           type="button"
           class="btn-add-guest"
-          @click="navigateTo('/bottle-keeping/add')"
+          @click="navigateTo('/delivery/add')"
         >
           <div class="new">
             <Iconify icon="mdi:plus-circle" class="text-primaryBg text-xl" />
@@ -147,6 +188,7 @@ const actions = reactive<Action[]>([
     :use-small-modal="true"
     :form-mode="true"
     :open-global-modal="filterModal"
+    :format="'DD/MM/YYYY'"
     @close="filterModal = false"
   >
     <form class="filter-form" @submit.prevent="">
@@ -157,16 +199,32 @@ const actions = reactive<Action[]>([
       </div>
       <div class="form-group">
         <label class="text-primaryText" for="date">Tanggal</label>
-        <Datepicker dark placeholder="Pilih Tanggal" class="w-1/4" />
+        <Datepicker
+          v-model="date"
+          dark
+          auto-apply
+          placeholder="Pilih Tanggal"
+          position="center"
+          class="mx-auto w-full"
+          mode-height="170"
+          :format="format"
+          :enable-time-picker="false"
+          @update:model-value="setDate()"
+        />
       </div>
       <div class="form-group">
         <label class="text-primaryText" for="date">Outlet</label>
-        <select class="form-select">
-          <option disabled selected>Pilih Outlet</option>
-          <option value="newest">Terbaru</option>
-          <option value="oldest">Terlama</option>
-          <option value="name">Nama</option>
-        </select>
+        <CustomSelect
+          v-model="selectedOption"
+          :options="
+            outletsOptions.map((option) => ({
+              id: option.id,
+              text: option.name,
+            }))
+          "
+          placeholder="Pilih Outlet"
+          @search="searchOutlet"
+        />
       </div>
     </form>
   </Modal>

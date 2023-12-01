@@ -76,6 +76,19 @@
     @apply accent-brand
   }
 
+  .custom-select {
+    @apply relative w-full;
+  }
+  .custom-select input[type="text"] {
+    @apply w-full p-2 bg-[#645C4B] rounded-lg outline-none text-primaryText text-sm placeholder:text-primaryText font-poppins-r;
+  }
+  .options {
+    @apply w-full absolute border border-secondaryBg rounded-lg shadow max-h-[220px] md:max-h-[350px] overflow-y-auto z-10;
+  }
+  .options .item {
+    @apply p-2 bg-primaryBg hover:bg-secondaryBg border-b border-secondaryBg text-primaryText text-sm cursor-pointer font-poppins-r;
+  }
+
   .form-select {
     @apply block w-full p-2 bg-[#212121] rounded outline-none text-primaryText font-poppins-r;
   }

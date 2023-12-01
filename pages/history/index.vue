@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import moment from "moment";
 
-const openDetailModal = ref(false);
+const _outlet = useOutlet();
 const _bottle = useBottleKeeping();
+
 const searchKey = ref("");
+const openDetailModal = ref(false);
+const selectedOption = ref(null);
+const outletsOptions = ref<Outlet[]>([]);
 
 onMounted(() => {
   _bottle.$reset();
@@ -14,6 +18,8 @@ onMounted(() => {
 
 async function initializaData(search?: string, page?: number) {
   await _bottle.getBottleDatas(search, true, page);
+  await _outlet.getOutlets();
+  outletsOptions.value = _outlet.outlets;
 }
 
 const actions = reactive<Action[]>([
@@ -38,6 +44,13 @@ async function changePage(page: any) {
   const nextPage = page?.split("page=")[1].split("&")[0];
   await initializaData("", nextPage);
 }
+
+function searchOutlet(search: string) {
+  const filtered = _outlet.outlets.filter((option) =>
+    fuzzySearch(option.name, search)
+  );
+  outletsOptions.value = filtered;
+}
 </script>
 
 <template>
@@ -49,7 +62,21 @@ async function changePage(page: any) {
     />
 
     <div class="menu-bar my-6">
-      <form class="ml-auto search md:w-1/4" @submit.prevent="searchData()">
+      <form
+        class="ml-auto search md:w-1/2 gap-2"
+        @submit.prevent="searchData()"
+      >
+        <CustomSelect
+          v-model="selectedOption"
+          :options="
+            outletsOptions.map((option) => ({
+              id: option.id,
+              text: option.name,
+            }))
+          "
+          placeholder="Pilih Outlet"
+          @search="searchOutlet"
+        />
         <input v-model="searchKey" type="text" placeholder="Cari sesuatu..." />
         <button @click="searchData()">
           <Iconify icon="material-symbols:search" class="text-xl" />

@@ -73,7 +73,7 @@ onClickOutside(modalDialog, () => emits("close"));
           <div class="detail-items">
             <button
               v-show="isAdmin()"
-              class="btn-xs general w-mwwwwax"
+              class="btn-xs general w-fit"
               @click="logsAction()"
             >
               <Iconify
