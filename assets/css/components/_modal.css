@@ -8,11 +8,14 @@
   .small-modal-wrapper {
     @apply w-full fixed bottom-5 left-0 z-[51];
   }
+  .snackbar-modal-card {
+    @apply p-2 rounded-lg;
+  }
   .modal-card {
-    @apply relative w-4/5 md:w-4/6 lg:w-2/5 xl:w-1/3 bg-[#464646] p-6 rounded-lg shadow-lg border border-brand max-h-[90vh] overflow-y-auto;
+    @apply relative w-5/6 md:w-3/4 lg:w-2/5 xl:w-1/3 bg-[#464646] p-6 rounded-lg shadow-lg border border-brand  max-h-[90vh] overflow-y-auto;
   }
   .small-modal-card {
-    @apply relative w-5/6 md:w-1/2 lg:w-1/3 xl:w-1/4 bg-[#464646] p-6 rounded-lg shadow-lg border border-brand;
+    @apply p-2 rounded-lg;
   }
   .small-modal-content h2 {
     @apply text-primaryText text-lg font-poppins-m;
@@ -27,9 +30,6 @@
     @apply text-primaryText text-sm font-poppins-r;
   }
   .modal-card button:not(.dp__btn){
-    @apply px-4 py-2 rounded-lg border duration-200 font-poppins-m;
-  }
-  .small-modal-card button:not(.dp__btn){
     @apply px-4 py-2 rounded-lg border duration-200 font-poppins-m;
   }
   .modal-card button.video {
@@ -47,10 +47,10 @@
   .modal-card button.danger {
     @apply bg-danger hover:bg-[#B35252] border-danger hover:border-[#B35252] text-primaryText;
   }
-  .modal-card button.exit,.small-modal-card button.exit, .sticky-button button.exit {
+  .modal-card button.exit, .sticky-button button.exit {
     @apply w-full bg-[#8B8B8B] hover:bg-[#747373] border-[#8B8B8B] hover:border-[#747373] text-primaryBg;
   }
-  .modal-card button.confirm, .small-modal-card button.confirm {
+  .modal-card button.confirm {
     @apply w-full bg-brand hover:bg-brandSecondary border-brand hover:border-brandSecondary text-primaryBg;
   }
   .modal-card  input[type="number"] {

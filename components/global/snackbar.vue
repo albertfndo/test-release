@@ -11,7 +11,7 @@ function exit() {
     <div v-show="_controller.isShown" class="small-modal-wrapper" @click="exit">
       <div class="container">
         <div
-          class="small-modal-card"
+          class="snackbar-modal-card"
           :class="_controller.isSuccess ? 'bg-success' : 'bg-danger'"
         >
           <div class="flex items-center gap-4">
