@@ -1,4 +1,3 @@
-import Axios, { type AxiosResponse } from "axios";
 import { useUserData } from "./useUserData";
 
 type Request = {
@@ -8,77 +7,85 @@ type Request = {
 
 type Response = {
   data: any;
-  response: AxiosResponse<any, any>;
+  response: any;
 };
 
 export const useApi = definePiniaStore("api", () => {
   const config = useRuntimeConfig();
-  const axios = Axios;
+  const baseUrl = config.public.baseUrl;
   const userData = useUserData();
 
-  axios.defaults.baseURL = config.public.baseUrl;
-  setHeader();
-
-  function setHeader() {
-    axios.defaults.headers.common["Accept"] = "application/json";
-    axios.defaults.headers.common["Content-Type"] = "application/json";
+  function getHeaders() {
+    const headers = {
+      Accept: "application/json",
+      ContentType: "application/json",
+      Authorization: "",
+    };
 
     const token =
       userData.value.token == null
         ? useUserData().value.token
         : userData.value.token;
-    const localStorageOutlet = localStorage.getItem("For-Outlet-Id");
 
     if (token) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      headers.Authorization = `Bearer ${token}`;
     }
 
-    if (localStorageOutlet) {
-      axios.defaults.headers.common["For-Outlet-Id"] = localStorageOutlet;
-    }
+    return headers;
   }
 
   function get({ url, params = {} }: Request): Promise<Response> {
-    setHeader();
     return new Promise((resolve, reject) => {
-      axios
-        .get(url, { params })
-        .then((response) => resolve({ data: response.data.data, response }))
-        .catch((error) => reject(error));
-    });
-  }
-
-  function download({ url, params = {} }: Request): Promise<Response> {
-    setHeader();
-    return new Promise((resolve, reject) => {
-      axios
-        .get(url, { params, responseType: "blob" })
-        .then((response) => resolve({ data: response.data.data, response }))
-        .catch((error) => reject(error));
+      useFetch(`${baseUrl}/${url}`, {
+        method: "GET",
+        headers: getHeaders(),
+        params,
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
     });
   }
 
   function post({ url, params = {} }: Request): Promise<Response> {
-    setHeader();
     return new Promise((resolve, reject) => {
-      axios
-        .post(url, params)
-        .then((response) => resolve({ data: response.data.data, response }))
-        .catch((error) => reject(error));
+      useFetch(`${baseUrl}/${url}`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(params),
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
     });
   }
 
   function put({ url, params = {} }: Request): Promise<any> {
-    setHeader();
     return new Promise((resolve, reject) => {
-      axios
-        .put(url, params)
-        .then((response) => resolve({ data: response.data.data, response }))
-        .catch((error) => reject(error));
+      useFetch(`${baseUrl}/${url}`, {
+        method: "PUT",
+        headers: getHeaders(),
+        params,
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
     });
   }
 
-  function uploadFile({ url, params = {} }: Request) {
+  function uploadFile({ url, params = {} }: Request): Promise<Response> {
     const formData = new FormData();
     const keys = Object.keys(params);
 
@@ -87,39 +94,38 @@ export const useApi = definePiniaStore("api", () => {
     }
 
     return new Promise((resolve, reject) => {
-      axios
-        .post(url, formData, {
-          headers: {
-            Accept: "application/json",
-            ContentType: "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          resolve({ data: response.data.data, response });
-        })
-        .catch((error) => {
+      useFetch(`${baseUrl}/${url}`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: formData,
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
           reject(error);
-        });
+        }
+        resolve({ data: data, response });
+      });
     });
   }
+
+  // function download({ url, params = {} }: Request): Promise<Response> {
+  //   setHeader();
+  //   return new Promise((resolve, reject) => {
+  //     axios
+  //       .get(url, { params, responseType: "blob" })
+  //       .then((response) => resolve({ data: response.data.data, response }))
+  //       .catch((error) => reject(error));
+  //   });
+  // }
 
   function handleError(error: any): boolean {
     let handled = false;
     const snackbar = useSnackbar();
     const auth = useAuth();
-    console.error(error);
 
-    if (!error.response) {
-      snackbar.error({
-        title: "Error",
-        message: "Failed to fetch data",
-        autoClose: true,
-      });
-
-      return true;
-    }
-    if (error.response?.status == 422) {
-      const errors = error.response.data.errors ?? error.response.data;
+    if (error.data?.status == 422) {
+      const errors = error.data;
       const message: string[] = [];
 
       Object.keys(errors).forEach((key) => {
@@ -134,7 +140,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status == 503) {
+    } else if (error.data.data?.status == 503 || error.data?.status == 503) {
       throw createError({
         statusCode: 503,
         statusMessage: "Server under maintenance. Please try again later.",
@@ -142,7 +148,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status >= 500) {
+    } else if (error.data.data?.status > 500 || error.data?.status > 500) {
       snackbar.error({
         title: "Error",
         message: "Server error. Please try again later.",
@@ -150,7 +156,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status == 401) {
+    } else if (error.data.data?.status == 401 || error.data?.status == 401) {
       snackbar.error({
         title: "Session Expired",
         message: "Try to login again.",
@@ -166,22 +172,27 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.response?.status == 400) {
-      const code = error.response.data.data.code;
+    } else if (error.data.data?.status == 400 || error.data?.status == 400) {
+      const code = error.data.code;
       if (code == "refresh_required") {
         window.location.reload();
         return true;
-      } else {
-        snackbar.error({
-          title: "Error",
-          message: error.response.data.data.message,
-          autoClose: true,
-        });
-
-        handled = true;
       }
+      snackbar.error({
+        title: "Error",
+        message: error.data.data?.message,
+        autoClose: true,
+      });
+
+      handled = true;
     } else {
-      // Handle other error
+      snackbar.error({
+        title: "Error",
+        message: "Failed to fetch data",
+        autoClose: true,
+      });
+
+      return true;
     }
 
     return handled;
@@ -189,10 +200,10 @@ export const useApi = definePiniaStore("api", () => {
 
   return {
     get,
-    download,
     post,
     put,
-    handleError,
     uploadFile,
+    // download,
+    handleError,
   };
 });

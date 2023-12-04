@@ -1,4 +1,3 @@
-<script setup lang="ts"></script>
 <template>
   <NuxtLoadingIndicator />
   <Watermark v-if="!isProduction()" />

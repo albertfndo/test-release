@@ -11,13 +11,19 @@
     @apply px-2 py-1 bg-brand hover:bg-brandSecondary duration-200 rounded-lg text-primaryBg text-sm font-poppins-r;
   }
   .btn-xs {
-    @apply p-1 rounded-md text-xs duration-200 font-poppins-r;
+    @apply flex px-1 py-0.5 rounded-md text-xs duration-200 font-poppins-r gap-1 items-center justify-center;
+  }
+  .btn-xs.general {
+    @apply border-brand bg-brand hover:bg-brandSecondary duration-200;
+  }
+  .btn-xs.general span {
+    @apply text-xs text-primaryBg;
   }
   .btn-xs.no-bg {
     @apply bg-transparent border border-brand hover:bg-brand text-primaryText hover:text-primaryBg;
   }
   .btn-full {
-    @apply w-full p-2 rounded-lg duration-200 text-sm lg:text-base font-poppins-m;
+    @apply flex items-center justify-center gap-1 w-full p-2 rounded-lg duration-200 text-sm lg:text-base font-poppins-m;
   }
   .btn-full.disabled {
     @apply bg-disabled hover:bg-disabled/60 text-primaryText;

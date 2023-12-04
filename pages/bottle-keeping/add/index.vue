@@ -1,10 +1,53 @@
+<script setup lang="ts">
+const _guest = useGuest();
+
+onMounted(async () => {
+  _guest.$reset();
+  await lazyLoadFetch();
+});
+
+async function search() {
+  _guest.guestDatas = [];
+  await _guest.searchGuest();
+}
+
+async function lazyLoadFetch() {
+  window.onscroll = () => {
+    const bottomOfWindow =
+      Math.max(
+        window.scrollY,
+        document.documentElement.scrollTop,
+        document.body.scrollTop
+      ) +
+        window.innerHeight ===
+      document.documentElement.offsetHeight;
+
+    if (bottomOfWindow && _guest.links.next != null) {
+      _guest.searchGuest(getNextPage(_guest.links.next));
+    }
+  };
+}
+
+function getGuestData(isMember: boolean, guest?: Customer) {
+  if (isMember) {
+    const guestData = guestStorage();
+    guestData.value = guest;
+  }
+
+  navigateTo({
+    path: "/bottle-keeping/add/form",
+    query: {
+      use_member: isMember.toString(),
+    },
+  });
+}
+</script>
 <template>
   <section id="addBottleKeepHead" class="without-topbar">
     <div class="flex items-center gap-4">
       <button
         type="button"
         class="btn-regular-nav"
-        data-hbid="gl-tt-back"
         @click="navigateTo('/bottle-keeping')"
       >
         <Iconify
@@ -12,29 +55,29 @@
           class="text-primaryText text-2xl"
         />
       </button>
-      <h1 class="subtitle-2 text-primaryText">Add Bottle Keeping</h1>
+      <h1 class="subtitle-2 text-primaryText">Tambah Bottle Keeping</h1>
     </div>
   </section>
 
   <section id="addBottleKeepBody" class="page-body">
     <div class="menu-bar">
-      <form class="form-guest" @submit.prevent="">
+      <form class="form-guest" @submit.prevent="search()">
         <div class="form-group">
           <input
+            v-model="_guest.form.searchKey"
             type="text"
-            placeholder="Enter Name / Phone"
-            data-hbid="gl-tt-name"
+            placeholder="Masukan Nama / No. Tlpn"
+            autofocus
           />
           <div class="devider hidden md:block"></div>
           <button
             type="button"
             class="btn-add-guest"
-            data-hbid="gl-tt-addnew-button"
-            @click="navigateTo('/bottle-keeping/add/form')"
+            @click="getGuestData(false)"
           >
             <div class="hidden lg:flex justify-center items-center gap-2">
               <Iconify icon="mdi:plus-circle" />
-              <p>Add New</p>
+              <p>Tambah Baru</p>
             </div>
             <p class="block lg:hidden">
               <Iconify icon="mdi:plus-circle" class="text-xl mx-auto" />
@@ -45,124 +88,46 @@
     </div>
 
     <div
-      v-if="true"
+      v-if="_guest.guestDatas.length"
       class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mt-8"
     >
-      <div class="guest-card">
-        <div>
-          <div class="guest-name bg-brand">
-            <p>asd</p>
-          </div>
-          <div class="guest-data">
-            <div class="grid grid-cols-2 gap-y-5">
-              <div class="guest-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>Basic</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
-                <p>Regular</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>+6282115831114</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:round-people-outline" class="text-xl" />
-                <p>Male</p>
-              </div>
-            </div>
-          </div>
+      <div
+        v-for="(guest, index) in _guest.guestDatas"
+        :key="index"
+        class="guest-card"
+        @click="getGuestData(true, guest)"
+      >
+        <div class="guest-name bg-brand">
+          <p>{{ guest.name }}</p>
         </div>
-      </div>
-      <div class="guest-card">
-        <div>
-          <div class="guest-name bg-brand">
-            <p>asd</p>
-          </div>
-          <div class="guest-data">
-            <div class="grid grid-cols-2 gap-y-5">
-              <div class="guest-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>Basic</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
-                <p>Regular</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>+6282115831114</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:round-people-outline" class="text-xl" />
-                <p>Male</p>
-              </div>
+        <div class="guest-data">
+          <div class="grid grid-cols-2 gap-y-5">
+            <div class="guest-detail">
+              <Iconify icon="ic:baseline-person-outline" class="text-xl" />
+              <p>{{ guest.membershipTypeText }}</p>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="guest-card">
-        <div>
-          <div class="guest-name bg-brand">
-            <p>asd</p>
-          </div>
-          <div class="guest-data">
-            <div class="grid grid-cols-2 gap-y-5">
-              <div class="guest-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>Basic</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
-                <p>Regular</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>+6282115831114</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:round-people-outline" class="text-xl" />
-                <p>Male</p>
-              </div>
+            <div class="guest-detail">
+              <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
+              <p>{{ guest.typeText }}</p>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="guest-card">
-        <div>
-          <div class="guest-name bg-brand">
-            <p>asd</p>
-          </div>
-          <div class="guest-data">
-            <div class="grid grid-cols-2 gap-y-5">
-              <div class="guest-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>Basic</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
-                <p>Regular</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>+6282115831114</p>
-              </div>
-              <div class="guest-detail">
-                <Iconify icon="ic:round-people-outline" class="text-xl" />
-                <p>Male</p>
-              </div>
+            <div class="guest-detail">
+              <Iconify icon="ic:outline-phone" class="text-xl" />
+              <p>+{{ guest.phone }}</p>
+            </div>
+            <div class="guest-detail">
+              <Iconify icon="ic:round-people-outline" class="text-xl" />
+              <p>{{ guest.genderText }}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-else class="text-center">
+    <div v-else class="text-center mt-10">
       <NuxtImg
         preload
         src="/images/icon-not-found.svg"
-        class="mx-auto"
+        class="m-auto"
         width="160px"
         loading="lazy"
         quality="80"

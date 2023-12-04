@@ -35,8 +35,8 @@ export const useSnackbar = defineStore("snackbar", {
     success(
       title = "Success",
       message = "Success Message",
-      buttonText = "Continue",
       autoClose = false,
+      buttonText = "Continue",
       callback: Callback | null = null
     ) {
       this.resetButton();

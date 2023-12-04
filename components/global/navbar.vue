@@ -6,7 +6,7 @@ const network = reactive(useNetwork());
 const _dialog = useDialog();
 const auth = useAuth();
 const userData = useUserData();
-// const route = useRoute();
+const route = useRoute();
 
 const time = ref(moment().format("HH:mm:ss"));
 const date = ref(moment().format("DD MMM YYYY"));
@@ -33,7 +33,7 @@ function logout() {
   showMobileNavbar.value = false;
   _dialog.show({
     title: "Log Out",
-    content: "Are you sure you want to log out?",
+    content: "Apakah anda yakin ingin melakukan Log Out?",
     callback: {
       onTapBack() {
         _dialog.hideDialog();
@@ -46,8 +46,8 @@ function logout() {
         });
       },
     },
-    backText: "Cancel",
-    confirmText: "Confirm",
+    backText: "Batal",
+    confirmText: "Konfirmasi",
     showBack: true,
   });
   return;
@@ -96,23 +96,22 @@ function logout() {
         to="/bottle-keeping"
         active-class="active"
         class="nav-link"
-        data-hbid="menu-reservation"
+        :class="route.path.startsWith('/bottle-keeping') ? 'active' : ''"
       >
         <Iconify icon="game-icons:beer-bottle" class="text-2xl" />
-        <p>Bottle Keeping</p>
+        <p>Bottle Keep</p>
       </NuxtLink>
-      <NuxtLink
-        to="/history"
-        active-class="active"
-        class="nav-link"
-        data-hbid="menu-reservation"
-      >
+      <NuxtLink to="/history" active-class="active" class="nav-link">
         <Iconify icon="ic:outline-access-time" class="text-2xl" />
-        <p>Bottle Keeping History</p>
+        <p>Riwayat Bottle Keep</p>
+      </NuxtLink>
+      <NuxtLink to="/delivery" active-class="active" class="nav-link">
+        <Iconify icon="solar:delivery-bold" class="text-2xl" />
+        <p>Pengiriman Botol</p>
       </NuxtLink>
     </nav>
 
-    <div class="logout-btn" data-hbid="logout-button" @click="logout()">
+    <div class="logout-btn" @click="logout()">
       <div class="logout-items">
         <Iconify icon="ic:round-log-out" class="mx-auto text-2xl" />
         <p>Log Out</p>

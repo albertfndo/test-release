@@ -1,7 +1,7 @@
 <template>
-  <!-- <Snackbar /> -->
+  <Snackbar />
   <Dialog />
-  <!-- <Loading /> -->
+  <Loading />
 
   <NuxtLayout>
     <NuxtPage />

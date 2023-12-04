@@ -1,20 +1,19 @@
-import { type AxiosResponse } from 'axios';
-import User from '../models/User';
+import User from "../models/User";
 
-export const useLogin = definePiniaStore('login', {
+export const useLogin = definePiniaStore("login", {
   state: () => ({
     form: {
       username: "",
       password: "",
-    }
+    },
   }),
   actions: {
-    async setUserData(user: User, response: AxiosResponse) {
+    async setUserData(user: User, data: any) {
       const auth = useAuth();
       await auth.setUser(user);
-      await auth.setToken(response.data.data.token);
-      await auth.setRoles(response.data.data.roles);
-      await auth.setPermissions(response.data.data.permissions);
+      await auth.setToken(data.data.token);
+      await auth.setRoles(data.data.roles);
+      await auth.setPermissions(data.data.permissions);
     },
     async login() {
       const api = useApi();
@@ -22,16 +21,16 @@ export const useLogin = definePiniaStore('login', {
 
       try {
         _loading.show();
-        const { response } = await api.post({
-          url: "/api/v1/holyboard/auth/login",
+        const { data } = await api.post({
+          url: "api/v1/holyboard/auth/login",
           params: {
             username: this.form.username,
             password: this.form.password,
-          }
+          },
         });
 
-        const user = User.fromJson(response.data.data.user_data);
-        this.setUserData(user, response);
+        const user = User.fromJson(data.data.user_data);
+        this.setUserData(user, data);
         window.location.href = "/";
 
         _loading.hide();
@@ -39,6 +38,6 @@ export const useLogin = definePiniaStore('login', {
         api.handleError(error);
         _loading.hide();
       }
-    }
-  }
-})
+    },
+  },
+});

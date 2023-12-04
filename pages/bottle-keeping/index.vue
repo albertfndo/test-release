@@ -1,93 +1,253 @@
 <script setup lang="ts">
-const bottleStatus = ref(0);
+import moment from "moment";
+import { nextTick } from "vue";
+import Datepicker from "@vuepic/vue-datepicker";
+import { BottleStatus } from "~/models/KeepingData";
+import { selectedBottleData } from "~/composables/useBottleKeeping";
+
+await nextTick();
+
+const _dialog = useDialog();
+const _outlet = useOutlet();
+const _bottle = useBottleKeeping();
+
+const date = ref("");
+const searchKey = ref("");
+const filterModal = ref(false);
+const releaseModal = ref(false);
 const openDetailModal = ref(false);
+const selectedOption = ref(null);
+const outletsOptions = ref<Outlet[]>([]);
+
+const format = (date: any) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
+onMounted(() => {
+  _bottle.$reset();
+  nextTick(async () => {
+    await initializaData();
+  });
+});
+
+async function initializaData(search?: string, page?: number) {
+  await _bottle.getBottleDatas(search, false, page);
+  await _outlet.getOutlets();
+  outletsOptions.value = _outlet.outlets;
+}
+
+async function changePage(page: any) {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  await initializaData((page = nextPage));
+}
+
+watch(
+  () => _bottle.bottleStatus,
+  (newValue) => {
+    _bottle.bottleStatus = newValue;
+    initializaData(searchKey.value);
+  }
+);
+
+function getColor(status: number) {
+  const colorMap = {
+    1: "bg-[#FF5D97]",
+    2: "bg-success",
+    3: "bg-primaryText",
+  };
+
+  return colorMap[status as keyof typeof colorMap];
+}
+
+function selectBottleCard(bottleData: KeepingData) {
+  openDetailModal.value = true;
+  _bottle.selectedBottle = bottleData;
+}
+
+function searchData() {
+  initializaData(searchKey.value);
+}
+
+function showButton(status: number, buttonName: string) {
+  const statusMap = {
+    1: ["Unlock"],
+    2: ["Release", "Lock"],
+    3: [""],
+    4: [""],
+  };
+
+  return statusMap[status as keyof typeof statusMap].includes(buttonName);
+}
+
+function releaseBottle(bottleData: KeepingData) {
+  if (openDetailModal.value) openDetailModal.value = false;
+
+  releaseModal.value = true;
+  _bottle.selectedBottle = bottleData;
+}
+
+function rekeepBottle(bottleData: KeepingData) {
+  const selectedBottle = selectedBottleData();
+  selectedBottle.value = bottleData;
+
+  navigateTo({
+    path: "/bottle-keeping/add/form",
+    query: {
+      use_member: bottleData.customer ? "true" : "false",
+    },
+  });
+}
+
+async function submitRelease() {
+  releaseModal.value = false;
+  await _bottle.releaseBottleData();
+  initializaData();
+}
+
+function updateStatus(bottleData: KeepingData, status: number) {
+  _dialog.show({
+    title: "Konfirmasi",
+    content: "Apakah anda yakin ingin mengubah status botol?",
+    callback: {
+      onTapBack() {
+        _dialog.hideDialog();
+      },
+      onTapConfirm() {
+        _bottle.updateBottleStatus(bottleData, status).then(() => {
+          _dialog.hideDialog();
+          initializaData();
+        });
+      },
+    },
+    backText: "Batal",
+    confirmText: "Konfirmasi",
+    showBack: true,
+  });
+}
 
 const actions = reactive<Action[]>([
   {
     text: "Refresh",
     icon: "ic:round-refresh",
     color: "white",
-    hbid: "res-refresh",
-    click: async () => console.log("refresh"),
+    click: async () => initializaData(),
   },
-  {
+]);
+
+if (isAdmin()) {
+  actions.push({
     text: "Export",
     icon: "ic:outline-file-upload",
     color: "white",
-    hbid: "res-export",
-    click: async () => console.log("export"),
-  },
-]);
+    click: async () => initializaData(),
+  });
+}
+
+function setDate() {
+  // date.value = moment(date.value).format("DD-MM-YYYY");
+}
+
+function searchOutlet(search: string) {
+  const filtered = _outlet.outlets.filter((option) =>
+    fuzzySearch(option.name, search)
+  );
+  outletsOptions.value = filtered;
+}
 </script>
 
 <template>
   <section id="bottleKeepHead">
-    <Topbar
-      page-title="Bottle Keeping"
-      :use-actions="true"
-      :actions="actions"
-    />
+    <Topbar page-title="Bottle Keep" :use-actions="true" :actions="actions" />
 
     <div class="menu-bar my-6">
-      <div class="flex gap-2">
+      <div class="flex gap-2 mb-4 md:mb-0">
         <p>Status:</p>
-        <div class="button-group mb-4 md:mb-0">
+        <div class="button-group">
           <button
             type="button"
             class="btn-rsvp-status pending"
-            :class="bottleStatus === 0 ? 'active' : ''"
-            data-hbid="res-status-pending"
-            @click="bottleStatus = 0"
+            :class="_bottle.bottleStatus === 0 ? 'active' : ''"
+            @click="_bottle.bottleStatus = 0"
           >
-            Show All
-          </button>
-          <button
-            type="button"
-            class="btn-rsvp-status"
-            :class="bottleStatus === 1 ? 'active' : ''"
-            data-hbid="res-status-arrived"
-            @click="bottleStatus = 1"
-          >
-            Picked Up
-          </button>
-          <button
-            type="button"
-            class="btn-rsvp-status arrived"
-            :class="bottleStatus === 2 ? 'active' : ''"
-            data-hbid="res-status-arrived"
-            @click="bottleStatus = 2"
-          >
-            Unlocked
+            Semua
           </button>
           <button
             type="button"
             class="btn-rsvp-status confirmed"
-            :class="bottleStatus === 3 ? 'active' : ''"
-            data-hbid="res-status-confirmed"
-            @click="bottleStatus = 3"
+            :class="_bottle.bottleStatus === BottleStatus.lock ? 'active' : ''"
+            @click="_bottle.bottleStatus = BottleStatus.lock"
           >
-            Locked
+            Terkunci
+          </button>
+          <button
+            type="button"
+            class="btn-rsvp-status arrived"
+            :class="
+              _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
+            "
+            @click="_bottle.bottleStatus = BottleStatus.unlock"
+          >
+            Terbuka
+          </button>
+          <button
+            type="button"
+            class="btn-rsvp-status"
+            :class="
+              _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
+            "
+            @click="_bottle.bottleStatus = BottleStatus.release"
+          >
+            Diambil
+          </button>
+          <button
+            v-show="false"
+            type="button"
+            class="btn-rsvp-status border-gray-500"
+            :class="
+              _bottle.bottleStatus === BottleStatus.waitingExpired
+                ? 'bg-gray-500 text-primaryText'
+                : ''
+            "
+            @click="_bottle.bottleStatus = BottleStatus.waitingExpired"
+          >
+            Menunggu Expired
           </button>
         </div>
       </div>
 
-      <div class="flex gap-2 lg:w-1/4">
-        <div class="search">
-          <input type="text" placeholder="Enter Name / Phone" />
-          <button>
+      <div class="search-row">
+        <form class="search" @submit.prevent="searchData()">
+          <input
+            v-model="searchKey"
+            type="text"
+            placeholder="Cari sesuatu..."
+          />
+          <button @click="searchData()">
             <Iconify icon="material-symbols:search" class="text-xl" />
           </button>
-        </div>
+        </form>
+        <button type="button" class="btn-add-guest" @click="filterModal = true">
+          <div class="new">
+            <Iconify icon="mdi:filter" class="text-primaryBg text-xl" />
+            <p>Filter</p>
+          </div>
+          <p class="block lg:hidden">
+            <Iconify icon="mdi:filter" class="mx-auto text-primaryBg text-xl" />
+          </p>
+        </button>
         <div class="devider hidden md:block"></div>
         <button
           type="button"
           class="btn-add-guest"
-          data-hbid="gl-tt-addnew-button"
           @click="navigateTo('/bottle-keeping/add')"
         >
           <div class="new">
             <Iconify icon="mdi:plus-circle" class="text-primaryBg text-xl" />
-            <p>Add Data</p>
+            <p>Tambah Data</p>
           </div>
           <p class="block lg:hidden">
             <Iconify
@@ -101,149 +261,183 @@ const actions = reactive<Action[]>([
   </section>
 
   <section id="bottleKeepBody">
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="rsvp-card">
-        <div @click="openDetailModal = true">
-          <div class="rsvp-card-head bg-[#A38954]">
-            <h1 class="text-primaryText font-poppins-sb">
-              Refined Cotton Bike
-            </h1>
-            <Iconify
-              icon="game-icons:beer-bottle"
-              class="text-2xl text-primaryText"
-            />
-          </div>
-          <div class="rsvp-card-body">
-            <div class="flex flex-col gap-y-5 gap-x-2">
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>Rendhy Widjaja</p>
+    <div v-if="_bottle.bottleDatas.length" class="mt-8 overflow-x-auto">
+      <table :class="isAdmin() ? 'w-[110%]' : 'w-full'">
+        <thead>
+          <tr>
+            <th class="text-center">No</th>
+            <th>Nama Botol</th>
+            <th>Nama Tamu</th>
+            <th>No. Tlpn</th>
+            <th v-show="isAdmin()" class="text-center">Tgl Simpan</th>
+            <th class="text-center">Tgl Expired</th>
+            <th v-show="isAdmin()" class="text-center">Sisa Simpan</th>
+            <th v-show="isAdmin()">Outlet</th>
+            <th class="text-center">Status</th>
+            <th v-show="isAdmin()" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(bottleData, index) in _bottle.bottleDatas"
+            :key="index"
+            :class="
+              !isAdmin()
+                ? 'hover:bg-primaryBg/40 cursor-pointer duration-200'
+                : ''
+            "
+            @click="!isAdmin() ? selectBottleCard(bottleData) : ''"
+          >
+            <td class="text-center">{{ _bottle.meta.from + index }}</td>
+            <td>{{ bottleData.bottleName }}</td>
+            <td>{{ bottleData.userFullName }}</td>
+            <td>{{ bottleData.phoneNumber }}</td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ moment(bottleData.storedAt).format("DD MMM YYYY") }}
+            </td>
+            <td class="text-center">
+              {{ moment(bottleData.expiredAt).format("DD MMM YYYY") }}
+              <p class="table-expired-text">({{ bottleData.expiredText }})</p>
+            </td>
+            <td v-show="isAdmin()" class="text-center">
+              {{ bottleData.remainingKeeps }}
+            </td>
+            <td v-show="isAdmin()">
+              {{ bottleData.outlet?.name }}
+            </td>
+            <td class="text-center">
+              <span class="status-pill" :class="getColor(bottleData.status)">
+                {{ bottleData.bottleStatusIndoText }}
+              </span>
+            </td>
+            <td v-show="isAdmin()">
+              <div class="flex justify-between gap-2">
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Release')"
+                  class="btn-general w-full"
+                  @click="releaseBottle(bottleData)"
+                >
+                  <p>Rilis</p>
+                </button>
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Unlock')"
+                  class="btn-general w-full"
+                  @click="updateStatus(bottleData, BottleStatus.unlock)"
+                >
+                  <p>Buka</p>
+                </button>
+                <button
+                  v-show="isAdmin() && showButton(bottleData.status, 'Lock')"
+                  class="btn-danger w-full"
+                  @click="updateStatus(bottleData, BottleStatus.lock)"
+                >
+                  <p>Kunci</p>
+                </button>
+                <button
+                  class="btn-full no-bg"
+                  @click="selectBottleCard(bottleData)"
+                >
+                  <p>Detail</p>
+                </button>
               </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>+6282115831114</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-access-time" class="text-xl" />
-                <p>Expired in 7 days</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:round-lens" class="text-xl" />
-                <p class="status">Picked Up</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-show="true" class="rsvp-card-footer">
-          <div class="flex justify-between gap-2 py-4">
-            <button class="btn-general w-full">
-              <p>Release</p>
-            </button>
-            <button v-show="false" class="btn-general w-full">
-              <p>Unlock</p>
-            </button>
-            <button v-show="true" class="btn-danger w-full">
-              <p>Lock</p>
-            </button>
-            <button class="btn-full no-bg">
-              <p>Detail</p>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="rsvp-card">
-        <div @click="openDetailModal = true">
-          <div class="rsvp-card-head bg-brand">
-            <p>Refined Cotton Bike</p>
-            <Iconify icon="game-icons:beer-bottle" class="text-2xl" />
-          </div>
-          <div class="rsvp-card-body">
-            <div class="flex flex-col gap-y-5 gap-x-2">
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>Rendhy Widjaja</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>+6282115831114</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-access-time" class="text-xl" />
-                <p>Expired in 7 days</p>
-              </div>
-              <div class="rsvp-card-detail text-success">
-                <Iconify icon="ic:round-lens" class="text-xl" />
-                <p class="status">Unlocked</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-show="true" class="rsvp-card-footer">
-          <div class="rsvp-footer-items">
-            <button v-show="false" class="btn-general w-full">
-              <p>Release</p>
-            </button>
-            <button v-show="true" class="btn-general w-full">
-              <p>Unlock</p>
-            </button>
-            <button v-show="false" class="btn-danger w-full">
-              <p>Lock</p>
-            </button>
-            <button class="btn-full no-bg">
-              <p>Detail</p>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="rsvp-card">
-        <div @click="openDetailModal = true">
-          <div class="rsvp-card-head bg-brand">
-            <p>Refined Cotton Bike</p>
-          </div>
-          <div class="rsvp-card-body">
-            <div class="flex flex-col gap-y-5 gap-x-2">
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:baseline-person-outline" class="text-xl" />
-                <p>Rendhy Widjaja</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-phone" class="text-xl" />
-                <p>+6282115831114</p>
-              </div>
-              <div class="rsvp-card-detail">
-                <Iconify icon="ic:outline-access-time" class="text-xl" />
-                <p>Expired in 7 days</p>
-              </div>
-              <div class="rsvp-card-detail text-[#FF5D97]">
-                <Iconify icon="ic:round-lens" class="text-xl" />
-                <p class="status">Locked</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-show="true" class="rsvp-card-footer">
-          <div class="flex justify-between gap-2 py-4">
-            <button class="btn-general w-full">
-              <p>Release</p>
-            </button>
-            <button v-show="false" class="btn-general w-full">
-              <p>Unlock</p>
-            </button>
-            <button v-show="true" class="btn-danger w-full">
-              <p>Lock</p>
-            </button>
-            <button class="btn-full no-bg">
-              <p>Detail</p>
-            </button>
-          </div>
-        </div>
-      </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <div v-else class="text-center mt-10">
+      <NuxtImg
+        preload
+        src="/images/icon-not-found.svg"
+        class="m-auto"
+        width="160px"
+        loading="lazy"
+        quality="80"
+        alt="No Data"
+      />
+      <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
+    </div>
+
+    <Pagination
+      v-if="_bottle.meta.total > 10"
+      :from="_bottle.meta.from"
+      :to="_bottle.meta.to"
+      :total="_bottle.meta.total"
+      :prev="_bottle.links.prev"
+      :next="_bottle.links.next"
+      :links="_bottle.meta.links"
+      @changepage="changePage"
+    />
   </section>
 
   <BottleKeepDetail
+    v-if="openDetailModal"
+    :bottle-keep-detail="_bottle.selectedBottle"
     :open-detail-modal="openDetailModal"
     :is-rekeep="false"
     @close="openDetailModal = false"
+    @release="releaseBottle(_bottle.selectedBottle)"
+    @rekeep="rekeepBottle(_bottle.selectedBottle)"
   />
+
+  <Modal
+    v-show="releaseModal"
+    :open-global-modal="releaseModal"
+    :form-mode="true"
+    :use-button="true"
+    @submit="submitRelease()"
+    @close="releaseModal = false"
+  >
+    <h2>Pelepasan Botol</h2>
+    <p>Apakah anda yakin ingin melepas botol ini?</p>
+    <textarea
+      v-model="_bottle.releaseNotes"
+      placeholder="Catatan Pelepasan"
+      rows="5"
+      class="global-textarea mt-2"
+    ></textarea>
+  </Modal>
+
+  <Modal
+    v-if="filterModal"
+    :use-button="true"
+    :use-small-modal="true"
+    :form-mode="true"
+    :open-global-modal="filterModal"
+    :format="'DD/MM/YYYY'"
+    @close="filterModal = false"
+  >
+    <form class="filter-form" @submit.prevent="">
+      <h2>Filter</h2>
+      <div class="form-group">
+        <label class="text-primaryText" for="date">Tanggal</label>
+        <Datepicker
+          v-model="date"
+          dark
+          auto-apply
+          placeholder="Pilih Tanggal"
+          position="center"
+          class="mx-auto w-full"
+          mode-height="170"
+          :format="format"
+          :enable-time-picker="false"
+          @update:model-value="setDate()"
+        />
+      </div>
+      <div class="form-group">
+        <label class="text-primaryText" for="date">Outlet</label>
+        <CustomSelect
+          v-model="selectedOption"
+          :options="
+            outletsOptions.map((option) => ({
+              id: option.id,
+              text: option.name,
+            }))
+          "
+          placeholder="Pilih Outlet"
+          @search="searchOutlet"
+        />
+      </div>
+    </form>
+  </Modal>
 </template>

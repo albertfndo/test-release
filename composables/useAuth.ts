@@ -1,4 +1,3 @@
-import Axios from "axios";
 import User from "../models/User";
 
 type Callback = () => void;
@@ -56,10 +55,7 @@ export const useAuth = definePiniaStore("auth", {
       this.refresh();
     },
     removeAllItem() {
-      const axios = Axios;
       const userData = useUserData();
-
-      delete axios.defaults.headers.common["For-Outlet-Id"];
 
       userData.value = {
         token: null,
@@ -77,7 +73,7 @@ export const useAuth = definePiniaStore("auth", {
 
       try {
         const { response } = await api.get({
-          url: "/api/v1/holyboard/get-profile",
+          url: "api/v1/holyboard/get-profile",
         });
         this.setUser(response.data.data.user_data);
       } catch (error) {

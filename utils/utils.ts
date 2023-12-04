@@ -1,4 +1,7 @@
 import numeral from "numeral";
+import { roleConstants } from "./RoleConstant";
+
+const userData = useUserData();
 
 export function fuzzySearch(text: string, haystack: string) {
   const hay = text.toLowerCase();
@@ -34,6 +37,14 @@ export function isProduction() {
   return config.public.environment == "production";
 }
 
+export function getNextPage(page: string): number {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  return parseInt(nextPage);
+}
+
+export function isAdmin() {
+  return userData.value.roles?.some((role) => roleConstants.includes(role));
+}
 // export function registerLocalStorageMeta() {
 // localStorage.setItem("APP_ENV", import.meta.env.VITE_APP_ENV);
 // localStorage.setItem("VERSION", import.meta.env.VITE_VERSION);
