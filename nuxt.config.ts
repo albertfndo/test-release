@@ -1,45 +1,67 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      baseUrl: "https://customer.holywings.id",
+      environment: "production",
+      version: "0.0.1",
+    },
+  },
   app: {
     head: {
-      title: "Nuxt Boilerplate",
+      title: "Bottle Keeping - Customer",
       meta: [
-        { "http-equiv": "X-UA-Compatible", content: "IE=edge"},
-        { name: "viewport", content: "width=device-width, initial-scale=1.0, shrink-to-fit=no"},
-        { name: "description", content: "" },
+        { "http-equiv": "X-UA-Compatible", content: "IE=edge" },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1.0, shrink-to-fit=no",
+        },
+        { name: "description", content: "Welcome to Bottle Keeping System" },
         { name: "keyword", content: "" },
+        { name: "robots", content: "noindex" },
       ],
       htmlAttrs: {
-        lang: "en"
+        lang: "en",
       },
       charset: "utf-8",
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      link: [
+        {
+          rel: "icon",
+          type: "image/x-icon",
+          href: "/images/logo/hwg-logo.svg",
+        },
+        { rel: "prefetch", as: "image", href: "/images/icon-not-found.svg" },
+        { rel: "prefetch", as: "image", href: "/images/watermark.webp" },
+        { rel: "prefetch", as: "image", href: "/images/logo/hwg-logo.svg" },
+      ],
     },
   },
   modules: [
     [
-      '@pinia/nuxt',
+      "@pinia/nuxt",
       {
-        autoImports: [
-          'defineStore',
-          ['defineStore', 'definePiniaStore'],
-        ],
+        autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
       },
     ],
     [
-      '@nuxtjs/eslint-module', 
+      "@nuxtjs/eslint-module",
       {
         failOnError: true,
-        formatter: 'unix',
-      }
-    ]
+        formatter: "unix",
+      },
+    ],
+    "@nuxt/image",
+    "nuxt-electron",
   ],
-  css: ['~/assets/css/main.css'],
+  electron: {
+    build: [{ entry: "electron-main.ts" }],
+  },
+  css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
     },
   },
-})
+});

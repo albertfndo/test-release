@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 type Callback = () => void;
 
@@ -7,6 +7,7 @@ type ErrorParameters = {
   message?: string;
   callback?: Callback | null;
   cancellable?: boolean;
+  autoClose?: boolean;
 };
 
 export const useSnackbar = defineStore("snackbar", {
@@ -17,7 +18,7 @@ export const useSnackbar = defineStore("snackbar", {
     title: <string>"",
     buttonText: <string>"OK",
     cancellable: <boolean>true,
-    callback: <Callback | null>null
+    callback: <Callback | null>null,
   }),
 
   actions: {
@@ -34,8 +35,9 @@ export const useSnackbar = defineStore("snackbar", {
     success(
       title = "Success",
       message = "Success Message",
+      autoClose = false,
       buttonText = "Continue",
-      callback: Callback | null = null,
+      callback: Callback | null = null
     ) {
       this.resetButton();
 
@@ -48,8 +50,12 @@ export const useSnackbar = defineStore("snackbar", {
         return;
       });
 
-      if(callback) {
+      if (callback) {
         this.setCallback(callback);
+      }
+
+      if (autoClose) {
+        setTimeout(this.tapExit, 5000);
       }
     },
     failed(
@@ -73,13 +79,14 @@ export const useSnackbar = defineStore("snackbar", {
       message = "Failed Message",
       callback = null,
       cancellable = true,
+      autoClose = false,
     }: ErrorParameters) {
       this.resetButton();
       this.setCallback(() => {
         return;
       });
 
-      if(callback) {
+      if (callback) {
         this.setCallback(callback);
       }
 
@@ -88,6 +95,10 @@ export const useSnackbar = defineStore("snackbar", {
       this.title = title;
       this.message = message;
       this.cancellable = cancellable;
-    }
-  }
+
+      if (autoClose) {
+        setTimeout(this.tapExit, 5000);
+      }
+    },
+  },
 });

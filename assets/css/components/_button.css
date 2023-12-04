@@ -1,0 +1,139 @@
+@tailwind components;
+
+@layer components {
+  .btn-general {
+    @apply px-4 py-2 bg-brand hover:bg-brandSecondary duration-200 rounded-lg text-primaryBg text-sm xl:text-base font-poppins-m;
+  }
+  .btn-danger {
+    @apply px-4 py-2 bg-dangerCard hover:bg-danger duration-200 rounded-lg text-primaryBg text-sm xl:text-base font-poppins-m;
+  }
+  .btn-general-sm {
+    @apply px-2 py-1 bg-brand hover:bg-brandSecondary duration-200 rounded-lg text-primaryBg text-sm font-poppins-r;
+  }
+  .btn-xs {
+    @apply flex px-1 py-0.5 rounded-md text-xs duration-200 font-poppins-r gap-1 items-center justify-center;
+  }
+  .btn-xs.general {
+    @apply border-brand bg-brand hover:bg-brandSecondary duration-200;
+  }
+  .btn-xs.general span {
+    @apply text-xs text-primaryBg;
+  }
+  .btn-xs.no-bg {
+    @apply bg-transparent border border-brand hover:bg-brand text-primaryText hover:text-primaryBg;
+  }
+  .btn-full {
+    @apply flex items-center justify-center gap-1 w-full p-2 rounded-lg duration-200 text-sm lg:text-base font-poppins-m;
+  }
+  .btn-full.disabled {
+    @apply bg-disabled hover:bg-disabled/60 text-primaryText;
+  }
+  .btn-full.active {
+    @apply bg-brand hover:bg-brandSecondary text-primaryBg;
+  }
+  .btn-full.no-bg {
+    @apply bg-transparent hover:bg-brand border border-brand text-primaryText hover:text-primaryBg;
+  }
+  .btn-full.no-bg.brand {
+    @apply bg-transparent hover:bg-brand border border-brand text-brand hover:text-primaryBg;
+  }
+  .btn-head {
+    @apply block mx-auto p-2 duration-200 text-center font-poppins-r;
+  }
+  .btn-outline-head {
+    @apply px-1 py-0.5 flex gap-0.5 border border-brand hover:bg-brand text-primaryText hover:text-primaryBg duration-200 rounded-md items-center font-poppins-r text-sm;
+  }
+  .btn-head-mobile {
+    @apply block w-full mb-5 font-poppins-r;
+  }
+  .btn-head-mobile:last-child {
+    @apply mb-0;
+  }
+  .btn-head.white,
+  .btn-head-mobile.white {
+    @apply text-primaryText hover:bg-cardBg;
+  }
+  .btn-head.brand,
+  .btn-head-mobile.brand {
+    @apply text-brand;
+  }
+  .btn-head p,
+  .btn-head-mobile p {
+    @apply text-sm;
+  }
+  .btn-calendar-trigger {
+    @apply w-28 py-2 px-3 bg-[#4D473B] hover:bg-[#645C4B] duration-200 rounded-lg text-primaryText text-sm font-poppins-r;
+  }
+  .btn-calendar-trigger-wide {
+    @apply py-2 px-3 bg-[#4D473B] hover:bg-[#645C4B] duration-200 rounded-lg text-primaryText text-sm font-poppins-r;
+  }
+  .btn-rsvp-status {
+    @apply py-2 px-3 duration-200 border rounded-lg text-primaryText text-sm font-poppins-r w-full min-w-max md:w-auto;
+  }
+  .btn-rsvp-status.pending {
+    @apply border-brand;
+  }
+  .btn-rsvp-status.new {
+    @apply border-blue-400;
+  }
+  .btn-rsvp-status.new.active {
+    @apply bg-blue-400;
+  }
+  .btn-rsvp-status.confirmed {
+    @apply border-[#FF5D97];
+  }
+  .btn-rsvp-status.rejected {
+    @apply border-[#FF5D97];
+  }
+  .btn-rsvp-status.arrived {
+    @apply border-success;
+  }
+  .btn-rsvp-status.approved {
+    @apply border-success;
+  }
+  .btn-rsvp-status.cancelled {
+    @apply border-disabled;
+  }
+  .btn-rsvp-status.active{
+    @apply bg-white text-primaryBg;
+  }
+  .btn-rsvp-status.pending.active {
+    @apply bg-brand text-primaryBg;
+  }
+  .btn-rsvp-status.confirmed.active {
+    @apply bg-[#FF5D97] text-primaryBg;
+  }
+  .btn-rsvp-status.arrived.active {
+    @apply bg-success text-primaryBg;
+  }
+  .btn-rsvp-status.rejected.active {
+    @apply bg-[#FF5D97] text-primaryBg;
+  }
+  .btn-rsvp-status.approved.active {
+    @apply bg-success text-primaryBg;
+  }
+  .btn-rsvp-status.cancelled.active {
+    @apply bg-[#4D473B] border-[#4D473B];
+  }
+  .btn-settings-toggle {
+    @apply text-base xl:text-xl font-poppins-r;
+  }
+  .btn-settings-toggle.inactive {
+    @apply text-dangerCard;
+  }
+  .btn-settings-toggle.active {
+    @apply text-success;
+  }
+  .btn-add-guest {
+    @apply w-full max-w-max min-w-max p-2 bg-brand hover:bg-brandSecondary duration-200 text-primaryBg font-poppins-m rounded-lg;
+  }
+  .btn-add-guest p{
+    @apply text-primaryBg font-poppins-r rounded-lg;
+  }
+  .btn-regular-nav {
+    @apply rounded-full duration-200 hover:bg-disabled/30;
+  }
+  .btn-guest.no-bg {
+    @apply bg-transparent hover:bg-brand border border-brand text-primaryText hover:text-primaryBg;
+  }
+}

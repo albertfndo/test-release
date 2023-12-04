@@ -1,7 +1,11 @@
 <template>
-  <header></header>
+  <NuxtLoadingIndicator />
+  <!-- <Watermark v-if="!isProduction()" /> -->
+
+  <header>
+    <Navbar />
+  </header>
   <main>
     <NuxtPage />
   </main>
-  <footer></footer>
 </template>
