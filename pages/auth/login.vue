@@ -23,7 +23,8 @@ onMounted(() => {
 
 async function login() {
   const ipc = useIpcRenderer();
-  ipc.send("_test", { data: "aasdfasdf" });
+  // ipc.send("_test", { data: "aasdfasdf" });
+  ipc.send("print", { data: "aasdfasdf", ip: "192.168.129.117" });
 
   // if (!isValid()) return;
   // await _controller.login();

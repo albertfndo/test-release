@@ -44,7 +44,11 @@ function runIpcMain() {
   const keys = Object.keys(routes)
 
   for (let key of keys) {
-    ipcMain.on(key, routes[key])
+    console.log(key, routes[key])
+    ipcMain.on(key, (event, data) => {
+      console.log(key)
+      routes[key](event, data);
+    })
   }
 }
 

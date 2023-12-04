@@ -1,8 +1,8 @@
-import { EscPostWrapper } from "./EscPostWrapper"
+import {print, test} from "./EscPosWrapper"
 
 console.log("============Routes loaded============")
-const wrapper = new EscPostWrapper;
 
 export const routes = {
-  "_test": wrapper.test
+  print: print,
+  _test: test,
 }
