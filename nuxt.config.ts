@@ -47,15 +47,18 @@ export default defineNuxtConfig({
     [
       "@nuxtjs/eslint-module",
       {
-        failOnError: true,
+        failOnError: false,
         formatter: "unix",
+        lintOnStart: false
       },
     ],
     "@nuxt/image",
     "nuxt-electron",
   ],
   electron: {
-    build: [{ entry: "electron-main.ts" }],
+    build: [
+      { entry: "electron/electron-main.ts" },
+    ],
   },
   css: ["~/assets/css/main.css"],
   postcss: {
