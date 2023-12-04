@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Datepicker from "@vuepic/vue-datepicker";
-import moment from "moment";
+// import moment from "moment";
 import Outlet from "~/models/Outlet";
 
 const _outlet = useOutlet();

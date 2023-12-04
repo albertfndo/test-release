@@ -52,7 +52,11 @@ export default defineNuxtConfig({
       },
     ],
     "@nuxt/image",
+    "nuxt-electron",
   ],
+  electron: {
+    build: [{ entry: "electron-main.ts" }],
+  },
   css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
