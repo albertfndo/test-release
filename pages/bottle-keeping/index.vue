@@ -1,16 +1,31 @@
 <script setup lang="ts">
 import moment from "moment";
-import { BottleStatus } from "~/models/KeepingData";
 import { nextTick } from "vue";
+import Datepicker from "@vuepic/vue-datepicker";
+import { BottleStatus } from "~/models/KeepingData";
 import { selectedBottleData } from "~/composables/useBottleKeeping";
 
 await nextTick();
 
-const openDetailModal = ref(false);
-const _bottle = useBottleKeeping();
-const searchKey = ref("");
-const releaseModal = ref(false);
 const _dialog = useDialog();
+const _outlet = useOutlet();
+const _bottle = useBottleKeeping();
+
+const date = ref("");
+const searchKey = ref("");
+const filterModal = ref(false);
+const releaseModal = ref(false);
+const openDetailModal = ref(false);
+const selectedOption = ref(null);
+const outletsOptions = ref<Outlet[]>([]);
+
+const format = (date: any) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
 
 onMounted(() => {
   _bottle.$reset();
@@ -21,6 +36,8 @@ onMounted(() => {
 
 async function initializaData(search?: string, page?: number) {
   await _bottle.getBottleDatas(search, false, page);
+  await _outlet.getOutlets();
+  outletsOptions.value = _outlet.outlets;
 }
 
 async function changePage(page: any) {
@@ -129,15 +146,22 @@ if (isAdmin()) {
     click: async () => initializaData(),
   });
 }
+
+function setDate() {
+  // date.value = moment(date.value).format("DD-MM-YYYY");
+}
+
+function searchOutlet(search: string) {
+  const filtered = _outlet.outlets.filter((option) =>
+    fuzzySearch(option.name, search)
+  );
+  outletsOptions.value = filtered;
+}
 </script>
 
 <template>
   <section id="bottleKeepHead">
-    <Topbar
-      page-title="Bottle Keeping"
-      :use-actions="true"
-      :actions="actions"
-    />
+    <Topbar page-title="Bottle Keep" :use-actions="true" :actions="actions" />
 
     <div class="menu-bar my-6">
       <div class="flex gap-2 mb-4 md:mb-0">
@@ -195,7 +219,7 @@ if (isAdmin()) {
         </div>
       </div>
 
-      <div class="flex gap-2 md:w-2/5 lg:w-1/3">
+      <div class="search-row">
         <form class="search" @submit.prevent="searchData()">
           <input
             v-model="searchKey"
@@ -206,6 +230,15 @@ if (isAdmin()) {
             <Iconify icon="material-symbols:search" class="text-xl" />
           </button>
         </form>
+        <button type="button" class="btn-add-guest" @click="filterModal = true">
+          <div class="new">
+            <Iconify icon="mdi:filter" class="text-primaryBg text-xl" />
+            <p>Filter</p>
+          </div>
+          <p class="block lg:hidden">
+            <Iconify icon="mdi:filter" class="mx-auto text-primaryBg text-xl" />
+          </p>
+        </button>
         <div class="devider hidden md:block"></div>
         <button
           type="button"
@@ -363,5 +396,48 @@ if (isAdmin()) {
       rows="5"
       class="global-textarea mt-2"
     ></textarea>
+  </Modal>
+
+  <Modal
+    v-if="filterModal"
+    :use-button="true"
+    :use-small-modal="true"
+    :form-mode="true"
+    :open-global-modal="filterModal"
+    :format="'DD/MM/YYYY'"
+    @close="filterModal = false"
+  >
+    <form class="filter-form" @submit.prevent="">
+      <h2>Filter</h2>
+      <div class="form-group">
+        <label class="text-primaryText" for="date">Tanggal</label>
+        <Datepicker
+          v-model="date"
+          dark
+          auto-apply
+          placeholder="Pilih Tanggal"
+          position="center"
+          class="mx-auto w-full"
+          mode-height="170"
+          :format="format"
+          :enable-time-picker="false"
+          @update:model-value="setDate()"
+        />
+      </div>
+      <div class="form-group">
+        <label class="text-primaryText" for="date">Outlet</label>
+        <CustomSelect
+          v-model="selectedOption"
+          :options="
+            outletsOptions.map((option) => ({
+              id: option.id,
+              text: option.name,
+            }))
+          "
+          placeholder="Pilih Outlet"
+          @search="searchOutlet"
+        />
+      </div>
+    </form>
   </Modal>
 </template>
