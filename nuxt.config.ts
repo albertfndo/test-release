@@ -49,17 +49,15 @@ export default defineNuxtConfig({
       {
         failOnError: false,
         formatter: "unix",
-        lintOnStart: false
+        lintOnStart: false,
       },
     ],
     "@nuxt/image",
-    "nuxt-electron",
+    // "nuxt-electron",
   ],
-  electron: {
-    build: [
-      { entry: "electron/electron-main.ts" },
-    ],
-  },
+  // electron: {
+  //   build: [{ entry: "electron/electron-main.ts" }],
+  // },
   css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {

@@ -1,8 +1,7 @@
-import {print, test} from "./EscPosWrapper"
+import { print } from "./EscPosWrapper";
 
-console.log("============Routes loaded============")
+console.log("============Routes loaded============");
 
 export const routes = {
   print: print,
-  _test: test,
-}
+};

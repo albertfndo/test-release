@@ -41,9 +41,7 @@ export default class KeepingData {
   }
 
   public get bottleStatusIndoText() {
-    return Object.entries(this.BottleStatus)
-      .find(([, value]) => value === this.status)?.[0]
-      .toUpperCase();
+    return this.BottleStatus[this.status].replaceAll("_", " ").toUpperCase();
   }
 
   public static fromJson(json: any): KeepingData {

@@ -46,26 +46,17 @@ async function changePage(page: any) {
 }
 
 function searchOutlet(search: string) {
-  const filtered = _outlet.outlets.filter((option) =>
-    fuzzySearch(option.name, search)
-  );
+  const filtered = _outlet.outlets.filter((option) => fuzzySearch(option.name, search));
   outletsOptions.value = filtered;
 }
 </script>
 
 <template>
   <section id="bottleKeepHistoryHead">
-    <Topbar
-      page-title="Bottle Keeping History"
-      :use-actions="true"
-      :actions="actions"
-    />
+    <Topbar page-title="Bottle Keeping History" :use-actions="true" :actions="actions" />
 
     <div class="menu-bar my-6">
-      <form
-        class="ml-auto search md:w-1/2 gap-2"
-        @submit.prevent="searchData()"
-      >
+      <form class="ml-auto search md:w-1/2 gap-2" @submit.prevent="searchData()">
         <CustomSelect
           v-model="selectedOption"
           :options="
@@ -107,7 +98,7 @@ function searchOutlet(search: string) {
             class="cursor-pointer hover:bg-primaryBg/40 duration-200"
             @click="selectBottleCard(bottleData)"
           >
-            <td class="text-center">{{ _bottle.meta.from + index }}</td>
+            <td class="text-center">{{ index + 1 }}</td>
             <td>{{ bottleData.bottleName }}</td>
             <td>{{ bottleData.userFullName }}</td>
             <td>{{ bottleData.phoneNumber }}</td>
@@ -144,7 +135,7 @@ function searchOutlet(search: string) {
     </div>
 
     <Pagination
-      v-if="_bottle.meta.total > 10"
+      v-if="_bottle.meta?.total > 10"
       :from="_bottle.meta.from"
       :to="_bottle.meta.to"
       :total="_bottle.meta.total"

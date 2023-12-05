@@ -152,9 +152,7 @@ function setDate() {
 }
 
 function searchOutlet(search: string) {
-  const filtered = _outlet.outlets.filter((option) =>
-    fuzzySearch(option.name, search)
-  );
+  const filtered = _outlet.outlets.filter((option) => fuzzySearch(option.name, search));
   outletsOptions.value = filtered;
 }
 </script>
@@ -186,9 +184,7 @@ function searchOutlet(search: string) {
           <button
             type="button"
             class="btn-rsvp-status arrived"
-            :class="
-              _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
-            "
+            :class="_bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''"
             @click="_bottle.bottleStatus = BottleStatus.unlock"
           >
             Terbuka
@@ -196,9 +192,7 @@ function searchOutlet(search: string) {
           <button
             type="button"
             class="btn-rsvp-status"
-            :class="
-              _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
-            "
+            :class="_bottle.bottleStatus === BottleStatus.release ? 'active' : ''"
             @click="_bottle.bottleStatus = BottleStatus.release"
           >
             Diambil
@@ -221,11 +215,7 @@ function searchOutlet(search: string) {
 
       <div class="search-row">
         <form class="search" @submit.prevent="searchData()">
-          <input
-            v-model="searchKey"
-            type="text"
-            placeholder="Cari sesuatu..."
-          />
+          <input v-model="searchKey" type="text" placeholder="Cari sesuatu..." />
           <button @click="searchData()">
             <Iconify icon="material-symbols:search" class="text-xl" />
           </button>
@@ -250,10 +240,7 @@ function searchOutlet(search: string) {
             <p>Tambah Data</p>
           </div>
           <p class="block lg:hidden">
-            <Iconify
-              icon="mdi:plus-circle"
-              class="mx-auto text-primaryBg text-xl"
-            />
+            <Iconify icon="mdi:plus-circle" class="mx-auto text-primaryBg text-xl" />
           </p>
         </button>
       </div>
@@ -281,14 +268,10 @@ function searchOutlet(search: string) {
           <tr
             v-for="(bottleData, index) in _bottle.bottleDatas"
             :key="index"
-            :class="
-              !isAdmin()
-                ? 'hover:bg-primaryBg/40 cursor-pointer duration-200'
-                : ''
-            "
+            :class="!isAdmin() ? 'hover:bg-primaryBg/40 cursor-pointer duration-200' : ''"
             @click="!isAdmin() ? selectBottleCard(bottleData) : ''"
           >
-            <td class="text-center">{{ _bottle.meta.from + index }}</td>
+            <td class="text-center">{{ index + 1 }}</td>
             <td>{{ bottleData.bottleName }}</td>
             <td>{{ bottleData.userFullName }}</td>
             <td>{{ bottleData.phoneNumber }}</td>
@@ -333,10 +316,7 @@ function searchOutlet(search: string) {
                 >
                   <p>Kunci</p>
                 </button>
-                <button
-                  class="btn-full no-bg"
-                  @click="selectBottleCard(bottleData)"
-                >
+                <button class="btn-full no-bg" @click="selectBottleCard(bottleData)">
                   <p>Detail</p>
                 </button>
               </div>
@@ -359,7 +339,7 @@ function searchOutlet(search: string) {
     </div>
 
     <Pagination
-      v-if="_bottle.meta.total > 10"
+      v-if="_bottle.meta?.total > 10"
       :from="_bottle.meta.from"
       :to="_bottle.meta.to"
       :total="_bottle.meta.total"

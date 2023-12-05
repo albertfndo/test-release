@@ -1,36 +1,26 @@
-import escpos from "escpos"
-import Network from "escpos-network"
+import escpos from "escpos";
+import Network from "escpos-network";
 
-
-const getDeviceAndPrinter = (ip) => {
+const getDeviceAndPrinter = (ip: string) => {
   escpos.Network = Network;
-  const device = new escpos.Network(ip, 9100)
+  const device = new escpos.Network(ip, 9100);
   const printer = new escpos.Printer(device);
 
   return {
-    device, printer
-  }
-}
+    device,
+    printer,
+  };
+};
 
-export const test = (event, data) => {
-  console.log('tesasfasdft');
-  console.log(event);
-  console.log(data);
-}
-
-export const print = (event, data) => {
-  const { device, printer } = getDeviceAndPrinter(data.ip)
-  device.open(async (err) => {
+export const print = (event: any, data: any) => {
+  const { device, printer } = getDeviceAndPrinter(data.ip);
+  device.open(async (err: any) => {
     if (err instanceof Error) {
-      console.error(err)
+      console.error(err);
       console.error("error!!");
       return;
     }
 
-    printer.font('a')
-      .size(1, 1)
-      .text('testing bos')
-      .cut()
-      .close()
-  })
-}
+    printer.font("a").size(1, 1).text(data.text).cut().close();
+  });
+};

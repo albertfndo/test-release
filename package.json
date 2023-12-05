@@ -16,7 +16,7 @@
     "@nuxt/devtools": "latest",
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxtjs/eslint-module": "^4.1.0",
-    "@types/node": "^20.10.3",
+    "@types/node": "^18.19.2",
     "@types/numeral": "^2.0.5",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.54.0",
@@ -28,7 +28,6 @@
   "dependencies": {
     "@nuxt/image": "^1.0.0",
     "@pinia/nuxt": "^0.4.11",
-    "@types/electron": "^1.6.10",
     "@vuepic/vue-datepicker": "^6.1.0",
     "@vueuse/core": "^10.6.1",
     "@vueuse/electron": "^10.6.1",

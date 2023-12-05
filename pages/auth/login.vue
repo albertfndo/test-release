@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useIpcRenderer } from "@vueuse/electron";
 definePageMeta({
   layout: "auth",
 });
@@ -22,12 +21,8 @@ onMounted(() => {
 });
 
 async function login() {
-  const ipc = useIpcRenderer();
-  // ipc.send("_test", { data: "aasdfasdf" });
-  ipc.send("print", { data: "aasdfasdf", ip: "192.168.129.117" });
-
-  // if (!isValid()) return;
-  // await _controller.login();
+  if (!isValid()) return;
+  await _controller.login();
 }
 
 function isValid() {
@@ -78,7 +73,9 @@ function isValid() {
             <button type="button" @click="showPassword = !showPassword">
               <Iconify
                 :icon="
-                  showPassword ? `ic:outline-visibility-off` : 'ic:outline-visibility'
+                  showPassword
+                    ? `ic:outline-visibility-off`
+                    : 'ic:outline-visibility'
                 "
                 class="text-brand text-3xl"
               />

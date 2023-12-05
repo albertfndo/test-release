@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useIpcRenderer } from "@vueuse/electron";
+
 const route = useRoute();
 const _guest = useGuest();
 const _bottle = useBottleKeeping();
@@ -122,7 +124,15 @@ function submitData() {
     return;
   }
 
-  _bottle.submitBottleData(useMember.value);
+  _bottle.submitBottleData(useMember.value).then(() => {
+    const ipc = useIpcRenderer();
+    ipc.send("print", {
+      text: `${selectedBottle.value.bottleName ?? _bottle.form.bottleName}`,
+      ip: "192.168.129.117",
+    });
+
+    navigateTo("/bottle-keeping");
+  });
 }
 </script>
 
@@ -141,7 +151,7 @@ function submitData() {
       </button>
       <h1 class="subtitle-2 text-primaryText">
         {{
-          selectedBottle.bottleName
+          selectedBottle?.bottleName
             ? "Rekeep Bottle " + selectedBottle.bottleName
             : "Add Bottle Keeping"
         }}
