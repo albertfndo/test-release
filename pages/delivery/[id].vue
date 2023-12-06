@@ -92,14 +92,12 @@ function chooseBottle(id: number) {
           )
         "
       >
-        <button class="btn-general">
+        <button class="btn-status pending active">
           <Iconify
             icon="icon-park-outline:delivery"
             class="text-lg md:hidden"
           />
-          <span class="hidden md:flex" @click="completeModal = true"
-            >Sampai</span
-          >
+          <span class="detail" @click="completeModal = true">Sampai</span>
         </button>
       </div>
     </div>
