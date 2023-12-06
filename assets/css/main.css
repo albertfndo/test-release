@@ -41,7 +41,7 @@
 
 @layer components {
   table {
-    @apply table-auto bg-cardBg shadow-card rounded-xl overflow-hidden;
+    @apply table-auto bg-cardBg shadow-card rounded-xl overflow-hidden w-full;
   }
   table thead  {
     @apply bg-primaryText shadow-md;

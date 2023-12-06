@@ -29,6 +29,9 @@
   .modal-card h2 {
     @apply mb-3 text-primaryText text-lg font-poppins-sb;
   }
+  .small-modal-card p {
+    @apply text-primaryText text-sm font-poppins-r;
+  }
   .modal-card p {
     @apply text-primaryText text-sm font-poppins-r;
   }

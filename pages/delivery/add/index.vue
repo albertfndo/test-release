@@ -1,18 +1,44 @@
 <script setup lang="ts">
-const notes = ref("");
+const _bottle = useBottleKeeping();
+const _delivery = useDelivery();
+
+onMounted(() => {
+  _bottle.$reset();
+  nextTick(async () => {
+    await initializaData();
+  });
+});
+
+async function initializaData(search?: string, page?: number) {
+  await _bottle.getBottleDatas(search, false, page);
+}
 
 const characterCount = computed(() => {
-  return notes.value.length + "/200";
+  return _delivery.form.notes.length + "/200";
 });
 
 watch(
-  () => notes.value,
+  () => _delivery.form.notes,
   (newValue) => {
     if (newValue.length > 200) {
-      notes.value = newValue.slice(0, 200);
+      _delivery.form.notes = newValue.slice(0, 200);
     }
   }
 );
+
+function chooseBottle(id: number) {
+  if (_delivery.form.bottles.includes(id)) {
+    _delivery.form.bottles = _delivery.form.bottles.filter(
+      (bottleId: number) => bottleId !== id
+    );
+  } else {
+    _delivery.form.bottles.push(id);
+  }
+}
+
+function draftData() {
+  _delivery.submitDelivery();
+}
 </script>
 <template>
   <section id="addNewDataHead" class="without-topbar">
@@ -40,7 +66,12 @@ watch(
           <label for="bottleName"
             >Nomor Surat Jalan <span class="asterisk"></span
           ></label>
-          <input id="deliveryReceiptNumber" type="text" disabled />
+          <input
+            id="deliveryReceiptNumber"
+            v-model="_delivery.form.deliveryNumber"
+            type="text"
+            disabled
+          />
         </div>
         <div class="my-4 max-h-[50vh] overflow-y-auto">
           <table class="w-full">
@@ -53,113 +84,24 @@ watch(
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Jameson</td>
-                <td>Albert</td>
+              <tr
+                v-for="(bottleData, index) in _bottle.bottleDatas"
+                v-show="_bottle.bottleDatas.length"
+                :key="index"
+              >
+                <td>
+                  <input
+                    class="text-center"
+                    type="checkbox"
+                    @change="chooseBottle(bottleData.id)"
+                  />
+                </td>
+                <td class="text-center">{{ index + 1 }}</td>
+                <td>{{ bottleData.bottleName }}</td>
+                <td>{{ bottleData.userFullName }}</td>
               </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Equil</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
-              </tr>
-              <tr>
-                <td><input class="text-center" type="checkbox" /></td>
-                <td class="text-center">1</td>
-                <td>Civas</td>
-                <td>Albert</td>
+              <tr v-show="!_bottle.bottleDatas.length">
+                <td colspan="4" class="text-center">Tidak ada data</td>
               </tr>
             </tbody>
           </table>
@@ -170,14 +112,14 @@ watch(
             >Catatan <span class="asterisk"></span
           ></label>
           <textarea
-            v-model="notes"
+            v-model="_delivery.form.notes"
             rows="5"
             placeholder="Ketik disini..."
           ></textarea>
           <p class="text-primaryText text-end">{{ characterCount }}</p>
         </div>
         <div class="mt-10">
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-3 gap-4">
             <button
               type="button"
               class="btn-full disabled"
@@ -185,12 +127,15 @@ watch(
             >
               Batal
             </button>
+            <button type="button" class="btn-full active" @click="draftData()">
+              Simpan
+            </button>
             <button
               type="button"
               class="btn-full active"
               @click="console.log(1)"
             >
-              Simpan
+              Simpan & Publish
             </button>
           </div>
         </div>

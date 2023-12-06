@@ -67,52 +67,55 @@
   .btn-calendar-trigger-wide {
     @apply py-2 px-3 bg-[#4D473B] hover:bg-[#645C4B] duration-200 rounded-lg text-primaryText text-sm font-poppins-r;
   }
-  .btn-rsvp-status {
+  .btn-status {
     @apply py-2 px-3 duration-200 border rounded-lg text-primaryText text-sm font-poppins-r w-full min-w-max md:w-auto;
   }
-  .btn-rsvp-status.pending {
+  .btn-status span.detail {
+    @apply hidden md:flex font-poppins-m;
+  }
+  .btn-status.pending {
     @apply border-brand;
   }
-  .btn-rsvp-status.new {
+  .btn-status.new {
     @apply border-blue-400;
   }
-  .btn-rsvp-status.new.active {
+  .btn-status.new.active {
     @apply bg-blue-400;
   }
-  .btn-rsvp-status.confirmed {
+  .btn-status.confirmed {
     @apply border-[#FF5D97];
   }
-  .btn-rsvp-status.rejected {
+  .btn-status.rejected {
     @apply border-[#FF5D97];
   }
-  .btn-rsvp-status.arrived {
+  .btn-status.arrived {
     @apply border-success;
   }
-  .btn-rsvp-status.approved {
+  .btn-status.approved {
     @apply border-success;
   }
-  .btn-rsvp-status.cancelled {
+  .btn-status.cancelled {
     @apply border-disabled;
   }
-  .btn-rsvp-status.active{
+  .btn-status.active{
     @apply bg-white text-primaryBg;
   }
-  .btn-rsvp-status.pending.active {
+  .btn-status.pending.active {
     @apply bg-brand text-primaryBg;
   }
-  .btn-rsvp-status.confirmed.active {
+  .btn-status.confirmed.active {
     @apply bg-[#FF5D97] text-primaryBg;
   }
-  .btn-rsvp-status.arrived.active {
+  .btn-status.arrived.active {
     @apply bg-success text-primaryBg;
   }
-  .btn-rsvp-status.rejected.active {
+  .btn-status.rejected.active {
     @apply bg-[#FF5D97] text-primaryBg;
   }
-  .btn-rsvp-status.approved.active {
+  .btn-status.approved.active {
     @apply bg-success text-primaryBg;
   }
-  .btn-rsvp-status.cancelled.active {
+  .btn-status.cancelled.active {
     @apply bg-[#4D473B] border-[#4D473B];
   }
   .btn-settings-toggle {

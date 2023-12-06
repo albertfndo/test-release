@@ -44,7 +44,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
       unlimitedExpired: <boolean>false,
     },
     releaseNotes: <string>"",
-    bottleStatus: <number>0,
+    bottleStatus: <number>1,
     meta: <PageMeta>{},
     links: <Links>{},
   }),

@@ -68,6 +68,23 @@ export const useApi = definePiniaStore("api", () => {
     });
   }
 
+  function del({ url, params = {} }: Request): Promise<Response> {
+    return new Promise((resolve, reject) => {
+      useFetch(`${baseUrl}/${url}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+        body: JSON.stringify(params),
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
+    });
+  }
+
   function put({ url, params = {} }: Request): Promise<any> {
     return new Promise((resolve, reject) => {
       useFetch(`${baseUrl}/${url}`, {
@@ -185,6 +202,14 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
+    } else if (error.statusCode == 403) {
+      snackbar.error({
+        title: "Error",
+        message: "Anda tidak memiliki akses untuk melakukan aksi ini",
+        autoClose: true,
+      });
+
+      handled = true;
     } else {
       snackbar.error({
         title: "Error",
@@ -201,6 +226,7 @@ export const useApi = definePiniaStore("api", () => {
   return {
     get,
     post,
+    del,
     put,
     uploadFile,
     // download,

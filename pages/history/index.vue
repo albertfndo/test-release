@@ -13,11 +13,15 @@ onMounted(() => {
   _bottle.$reset();
   nextTick(async () => {
     await initializaData();
+    await getOutlets();
   });
 });
 
 async function initializaData(search?: string, page?: number) {
   await _bottle.getBottleDatas(search, true, page);
+}
+
+async function getOutlets() {
   await _outlet.getOutlets();
   outletsOptions.value = _outlet.outlets;
 }
@@ -62,10 +66,8 @@ function searchOutlet(search: string) {
     />
 
     <div class="menu-bar my-6">
-      <form
-        class="ml-auto search md:w-1/2 gap-2"
-        @submit.prevent="searchData()"
-      >
+      <div class="spacer"></div>
+      <div class="search-row">
         <CustomSelect
           v-model="selectedOption"
           :options="
@@ -74,20 +76,27 @@ function searchOutlet(search: string) {
               text: option.name,
             }))
           "
+          class="md:w-1/2"
           placeholder="Pilih Outlet"
           @search="searchOutlet"
         />
-        <input v-model="searchKey" type="text" placeholder="Cari sesuatu..." />
-        <button @click="searchData()">
-          <Iconify icon="material-symbols:search" class="text-xl" />
-        </button>
-      </form>
+        <form class="search md:w-1/2" @submit.prevent="searchData()">
+          <input
+            v-model="searchKey"
+            type="text"
+            placeholder="Cari sesuatu..."
+          />
+          <button @click="searchData()">
+            <Iconify icon="material-symbols:search" class="text-xl" />
+          </button>
+        </form>
+      </div>
     </div>
   </section>
 
   <section id="bottleKeepHistoryBody" class="page-body">
-    <div v-if="_bottle.bottleDatas.length" class="mt-8 overflow-x-auto">
-      <table :class="isAdmin() ? 'w-[110%]' : 'w-full'">
+    <div class="mt-8 overflow-x-auto">
+      <table>
         <thead>
           <tr>
             <th class="text-center">No</th>
@@ -103,6 +112,7 @@ function searchOutlet(search: string) {
         <tbody>
           <tr
             v-for="(bottleData, index) in _bottle.bottleDatas"
+            v-show="_bottle.bottleDatas.length"
             :key="index"
             class="cursor-pointer hover:bg-primaryBg/40 duration-200"
             @click="selectBottleCard(bottleData)"
@@ -127,20 +137,11 @@ function searchOutlet(search: string) {
               </span>
             </td>
           </tr>
+          <tr v-show="!_bottle.bottleDatas.length">
+            <td colspan="8" class="text-center">Tidak ada data</td>
+          </tr>
         </tbody>
       </table>
-    </div>
-    <div v-else class="text-center mt-10">
-      <NuxtImg
-        preload
-        src="/images/icon-not-found.svg"
-        class="m-auto"
-        width="160px"
-        loading="lazy"
-        quality="80"
-        alt="No Data"
-      />
-      <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
 
     <Pagination
