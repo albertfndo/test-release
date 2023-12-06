@@ -27,7 +27,7 @@
     @apply lg:ml-64 px-4 lg:px-6 mt-6 lg:mt-0;
   }
   ::-webkit-scrollbar {
-    @apply w-1.5;               /* width of the entire scrollbar */
+    @apply w-1.5 hidden;               /* width of the entire scrollbar */
   }
   
   ::-webkit-scrollbar-track {
@@ -67,6 +67,10 @@
   }
   .card .card-body {
     @apply px-4 pb-4 flex flex-col gap-4;
+  }
+
+  .scanner-input {
+    @apply w-full p-2 bg-primaryBg/60 rounded-md border border-brand text-primaryText focus:outline-brandSecondary placeholder:text-brand/50 text-sm font-poppins-r;;
   }
 
   input[type='checkbox']{

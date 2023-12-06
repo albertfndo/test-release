@@ -18,6 +18,8 @@ const releaseModal = ref(false);
 const openDetailModal = ref(false);
 const selectedOption = ref(null);
 const outletsOptions = ref<Outlet[]>([]);
+const scannerModal = ref(false);
+const scannerFocus = ref();
 
 const format = (date: any) => {
   const day = date.getDate();
@@ -31,18 +33,18 @@ onMounted(() => {
   _bottle.$reset();
   nextTick(async () => {
     await initializaData();
+    await _outlet.getOutlets();
+    outletsOptions.value = _outlet.outlets;
   });
 });
 
 async function initializaData(search?: string, page?: number) {
   await _bottle.getBottleDatas(search, false, page);
-  await _outlet.getOutlets();
-  outletsOptions.value = _outlet.outlets;
 }
 
 async function changePage(page: any) {
   const nextPage = page?.split("page=")[1].split("&")[0];
-  await initializaData((page = nextPage));
+  await initializaData(searchKey.value, (page = nextPage));
 }
 
 watch(
@@ -61,6 +63,13 @@ function getColor(status: number) {
   };
 
   return colorMap[status as keyof typeof colorMap];
+}
+
+function openScanner() {
+  scannerModal.value = true;
+  nextTick(() => {
+    scannerFocus.value.focus();
+  });
 }
 
 function selectBottleCard(bottleData: KeepingData) {
@@ -136,6 +145,12 @@ const actions = reactive<Action[]>([
     color: "white",
     click: async () => initializaData(),
   },
+  {
+    text: "Scan QR",
+    icon: "tabler:qrcode",
+    color: "white",
+    click: async () => openScanner(),
+  },
 ]);
 
 if (isAdmin()) {
@@ -152,7 +167,9 @@ function setDate() {
 }
 
 function searchOutlet(search: string) {
-  const filtered = _outlet.outlets.filter((option) => fuzzySearch(option.name, search));
+  const filtered = _outlet.outlets.filter((option) =>
+    fuzzySearch(option.name, search)
+  );
   outletsOptions.value = filtered;
 }
 </script>
@@ -184,7 +201,9 @@ function searchOutlet(search: string) {
           <button
             type="button"
             class="btn-rsvp-status arrived"
-            :class="_bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''"
+            :class="
+              _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
+            "
             @click="_bottle.bottleStatus = BottleStatus.unlock"
           >
             Terbuka
@@ -192,7 +211,9 @@ function searchOutlet(search: string) {
           <button
             type="button"
             class="btn-rsvp-status"
-            :class="_bottle.bottleStatus === BottleStatus.release ? 'active' : ''"
+            :class="
+              _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
+            "
             @click="_bottle.bottleStatus = BottleStatus.release"
           >
             Diambil
@@ -215,7 +236,11 @@ function searchOutlet(search: string) {
 
       <div class="search-row">
         <form class="search" @submit.prevent="searchData()">
-          <input v-model="searchKey" type="text" placeholder="Cari sesuatu..." />
+          <input
+            v-model="searchKey"
+            type="text"
+            placeholder="Cari sesuatu..."
+          />
           <button @click="searchData()">
             <Iconify icon="material-symbols:search" class="text-xl" />
           </button>
@@ -240,7 +265,10 @@ function searchOutlet(search: string) {
             <p>Tambah Data</p>
           </div>
           <p class="block lg:hidden">
-            <Iconify icon="mdi:plus-circle" class="mx-auto text-primaryBg text-xl" />
+            <Iconify
+              icon="mdi:plus-circle"
+              class="mx-auto text-primaryBg text-xl"
+            />
           </p>
         </button>
       </div>
@@ -268,10 +296,14 @@ function searchOutlet(search: string) {
           <tr
             v-for="(bottleData, index) in _bottle.bottleDatas"
             :key="index"
-            :class="!isAdmin() ? 'hover:bg-primaryBg/40 cursor-pointer duration-200' : ''"
+            :class="
+              !isAdmin()
+                ? 'hover:bg-primaryBg/40 cursor-pointer duration-200'
+                : ''
+            "
             @click="!isAdmin() ? selectBottleCard(bottleData) : ''"
           >
-            <td class="text-center">{{ index + 1 }}</td>
+            <td class="text-center">{{ _bottle.meta.from + index }}</td>
             <td>{{ bottleData.bottleName }}</td>
             <td>{{ bottleData.userFullName }}</td>
             <td>{{ bottleData.phoneNumber }}</td>
@@ -316,7 +348,10 @@ function searchOutlet(search: string) {
                 >
                   <p>Kunci</p>
                 </button>
-                <button class="btn-full no-bg" @click="selectBottleCard(bottleData)">
+                <button
+                  class="btn-full no-bg"
+                  @click="selectBottleCard(bottleData)"
+                >
                   <p>Detail</p>
                 </button>
               </div>
@@ -339,7 +374,7 @@ function searchOutlet(search: string) {
     </div>
 
     <Pagination
-      v-if="_bottle.meta?.total > 10"
+      v-if="_bottle.meta.total > 10"
       :from="_bottle.meta.from"
       :to="_bottle.meta.to"
       :total="_bottle.meta.total"
@@ -419,5 +454,22 @@ function searchOutlet(search: string) {
         />
       </div>
     </form>
+  </Modal>
+
+  <Modal
+    v-if="scannerModal"
+    :use-small-modal="true"
+    :open-global-modal="scannerModal"
+    :use-button="true"
+    @close="scannerModal = false"
+  >
+    <h2>Scan QR Code</h2>
+    <input
+      ref="scannerFocus"
+      type="text"
+      class="scanner-input"
+      placeholder="Scan QR Code"
+      autofocus
+    />
   </Modal>
 </template>

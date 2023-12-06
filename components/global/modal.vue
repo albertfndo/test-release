@@ -28,13 +28,17 @@ onClickOutside(modalDialog, () => emits("close"));
 
           <div v-if="props.useButton">
             <div v-if="props.formMode" class="mt-8 grid grid-cols-2 gap-3">
-              <button type="button" class="exit" @click="emits('close')">Tutup</button>
+              <button type="button" class="exit" @click="emits('close')">
+                Tutup
+              </button>
               <button type="button" class="confirm" @click="emits('submit')">
                 Simpan
               </button>
             </div>
             <div v-else class="mt-8 text-center">
-              <button type="button" class="success" @click="emits('close')">Tutup</button>
+              <button type="button" class="exit" @click="emits('close')">
+                Tutup
+              </button>
             </div>
           </div>
         </form>

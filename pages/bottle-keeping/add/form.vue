@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useIpcRenderer } from "@vueuse/electron";
-
 const route = useRoute();
 const _guest = useGuest();
 const _bottle = useBottleKeeping();
@@ -124,15 +122,7 @@ function submitData() {
     return;
   }
 
-  _bottle.submitBottleData(useMember.value).then(() => {
-    const ipc = useIpcRenderer();
-    ipc.send("print", {
-      text: `${selectedBottle.value.bottleName ?? _bottle.form.bottleName}`,
-      ip: "192.168.129.117",
-    });
-
-    navigateTo("/bottle-keeping");
-  });
+  _bottle.submitBottleData(useMember.value);
 }
 </script>
 
@@ -185,7 +175,7 @@ function submitData() {
               v-model="_bottle.form.phoneNumber"
               type="text"
               placeholder="Ex. 6287896395385"
-              :disabled="selectedBottle.bottleName ? true : false"
+              :disabled="selectedBottle?.bottleName ? true : false"
               @input="formatPhoneNumber($event)"
             />
           </div>
@@ -193,7 +183,7 @@ function submitData() {
         <template v-else>
           <div class="guest-card mb-3">
             <div class="guest-name bg-brand">
-              <p>{{ fetchGuest()?.name ?? selectedBottle.customer?.name }}</p>
+              <p>{{ fetchGuest()?.name ?? selectedBottle?.customer?.name }}</p>
             </div>
             <div class="guest-data">
               <div class="grid grid-cols-2 gap-y-5">
@@ -202,7 +192,7 @@ function submitData() {
                   <p>
                     {{
                       fetchGuest()?.membershipTypeText ??
-                      selectedBottle.customer?.membershipTypeText
+                      selectedBottle?.customer?.membershipTypeText
                     }}
                   </p>
                 </div>
@@ -214,14 +204,16 @@ function submitData() {
                   <p>
                     {{
                       fetchGuest()?.typeText ??
-                      selectedBottle.customer?.typeText
+                      selectedBottle?.customer?.typeText
                     }}
                   </p>
                 </div>
                 <div class="guest-detail">
                   <Iconify icon="ic:outline-phone" class="text-xl" />
                   <p>
-                    +{{ fetchGuest()?.phone ?? selectedBottle.customer?.phone }}
+                    +{{
+                      fetchGuest()?.phone ?? selectedBottle?.customer?.phone
+                    }}
                   </p>
                 </div>
                 <div class="guest-detail">
@@ -229,7 +221,7 @@ function submitData() {
                   <p>
                     {{
                       fetchGuest()?.genderText ??
-                      selectedBottle.customer?.genderText
+                      selectedBottle?.customer?.genderText
                     }}
                   </p>
                 </div>
@@ -247,7 +239,7 @@ function submitData() {
             v-model="_bottle.form.bottleName"
             type="text"
             placeholder="Ketik disini..."
-            :disabled="selectedBottle.bottleName ? true : false"
+            :disabled="selectedBottle?.bottleName ? true : false"
           />
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -258,7 +250,7 @@ function submitData() {
               v-model="_bottle.form.gram"
               type="number"
               placeholder="Ketik disini..."
-              :disabled="selectedBottle.bottleName ? true : false"
+              :disabled="selectedBottle?.bottleName ? true : false"
             />
           </div>
           <div class="form-group w-full">
@@ -268,7 +260,7 @@ function submitData() {
               v-model="_bottle.form.miliLiter"
               type="number"
               placeholder="Ketik disini..."
-              :disabled="selectedBottle.bottleName ? true : false"
+              :disabled="selectedBottle?.bottleName ? true : false"
             />
           </div>
         </div>

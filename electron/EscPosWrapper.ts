@@ -21,6 +21,31 @@ export const print = (event: any, data: any) => {
       return;
     }
 
-    printer.font("a").size(1, 1).text(data.text).cut().close();
+    printer
+      .font("b")
+      .align("ct")
+      .size(1, 1)
+      .style("normal")
+      .text("--------------------------------")
+      .text("Bottle Description")
+      .text("--------------------------------")
+      .font("a")
+      .align("lt")
+      .style("normal")
+      .size(0, 0)
+      .text(data.bottleName)
+      .text(data.userName)
+      .text(data.phoneNumber)
+      .text("GR: " + data.gram + " / ML: " + data.miliLiter)
+      .text("Exp Date:" + data.expirationDate)
+      .font("b")
+      .align("ct")
+      .size(1, 1)
+      .style("normal")
+      .text("--------------------------------")
+      .qrimage(data.uniqueCode, function (err: any) {
+        this.cut();
+        this.close();
+      });
   });
 };

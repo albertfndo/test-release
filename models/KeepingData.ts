@@ -23,6 +23,7 @@ export default class KeepingData {
   public BottleStatus;
   constructor(
     public id: number,
+    public uniqueCode: string,
     public bottleName: string,
     public storedAt: string,
     public expiredAt: string,
@@ -35,7 +36,9 @@ export default class KeepingData {
     public remainingKeeps: number,
     public userFullName: string,
     public phoneNumber: string,
-    public logs: Logs[] | []
+    public logs: Logs[] | [],
+    public gram: number,
+    public miliLiter: number
   ) {
     this.BottleStatus = BottleStatusIndonesianText;
   }
@@ -47,6 +50,7 @@ export default class KeepingData {
   public static fromJson(json: any): KeepingData {
     return new KeepingData(
       json.id,
+      json.unique_code,
       json.name,
       json.stored_at,
       json.expired_at,
@@ -61,7 +65,9 @@ export default class KeepingData {
       json.remaining_keeps,
       json.user_fullname,
       json.phone_number,
-      json.logs ? json.logs.map((log: any) => Logs.fromJson(log)) : []
+      json.logs ? json.logs.map((log: any) => Logs.fromJson(log)) : [],
+      json.gram,
+      json.mililiter
     );
   }
 }

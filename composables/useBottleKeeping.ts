@@ -2,6 +2,9 @@ import { useLocalStorage, type RemovableRef } from "@vueuse/core";
 import KeepingData from "~/models/KeepingData";
 import type { PageMeta, Links } from "~/models/Pagination";
 
+import { useIpcRenderer } from "@vueuse/electron";
+import moment from "moment";
+
 type BottleKeepRequest = {
   name: string; //Bottle Name
   user_id: number;
@@ -129,7 +132,23 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
           requestData.params.user_id = customerData.value.id;
         }
 
-        await api.post(requestData);
+        const { data } = await api.post(requestData);
+
+        this.selectedBottle = KeepingData.fromJson(data.data);
+
+        const ipc = useIpcRenderer();
+        ipc.send("print", {
+          uniqueCode: this.selectedBottle?.uniqueCode,
+          bottleName: this.selectedBottle?.bottleName,
+          userName: this.selectedBottle?.userFullName,
+          phoneNumber: this.selectedBottle?.phoneNumber,
+          gram: this.selectedBottle?.gram,
+          miliLiter: this.selectedBottle?.miliLiter,
+          expirationDate: moment(this.selectedBottle?.expiredAt).format(
+            "DD/MM/YYYY"
+          ),
+          ip: "192.168.129.117",
+        });
 
         _loading.hide();
         _snackbar.success("Berhasil", "Botol berhasil disimpan", true);
