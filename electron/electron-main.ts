@@ -21,7 +21,7 @@ process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 let win: BrowserWindow;
 
-function bootstrap() {
+function createWindow() {
   win = new BrowserWindow({
     webPreferences: {
       // preload,
@@ -32,14 +32,14 @@ function bootstrap() {
     },
   });
 
-  if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL);
-    // win.webContents.openDevTools()
+  if (process.env.NUXT_PUBLIC_APP_URL) {
+    win.loadURL(process.env.NUXT_PUBLIC_APP_URL as string);
+    // win.webContents.openDevTools();
   } else {
     win.loadFile(path.join(process.env.VITE_PUBLIC!, "index.html"));
   }
 
-  win.maximize();
+  win.setFullScreen(true);
 }
 
 function runIpcMain() {
@@ -56,5 +56,19 @@ app.setName("HWG Bottle Keeping");
 app.whenReady().then(() => {
   runIpcMain();
 
-  bootstrap();
+  createWindow();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+
+      runIpcMain();
+    }
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });

@@ -37,7 +37,7 @@ export const print = (event: any, data: any) => {
       .text(data.userName)
       .text(data.phoneNumber)
       .text("GR: " + data.gram + " / ML: " + data.miliLiter)
-      .text("Exp Date:" + data.expirationDate)
+      .text("Exp Date: " + data.expirationDate)
       .font("b")
       .align("ct")
       .size(1, 1)
