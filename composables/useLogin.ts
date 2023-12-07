@@ -31,9 +31,9 @@ export const useLogin = definePiniaStore("login", {
 
         const user = User.fromJson(data.data.user_data);
         this.setUserData(user, data);
-        window.location.href = "/";
-
         _loading.hide();
+
+        navigateTo("/");
       } catch (error) {
         api.handleError(error);
         _loading.hide();

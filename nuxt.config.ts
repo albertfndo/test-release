@@ -61,11 +61,11 @@ export default defineNuxtConfig({
   electron: {
     build: [
       { entry: "electron/electron-main.ts" },
-      { 
+      {
         entry: "electron/preload.ts",
-        onstart(options) {
-          options.reload
-        }
+        onstart(options: any) {
+          options.reload;
+        },
       },
     ],
     renderer: {},

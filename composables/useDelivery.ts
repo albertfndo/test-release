@@ -119,7 +119,7 @@ export const useDelivery = definePiniaStore("delivery", {
         );
         _loading.hide();
 
-        window.location.reload();
+        navigateTo(`/delivery/${id}`);
       } catch (error) {
         api.handleError(error);
         _loading.hide();
