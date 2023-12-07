@@ -32,7 +32,7 @@ onClickOutside(modalDialog, () => emits("close"));
                 Tutup
               </button>
               <button type="button" class="confirm" @click="emits('submit')">
-                Simpan
+                Konfirmasi
               </button>
             </div>
             <div v-else class="mt-8 text-center">

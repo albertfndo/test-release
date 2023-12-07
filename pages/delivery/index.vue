@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import Datepicker from "@vuepic/vue-datepicker";
+import { DeliveryStatus } from "~/models/Delivery";
+import moment from "moment";
 // import moment from "moment";
 import Outlet from "~/models/Outlet";
 
 const _outlet = useOutlet();
+const _delivery = useDelivery();
 
 const date = ref("");
 const searchKey = ref("");
@@ -16,10 +19,27 @@ await nextTick();
 onMounted(() => {
   nextTick(async () => {
     await initializaData();
+    await getOutlet();
   });
 });
 
-async function initializaData() {
+watch(
+  () => _delivery.deliveryStatus,
+  (newValue) => {
+    _delivery.deliveryStatus = newValue;
+  }
+);
+
+async function initializaData(page?: number) {
+  await _delivery.getDeliveryList(page);
+}
+
+async function changePage(page: any) {
+  const nextPage = page?.split("page=")[1].split("&")[0];
+  await initializaData(nextPage);
+}
+
+async function getOutlet() {
   await _outlet.getOutlets();
   outletsOptions.value = _outlet.outlets;
 }
@@ -51,6 +71,16 @@ function searchOutlet(search: string) {
   );
   outletsOptions.value = filtered;
 }
+
+function getColor(status: number) {
+  const colorMap = {
+    1: "bg-primaryText",
+    2: "bg-blue-400",
+    3: "bg-success",
+  };
+
+  return colorMap[status as keyof typeof colorMap];
+}
 </script>
 <template>
   <section id="deliveryHead">
@@ -64,10 +94,48 @@ function searchOutlet(search: string) {
       <div class="flex gap-2 mb-4 md:mb-0">
         <p>Status:</p>
         <div class="button-group">
-          <button type="button" class="btn-rsvp-status pending">Semua</button>
-          <button type="button" class="btn-rsvp-status new">Publish</button>
-          <button type="button" class="btn-rsvp-status arrived">Selesai</button>
-          <button type="button" class="btn-rsvp-status">Draft</button>
+          <button
+            type="button"
+            class="btn-status pending"
+            :class="_delivery.deliveryStatus === 0 ? 'active' : ''"
+            @click="_delivery.deliveryStatus = 0"
+          >
+            Semua
+          </button>
+          <button
+            type="button"
+            class="btn-status"
+            :class="
+              _delivery.deliveryStatus === DeliveryStatus.draft ? 'active' : ''
+            "
+            @click="_delivery.deliveryStatus = DeliveryStatus.draft"
+          >
+            Draft
+          </button>
+          <button
+            type="button"
+            class="btn-status new"
+            :class="
+              _delivery.deliveryStatus === DeliveryStatus.publish
+                ? 'active'
+                : ''
+            "
+            @click="_delivery.deliveryStatus = DeliveryStatus.publish"
+          >
+            Publish
+          </button>
+          <button
+            type="button"
+            class="btn-status arrived"
+            :class="
+              _delivery.deliveryStatus === DeliveryStatus.selesai
+                ? 'active'
+                : ''
+            "
+            @click="_delivery.deliveryStatus = DeliveryStatus.selesai"
+          >
+            Selesai
+          </button>
         </div>
       </div>
 
@@ -113,7 +181,7 @@ function searchOutlet(search: string) {
   </section>
   <section id="deliveryBody" class="page-body">
     <div class="mt-8 overflow-x-auto">
-      <table class="w-full">
+      <table>
         <thead>
           <tr>
             <th class="text-center">No</th>
@@ -126,61 +194,42 @@ function searchOutlet(search: string) {
         </thead>
         <tbody>
           <tr
+            v-for="(deliveryData, index) in _delivery.deliveryList"
+            v-show="_delivery.deliveryList.length"
+            :key="index"
             class="cursor-pointer hover:bg-primaryBg/40 duration-200"
-            @click="navigateTo(`/delivery/${1}`)"
+            @click="navigateTo(`/delivery/${deliveryData.id}`)"
           >
-            <td class="text-center">1</td>
-            <td>2021/0001</td>
-            <td>12/12/2021</td>
-            <td>12/12/2021</td>
-            <td>Outlet 1</td>
+            <td class="text-center">{{ _delivery.meta.from + index }}</td>
+            <td>{{ deliveryData.id }}</td>
+            <td>{{ moment(deliveryData.createdAt).format("DD MMM YYYY") }}</td>
+            <td>{{ moment(deliveryData.updatedAt).format("DD MMM YYYY") }}</td>
+            <td>{{ deliveryData.outlet }}</td>
             <td class="text-center">
-              <span class="status-pill bg-success">Selesai</span>
-            </td>
-          </tr>
-          <tr
-            class="cursor-pointer hover:bg-primaryBg/40 duration-200"
-            @click="navigateTo(`/delivery/${1}`)"
-          >
-            <td class="text-center">1</td>
-            <td>2021/0001</td>
-            <td>12/12/2021</td>
-            <td>12/12/2021</td>
-            <td>Outlet 1</td>
-            <td class="text-center">
-              <span class="status-pill bg-blue-400 text-primaryText"
-                >Publish</span
+              <span
+                :class="getColor(deliveryData.status)"
+                class="status-pill"
+                >{{ deliveryData.deliveryStatusIndonesian }}</span
               >
             </td>
           </tr>
-          <tr
-            class="cursor-pointer hover:bg-primaryBg/40 duration-200"
-            @click="navigateTo(`/delivery/${1}`)"
-          >
-            <td class="text-center">1</td>
-            <td>2021/0001</td>
-            <td>12/12/2021</td>
-            <td>12/12/2021</td>
-            <td>Outlet 1</td>
-            <td class="text-center">
-              <span class="status-pill bg-success">Selesai</span>
-            </td>
+          <tr v-show="!_delivery.deliveryList.length">
+            <td colspan="6" class="text-center">Tidak ada data</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- <div v-else class="text-center mt-10">
-      <NuxtImg
-        preload
-        src="/images/icon-not-found.svg"
-        class="m-auto"
-        width="160px"
-        loading="lazy"
-        quality="80"
-        alt="No Data"
-      />
-      <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
-    </div> -->
+
+    <Pagination
+      v-if="_delivery.meta.total > 10"
+      :from="_delivery.meta.from"
+      :to="_delivery.meta.to"
+      :total="_delivery.meta.total"
+      :prev="_delivery.links.prev"
+      :next="_delivery.links.next"
+      :links="_delivery.meta.links"
+      @changepage="changePage"
+    />
   </section>
   <Modal
     v-if="filterModal"

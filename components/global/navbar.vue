@@ -68,11 +68,11 @@ function logout() {
         :placeholder="[50, 25, 75]"
       />
 
-      <h3>Hi, {{ userData.user?.name }}</h3>
+      <h3>{{ userData.user?.outlet.name }}</h3>
 
       <div class="general">
+        <p>{{ userData.user?.name }}</p>
         <p>{{ userData.user?.username }}</p>
-        <p>{{ userData.user?.outlet.name }}</p>
       </div>
 
       <div class="general">
@@ -88,7 +88,7 @@ function logout() {
         <p>{{ network.isOnline ? "ONLINE" : "OFFLINE" }}</p>
       </div>
 
-      <p class="version">v{{ version }}</p>
+      <p class="version">v {{ version }}</p>
     </div>
 
     <nav>

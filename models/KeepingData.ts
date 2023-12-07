@@ -9,6 +9,9 @@ export enum BottleStatus {
   release = 3,
   history = 4,
   waitingExpired = 5,
+  onTheWayCentral = 6,
+  arriveCentral = 7,
+  lostOnDelivery = 8,
 }
 
 export enum BottleStatusIndonesianText {
@@ -17,6 +20,9 @@ export enum BottleStatusIndonesianText {
   diambil = 3,
   expired = 4,
   menunggu_expired = 5,
+  dalam_perjalanan_ke_pusat = 6,
+  sampai_di_pusat = 7,
+  hilang_dalam_pengiriman = 8,
 }
 
 export default class KeepingData {
