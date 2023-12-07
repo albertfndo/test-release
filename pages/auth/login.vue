@@ -44,7 +44,7 @@ function isValid() {
         </h1>
       </div>
       <div>
-        <img
+        <NuxtImg
           preload
           src="/images/logo/hwg-logo.svg"
           class="mx-auto"
@@ -73,7 +73,9 @@ function isValid() {
             <button type="button" @click="showPassword = !showPassword">
               <Iconify
                 :icon="
-                  showPassword ? `ic:outline-visibility-off` : 'ic:outline-visibility'
+                  showPassword
+                    ? `ic:outline-visibility-off`
+                    : 'ic:outline-visibility'
                 "
                 class="text-brand text-3xl"
               />

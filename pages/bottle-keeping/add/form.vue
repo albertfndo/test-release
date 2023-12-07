@@ -134,7 +134,10 @@ function submitData() {
         class="btn-regular-nav"
         @click="navigateTo('/bottle-keeping')"
       >
-        <Iconify icon="ic:round-chevron-left" class="text-primaryText text-2xl" />
+        <Iconify
+          icon="ic:round-chevron-left"
+          class="text-primaryText text-2xl"
+        />
       </button>
       <h1 class="subtitle-2 text-primaryText">
         {{
@@ -151,7 +154,9 @@ function submitData() {
       <form class="form-new-guest" @submit.prevent="">
         <template v-if="!useMember">
           <div class="form-group">
-            <label for="new-guest-name">Nama Tamu <span class="asterisk"></span></label>
+            <label for="new-guest-name"
+              >Nama Tamu <span class="asterisk"></span
+            ></label>
             <input
               id="new-guest-name"
               v-model="_bottle.form.userFullname"
@@ -162,7 +167,9 @@ function submitData() {
             />
           </div>
           <div class="form-group">
-            <label for="new-guest-phone">No Telepon <span class="asterisk"></span></label>
+            <label for="new-guest-phone"
+              >No Telepon <span class="asterisk"></span
+            ></label>
             <input
               id="new-guest-phone"
               v-model="_bottle.form.phoneNumber"
@@ -190,19 +197,32 @@ function submitData() {
                   </p>
                 </div>
                 <div class="guest-detail">
-                  <Iconify icon="ic:outline-workspace-premium" class="text-xl" />
+                  <Iconify
+                    icon="ic:outline-workspace-premium"
+                    class="text-xl"
+                  />
                   <p>
-                    {{ fetchGuest()?.typeText ?? selectedBottle?.customer?.typeText }}
+                    {{
+                      fetchGuest()?.typeText ??
+                      selectedBottle?.customer?.typeText
+                    }}
                   </p>
                 </div>
                 <div class="guest-detail">
                   <Iconify icon="ic:outline-phone" class="text-xl" />
-                  <p>+{{ fetchGuest()?.phone ?? selectedBottle?.customer?.phone }}</p>
+                  <p>
+                    +{{
+                      fetchGuest()?.phone ?? selectedBottle?.customer?.phone
+                    }}
+                  </p>
                 </div>
                 <div class="guest-detail">
                   <Iconify icon="ic:round-people-outline" class="text-xl" />
                   <p>
-                    {{ fetchGuest()?.genderText ?? selectedBottle?.customer?.genderText }}
+                    {{
+                      fetchGuest()?.genderText ??
+                      selectedBottle?.customer?.genderText
+                    }}
                   </p>
                 </div>
               </div>
@@ -211,7 +231,9 @@ function submitData() {
         </template>
 
         <div class="form-group">
-          <label for="bottleName">Nama Botol <span class="asterisk"></span></label>
+          <label for="bottleName"
+            >Nama Botol <span class="asterisk"></span
+          ></label>
           <input
             id="bottleName"
             v-model="_bottle.form.bottleName"
@@ -243,7 +265,9 @@ function submitData() {
           </div>
         </div>
         <div class="form-group">
-          <label for="description">Catatan <span class="asterisk"></span></label>
+          <label for="description"
+            >Catatan <span class="asterisk"></span
+          ></label>
           <textarea
             v-model="_bottle.form.description"
             rows="5"
@@ -252,7 +276,9 @@ function submitData() {
           <p class="text-primaryText text-end">{{ characterCount }}</p>
         </div>
         <div class="form-group">
-          <label for="description">Foto Botol <span class="asterisk"></span></label>
+          <label for="description"
+            >Foto Botol <span class="asterisk"></span
+          ></label>
           <div
             v-if="!_bottle.form.imageUrl"
             class="input-photo"
@@ -264,7 +290,7 @@ function submitData() {
             </div>
           </div>
           <div v-else class="input-photo">
-            <img
+            <NuxtImg
               preload
               :src="displayedPhoto"
               class="rounded-xl"
@@ -282,7 +308,9 @@ function submitData() {
             v-model="_bottle.form.unlimitedExpired"
             type="checkbox"
           />
-          <label for="unlimitedExpired" class="font-poppins-m">Unlimited Expired </label>
+          <label for="unlimitedExpired" class="font-poppins-m"
+            >Unlimited Expired
+          </label>
           <p class="font-poppins-r">(Opsional)</p>
         </div>
         <div class="mt-10">

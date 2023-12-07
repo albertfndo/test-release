@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { routes } from "./routes";
-import log from 'electron-log/main';
+// import log from "electron-log/main";
 
 import fs from "fs";
 
@@ -17,10 +17,10 @@ import fs from "fs";
 
 const distPath = path.join(__dirname, "../.output/public");
 
-console.log = log.log
-log.initialize({ preload: true });
+// console.log = log.log;
+// log.initialize({ preload: true });
 
-console.log('Log from the main process');
+// console.log("Log from the main process");
 
 process.env.ROOT = path.join(__dirname, "..");
 process.env.DIST = path.join(process.env.ROOT, "dist-electron");
@@ -28,14 +28,9 @@ process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? path.join(process.env.ROOT, "public")
   : path.join(process.env.ROOT, ".output/public");
 
-console.log("asdfafsdf")
-console.log(process.env.VITE_DEV_SERVER_URL);
-console.log(process.env.VITE_PUBLIC);
-console.log(process.env.NUXT_PUBLIC_APP_URL);
-
 const output = `asdfafsdf\n${process.env.VITE_DEV_SERVER_URL}\n${process.env.VITE_PUBLIC}\n${process.env.NUXT_PUBLIC_APP_URL}`;
 
-fs.appendFile(path.join(__dirname, "/logger.log"), output, () => {})
+fs.appendFile(path.join(__dirname, "/logger.log"), output, () => {});
 
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "false";
 
@@ -53,17 +48,13 @@ function createWindow() {
   });
 
   if (process.env.NUXT_PUBLIC_APP_URL) {
-    // console.log(process.env.VITE_PUBLIC);
-    // console.log(process.env.NUXT_PUBLIC_APP_URL);
     win.loadURL(process.env.NUXT_PUBLIC_APP_URL as string);
-    // win.webContents.openDevTools();
   } else {
-    console.log(path);
     win.loadFile(path.join(distPath, "index.html"));
     win.webContents.openDevTools();
   }
 
-  // win.setFullScreen(true);
+  win.maximize();
 }
 
 function runIpcMain() {

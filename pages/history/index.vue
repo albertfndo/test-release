@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import moment from "moment";
-
 const _outlet = useOutlet();
 const _bottle = useBottleKeeping();
 
@@ -122,10 +120,10 @@ function searchOutlet(search: string) {
             <td>{{ bottleData.userFullName }}</td>
             <td>{{ bottleData.phoneNumber }}</td>
             <td v-show="isAdmin()" class="text-center">
-              {{ moment(bottleData.storedAt).format("DD MMM YYYY") }}
+              {{ formatDate(bottleData.storedAt) }}
             </td>
             <td class="text-center">
-              {{ moment(bottleData.expiredAt).format("DD MMM YYYY") }}
+              {{ formatDate(bottleData.expiredAt) }}
               <p class="table-expired-text">({{ bottleData.expiredText }})</p>
             </td>
             <td v-show="isAdmin()">

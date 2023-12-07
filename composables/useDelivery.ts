@@ -134,7 +134,7 @@ export const useDelivery = definePiniaStore("delivery", {
         _loading.show();
 
         await api.del({
-          url: `api/v1/holyboard/bottles/delivery-order/${id}`,
+          url: `api/v1/holyboard/bottles/delivery-order/delete/${id}`,
         });
 
         _snackbar.success("Success", "Data berhasil dihapus", true);

@@ -219,7 +219,6 @@ function searchOutlet(search: string) {
             Diambil
           </button>
           <button
-            v-show="false"
             type="button"
             class="btn-status border-gray-500"
             :class="

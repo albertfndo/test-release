@@ -52,7 +52,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
     async getBottleDatas(
       keyword: string = "",
       isHistory: boolean = false,
-      page: number = 1
+      page?: number
     ) {
       const api = useApi();
       const _loading = useLoading();
@@ -84,8 +84,8 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
           KeepingData.fromJson(bottleData)
         );
 
-        this.meta = data.meta;
-        this.links = data.links;
+        this.meta = data.meta ?? null;
+        this.links = data.links ?? null;
 
         _loading.hide();
       } catch (error) {

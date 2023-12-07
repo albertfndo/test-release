@@ -40,7 +40,7 @@ function logout() {
       },
       onTapConfirm() {
         auth.logout({
-          next: "/auth/login"
+          next: "/auth/login",
         });
       },
     },
@@ -55,7 +55,7 @@ function logout() {
 <template>
   <aside :class="showMobileNavbar ? 'max-lg:left-0' : 'max-lg:-left-full'">
     <div class="nav-info">
-      <img
+      <NuxtImg
         v-show="isMounted"
         preload
         src="/images/logo/hwg-logo.svg"
@@ -79,7 +79,10 @@ function logout() {
       </div>
 
       <div class="status">
-        <div class="status-dot" :class="network.isOnline ? 'online' : 'offline'"></div>
+        <div
+          class="status-dot"
+          :class="network.isOnline ? 'online' : 'offline'"
+        ></div>
         <p>{{ network.isOnline ? "ONLINE" : "OFFLINE" }}</p>
       </div>
 
@@ -100,7 +103,12 @@ function logout() {
         <Iconify icon="ic:outline-access-time" class="text-2xl" />
         <p>Riwayat Bottle Keep</p>
       </NuxtLink>
-      <NuxtLink to="/delivery" active-class="active" class="nav-link">
+      <NuxtLink
+        to="/delivery"
+        active-class="active"
+        class="nav-link"
+        :class="route.path.startsWith('/delivery') ? 'active' : ''"
+      >
         <Iconify icon="solar:delivery-bold" class="text-2xl" />
         <p>Pengiriman Botol</p>
       </NuxtLink>
@@ -114,7 +122,11 @@ function logout() {
     </div>
   </aside>
 
-  <div v-if="showMobileNavbar" class="overlay" @click="showMobileNavbar = false"></div>
+  <div
+    v-if="showMobileNavbar"
+    class="overlay"
+    @click="showMobileNavbar = false"
+  ></div>
   <div class="w-full block lg:hidden py-2 px-4 bg-cardBg shadow-lg">
     <button type="button" @click="showMobileNavbar = true">
       <Iconify icon="ic:round-menu" class="text-primaryText text-xl" />
