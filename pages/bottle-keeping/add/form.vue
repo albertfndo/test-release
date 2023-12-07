@@ -290,14 +290,11 @@ function submitData() {
             </div>
           </div>
           <div v-else class="input-photo">
-            <NuxtImg
+            <img
               preload
               :src="displayedPhoto"
               class="rounded-xl"
               alt="Captured Photo"
-              quality="100"
-              loading="lazy"
-              :placeholder="[50, 25, 75]"
               @click="openMediaType = true"
             />
           </div>

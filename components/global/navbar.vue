@@ -42,6 +42,8 @@ function logout() {
         auth.logout({
           next: "/auth/login",
         });
+
+        _dialog.hideDialog();
       },
     },
     backText: "Batal",
@@ -55,15 +57,12 @@ function logout() {
 <template>
   <aside :class="showMobileNavbar ? 'max-lg:left-0' : 'max-lg:-left-full'">
     <div class="nav-info">
-      <NuxtImg
+      <img
         v-show="isMounted"
         preload
         src="/images/logo/hwg-logo.svg"
         class="mx-auto"
-        width="120px"
-        loading="lazy"
-        quality="100"
-        :placeholder="[50, 25, 75]"
+        width="100px"
       />
 
       <h3>{{ userData.user?.outlet?.name }}</h3>
