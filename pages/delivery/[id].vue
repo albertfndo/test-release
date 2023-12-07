@@ -147,7 +147,10 @@ function chooseBottle(id: number) {
         </div>
       </div>
     </div>
-    <p v-show="isAdmin()" class="text-red-500 font-poppins-r mb-1">
+    <p
+      v-show="isAdmin() && _delivery.delivery.status == DeliveryStatus.publish"
+      class="text-red-500 font-poppins-r mb-1"
+    >
       *Centang botol yang hilang diperjalanan
     </p>
     <div class="max-h-[70vh] overflow-y-auto">
@@ -156,7 +159,7 @@ function chooseBottle(id: number) {
           <tr>
             <th
               v-show="
-                isAdmin() && _delivery.delivery.status != DeliveryStatus.selesai
+                isAdmin() && _delivery.delivery.status == DeliveryStatus.publish
               "
               class="w-[3%]"
             >
@@ -174,7 +177,7 @@ function chooseBottle(id: number) {
           >
             <td
               v-show="
-                isAdmin() && _delivery.delivery.status != DeliveryStatus.selesai
+                isAdmin() && _delivery.delivery.status == DeliveryStatus.publish
               "
             >
               <input type="checkbox" @change="chooseBottle(bottleData.id)" />

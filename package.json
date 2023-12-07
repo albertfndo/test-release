@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "nuxt start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "dist": "electron-builder"
   },
   "devDependencies": {
     "@iconify/vue": "^4.1.1",

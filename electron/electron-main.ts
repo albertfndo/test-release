@@ -45,7 +45,7 @@ function bootstrap() {
 function runIpcMain() {
   const keys = Object.keys(routes);
 
-  for (let key of keys) {
+  for (const key of keys) {
     ipcMain.on(key, (event, data) => {
       routes[key](event, data);
     });
