@@ -2,6 +2,9 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
+    app: {
+      baseURL: "./",
+    },
     public: {
       baseUrl: "https://customer.holywings.id",
       environment: "production",
@@ -56,7 +59,16 @@ export default defineNuxtConfig({
     "nuxt-electron",
   ],
   electron: {
-    build: [{ entry: "electron/electron-main.ts" }],
+    build: [
+      { entry: "electron/electron-main.ts" },
+      { 
+        entry: "electron/preload.ts",
+        onstart(options) {
+          options.reload
+        }
+      },
+    ],
+    renderer: {},
   },
   css: ["~/assets/css/main.css"],
   postcss: {
@@ -65,4 +77,5 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  ssr: false,
 });

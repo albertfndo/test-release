@@ -217,6 +217,8 @@ export const useApi = definePiniaStore("api", () => {
         autoClose: true,
       });
 
+      console.error(error);
+
       return true;
     }
 

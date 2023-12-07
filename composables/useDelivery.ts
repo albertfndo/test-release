@@ -1,8 +1,6 @@
 import Delivery, { DeliveryStatus } from "~/models/Delivery";
 import type { PageMeta, Links } from "~/models/Pagination";
 
-const userData = useUserData();
-
 export const useDelivery = definePiniaStore("delivery", {
   state: () => ({
     delivery: <Delivery>{},
@@ -68,13 +66,14 @@ export const useDelivery = definePiniaStore("delivery", {
       const api = useApi();
       const _loading = useLoading();
       const _snackbar = useSnackbar();
+      const userData = useUserData();
       try {
         _loading.show();
 
         await api.post({
           url: "api/v1/holyboard/bottles/delivery-order/store",
           params: {
-            outlet_id: userData.user?.outlet.id,
+            outlet_id: userData.value.user?.outlet?.id,
             bottle_keep_ids: this.form.bottles,
             notes: this.form.notes,
           },

@@ -40,9 +40,7 @@ function logout() {
       },
       onTapConfirm() {
         auth.logout({
-          callback() {
-            location.href = "/auth/login";
-          },
+          next: "/auth/login"
         });
       },
     },
@@ -57,7 +55,7 @@ function logout() {
 <template>
   <aside :class="showMobileNavbar ? 'max-lg:left-0' : 'max-lg:-left-full'">
     <div class="nav-info">
-      <NuxtImg
+      <img
         v-show="isMounted"
         preload
         src="/images/logo/hwg-logo.svg"
@@ -68,7 +66,7 @@ function logout() {
         :placeholder="[50, 25, 75]"
       />
 
-      <h3>{{ userData.user?.outlet.name }}</h3>
+      <h3>{{ userData.user?.outlet?.name }}</h3>
 
       <div class="general">
         <p>{{ userData.user?.name }}</p>
@@ -81,10 +79,7 @@ function logout() {
       </div>
 
       <div class="status">
-        <div
-          class="status-dot"
-          :class="network.isOnline ? 'online' : 'offline'"
-        ></div>
+        <div class="status-dot" :class="network.isOnline ? 'online' : 'offline'"></div>
         <p>{{ network.isOnline ? "ONLINE" : "OFFLINE" }}</p>
       </div>
 
@@ -119,11 +114,7 @@ function logout() {
     </div>
   </aside>
 
-  <div
-    v-if="showMobileNavbar"
-    class="overlay"
-    @click="showMobileNavbar = false"
-  ></div>
+  <div v-if="showMobileNavbar" class="overlay" @click="showMobileNavbar = false"></div>
   <div class="w-full block lg:hidden py-2 px-4 bg-cardBg shadow-lg">
     <button type="button" @click="showMobileNavbar = true">
       <Iconify icon="ic:round-menu" class="text-primaryText text-xl" />

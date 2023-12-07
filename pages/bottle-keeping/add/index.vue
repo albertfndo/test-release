@@ -50,10 +50,7 @@ function getGuestData(isMember: boolean, guest?: Customer) {
         class="btn-regular-nav"
         @click="navigateTo('/bottle-keeping')"
       >
-        <Iconify
-          icon="ic:round-chevron-left"
-          class="text-primaryText text-2xl"
-        />
+        <Iconify icon="ic:round-chevron-left" class="text-primaryText text-2xl" />
       </button>
       <h1 class="subtitle-2 text-primaryText">Tambah Bottle Keeping</h1>
     </div>
@@ -70,11 +67,7 @@ function getGuestData(isMember: boolean, guest?: Customer) {
             autofocus
           />
           <div class="devider hidden md:block"></div>
-          <button
-            type="button"
-            class="btn-add-guest"
-            @click="getGuestData(false)"
-          >
+          <button type="button" class="btn-add-guest" @click="getGuestData(false)">
             <div class="hidden lg:flex justify-center items-center gap-2">
               <Iconify icon="mdi:plus-circle" />
               <p>Tambah Baru</p>
@@ -124,7 +117,7 @@ function getGuestData(isMember: boolean, guest?: Customer) {
     </div>
 
     <div v-else class="text-center mt-10">
-      <NuxtImg
+      <img
         preload
         src="/images/icon-not-found.svg"
         class="m-auto"

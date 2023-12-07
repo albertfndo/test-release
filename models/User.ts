@@ -6,7 +6,7 @@ export default class User {
     public userId: number,
     public username: string,
     public name: string,
-    public outlet: Outlet
+    public outlet: Outlet | null,
   ) {}
 
   public static fromJson(json: any): User {
@@ -15,7 +15,7 @@ export default class User {
       json.user_id,
       json.username,
       json.name,
-      Outlet.fromJson(json.outlet)
+      json.outlet ? Outlet.fromJson(json.outlet) : null
     )
   }
 }
