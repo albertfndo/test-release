@@ -68,6 +68,23 @@ export const useApi = definePiniaStore("api", () => {
     });
   }
 
+  function del({ url, params = {} }: Request): Promise<Response> {
+    return new Promise((resolve, reject) => {
+      useFetch(`${baseUrl}/${url}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+        body: JSON.stringify(params),
+      }).then((response) => {
+        const data = response.data.value;
+        const error = response.error.value;
+        if (error) {
+          reject(error);
+        }
+        resolve({ data: data, response });
+      });
+    });
+  }
+
   function put({ url, params = {} }: Request): Promise<any> {
     return new Promise((resolve, reject) => {
       useFetch(`${baseUrl}/${url}`, {
@@ -124,7 +141,7 @@ export const useApi = definePiniaStore("api", () => {
     const snackbar = useSnackbar();
     const auth = useAuth();
 
-    if (error.data?.status == 422) {
+    if (error.statusCode == 422) {
       const errors = error.data;
       const message: string[] = [];
 
@@ -140,7 +157,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data.data?.status == 503 || error.data?.status == 503) {
+    } else if (error.statusCode == 503) {
       throw createError({
         statusCode: 503,
         statusMessage: "Server under maintenance. Please try again later.",
@@ -148,7 +165,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data.data?.status > 500 || error.data?.status > 500) {
+    } else if (error.statusCode > 500) {
       snackbar.error({
         title: "Error",
         message: "Server error. Please try again later.",
@@ -156,7 +173,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data.data?.status == 401 || error.data?.status == 401) {
+    } else if (error.statusCode == 401) {
       snackbar.error({
         title: "Session Expired",
         message: "Try to login again.",
@@ -172,7 +189,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.data.data?.status == 400 || error.data?.status == 400) {
+    } else if (error.statusCode == 400) {
       const code = error.data.code;
       if (code == "refresh_required") {
         window.location.reload();
@@ -181,6 +198,14 @@ export const useApi = definePiniaStore("api", () => {
       snackbar.error({
         title: "Error",
         message: error.data.data?.message,
+        autoClose: true,
+      });
+
+      handled = true;
+    } else if (error.statusCode == 403) {
+      snackbar.error({
+        title: "Error",
+        message: "Anda tidak memiliki akses untuk melakukan aksi ini",
         autoClose: true,
       });
 
@@ -201,6 +226,7 @@ export const useApi = definePiniaStore("api", () => {
   return {
     get,
     post,
+    del,
     put,
     uploadFile,
     // download,

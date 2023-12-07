@@ -18,6 +18,8 @@ const releaseModal = ref(false);
 const openDetailModal = ref(false);
 const selectedOption = ref(null);
 const outletsOptions = ref<Outlet[]>([]);
+const scannerModal = ref(false);
+const scannerFocus = ref();
 
 const format = (date: any) => {
   const day = date.getDate();
@@ -31,18 +33,18 @@ onMounted(() => {
   _bottle.$reset();
   nextTick(async () => {
     await initializaData();
+    await _outlet.getOutlets();
+    outletsOptions.value = _outlet.outlets;
   });
 });
 
 async function initializaData(search?: string, page?: number) {
   await _bottle.getBottleDatas(search, false, page);
-  await _outlet.getOutlets();
-  outletsOptions.value = _outlet.outlets;
 }
 
 async function changePage(page: any) {
   const nextPage = page?.split("page=")[1].split("&")[0];
-  await initializaData((page = nextPage));
+  await initializaData(searchKey.value, (page = nextPage));
 }
 
 watch(
@@ -61,6 +63,13 @@ function getColor(status: number) {
   };
 
   return colorMap[status as keyof typeof colorMap];
+}
+
+function openScanner() {
+  scannerModal.value = true;
+  nextTick(() => {
+    scannerFocus.value.focus();
+  });
 }
 
 function selectBottleCard(bottleData: KeepingData) {
@@ -136,6 +145,12 @@ const actions = reactive<Action[]>([
     color: "white",
     click: async () => initializaData(),
   },
+  {
+    text: "Scan QR",
+    icon: "tabler:qrcode",
+    color: "white",
+    click: async () => openScanner(),
+  },
 ]);
 
 if (isAdmin()) {
@@ -169,7 +184,7 @@ function searchOutlet(search: string) {
         <div class="button-group">
           <button
             type="button"
-            class="btn-rsvp-status pending"
+            class="btn-status pending"
             :class="_bottle.bottleStatus === 0 ? 'active' : ''"
             @click="_bottle.bottleStatus = 0"
           >
@@ -177,7 +192,7 @@ function searchOutlet(search: string) {
           </button>
           <button
             type="button"
-            class="btn-rsvp-status confirmed"
+            class="btn-status confirmed"
             :class="_bottle.bottleStatus === BottleStatus.lock ? 'active' : ''"
             @click="_bottle.bottleStatus = BottleStatus.lock"
           >
@@ -185,7 +200,7 @@ function searchOutlet(search: string) {
           </button>
           <button
             type="button"
-            class="btn-rsvp-status arrived"
+            class="btn-status arrived"
             :class="
               _bottle.bottleStatus === BottleStatus.unlock ? 'active' : ''
             "
@@ -195,7 +210,7 @@ function searchOutlet(search: string) {
           </button>
           <button
             type="button"
-            class="btn-rsvp-status"
+            class="btn-status"
             :class="
               _bottle.bottleStatus === BottleStatus.release ? 'active' : ''
             "
@@ -206,7 +221,7 @@ function searchOutlet(search: string) {
           <button
             v-show="false"
             type="button"
-            class="btn-rsvp-status border-gray-500"
+            class="btn-status border-gray-500"
             :class="
               _bottle.bottleStatus === BottleStatus.waitingExpired
                 ? 'bg-gray-500 text-primaryText'
@@ -261,8 +276,8 @@ function searchOutlet(search: string) {
   </section>
 
   <section id="bottleKeepBody">
-    <div v-if="_bottle.bottleDatas.length" class="mt-8 overflow-x-auto">
-      <table :class="isAdmin() ? 'w-[110%]' : 'w-full'">
+    <div class="mt-8 overflow-x-auto">
+      <table>
         <thead>
           <tr>
             <th class="text-center">No</th>
@@ -280,6 +295,7 @@ function searchOutlet(search: string) {
         <tbody>
           <tr
             v-for="(bottleData, index) in _bottle.bottleDatas"
+            v-show="_bottle.bottleDatas.length"
             :key="index"
             :class="
               !isAdmin()
@@ -342,20 +358,11 @@ function searchOutlet(search: string) {
               </div>
             </td>
           </tr>
+          <tr v-show="!_bottle.bottleDatas.length">
+            <td colspan="10" class="text-center">Tidak ada data</td>
+          </tr>
         </tbody>
       </table>
-    </div>
-    <div v-else class="text-center mt-10">
-      <NuxtImg
-        preload
-        src="/images/icon-not-found.svg"
-        class="m-auto"
-        width="160px"
-        loading="lazy"
-        quality="80"
-        alt="No Data"
-      />
-      <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>
     </div>
 
     <Pagination
@@ -439,5 +446,22 @@ function searchOutlet(search: string) {
         />
       </div>
     </form>
+  </Modal>
+
+  <Modal
+    v-if="scannerModal"
+    :use-small-modal="true"
+    :open-global-modal="scannerModal"
+    :use-button="true"
+    @close="scannerModal = false"
+  >
+    <h2>Scan QR Code</h2>
+    <input
+      ref="scannerFocus"
+      type="text"
+      class="scanner-input"
+      placeholder="Scan QR Code"
+      autofocus
+    />
   </Modal>
 </template>

@@ -27,7 +27,7 @@
     @apply lg:ml-64 px-4 lg:px-6 mt-6 lg:mt-0;
   }
   ::-webkit-scrollbar {
-    @apply w-1.5;               /* width of the entire scrollbar */
+    @apply w-1.5 hidden;               /* width of the entire scrollbar */
   }
   
   ::-webkit-scrollbar-track {
@@ -41,13 +41,13 @@
 
 @layer components {
   table {
-    @apply table-auto bg-cardBg shadow-card rounded-xl overflow-hidden;
+    @apply table-auto bg-cardBg shadow-card rounded-xl overflow-hidden w-full;
   }
   table thead  {
     @apply bg-primaryText shadow-md;
   }
   table thead tr th {
-    @apply py-3 px-4 text-left text-primaryBg text-base font-poppins-sb uppercase;
+    @apply py-3 px-4 text-left text-primaryBg text-sm font-poppins-sb uppercase;
   }
   table tbody tr {
     @apply shadow-md;
@@ -67,6 +67,10 @@
   }
   .card .card-body {
     @apply px-4 pb-4 flex flex-col gap-4;
+  }
+
+  .scanner-input {
+    @apply w-full p-2 bg-primaryBg/60 rounded-md border border-brand text-primaryText focus:outline-brandSecondary placeholder:text-brand/50 text-sm font-poppins-r;;
   }
 
   input[type='checkbox']{

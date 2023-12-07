@@ -1,0 +1,20 @@
+{
+  "appId": "hwgroup.id",
+  "productName": "HWG Bottle Keeping",
+  "directories": {
+    "output": "dist"
+  },
+  "files": ["dist-electron/", "node_modules/"],
+  "win": {
+    "target": "nsis",
+    "icon": "public/images/icons/hwg-logo.ico"
+  },
+  "mac": {
+    "target": "dmg",
+    "icon": "public/images/icons/hwg-logo.icns"
+  },
+  "linux": {
+    "target": "AppImage",
+    "icon": "public/images/icons/hwg-logo.png"
+  }
+}

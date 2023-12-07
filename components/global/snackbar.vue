@@ -8,7 +8,11 @@ function exit() {
 
 <template>
   <Transition name="slideup">
-    <div v-show="_controller.isShown" class="small-modal-wrapper" @click="exit">
+    <div
+      v-show="_controller.isShown"
+      class="snackbar-modal-wrapper"
+      @click="exit"
+    >
       <div class="container">
         <div
           class="snackbar-modal-card"
