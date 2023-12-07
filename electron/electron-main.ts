@@ -38,7 +38,7 @@ function createWindow() {
   } else {
     win.loadFile(path.join(process.env.VITE_PUBLIC!, "index.html"));
   }
-
+  win.maximize();
   win.setFullScreen(true);
 }
 
