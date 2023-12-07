@@ -47,7 +47,7 @@
     @apply bg-primaryText shadow-md;
   }
   table thead tr th {
-    @apply py-3 px-4 text-left text-primaryBg text-base font-poppins-sb uppercase;
+    @apply py-3 px-4 text-left text-primaryBg text-sm font-poppins-sb uppercase;
   }
   table tbody tr {
     @apply shadow-md;

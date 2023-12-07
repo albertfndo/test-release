@@ -10,7 +10,7 @@ onMounted(() => {
 });
 
 async function initializaData(search?: string, page?: number) {
-  await _bottle.getBottleDatas(search, false, page);
+  await _bottle.getBottleDatas(search, true, page);
 }
 
 const characterCount = computed(() => {
@@ -62,17 +62,6 @@ function draftData() {
   <section id="addNewDataBody" class="page-body flex w-full justify-center">
     <div class="w-3/4">
       <form class="form-new-guest" @submit.prevent="">
-        <div class="form-group">
-          <label for="bottleName"
-            >Nomor Surat Jalan <span class="asterisk"></span
-          ></label>
-          <input
-            id="deliveryReceiptNumber"
-            v-model="_delivery.form.deliveryNumber"
-            type="text"
-            disabled
-          />
-        </div>
         <div class="my-4 max-h-[50vh] overflow-y-auto">
           <table class="w-full">
             <thead>
