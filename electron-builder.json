@@ -1,20 +1,32 @@
 {
-  "appId": "hwgroup.id",
+  "appId": "id.hwgroup.bottlekeep",
   "productName": "HWG Bottle Keeping",
   "directories": {
-    "output": "dist"
+    "output": "release/${version}"
   },
-  "files": ["dist-electron/", "node_modules/"],
+  "files": [
+    ".output/**/*",
+    "dist-electron"
+  ],
   "win": {
+    "artifactName": "${productName}_${version}.${ext}",
     "target": "nsis",
     "icon": "public/images/icons/hwg-logo.ico"
   },
   "mac": {
-    "target": "dmg",
+    "artifactName": "${productName}_${version}.${ext}",
+    "target": ["dmg"],
     "icon": "public/images/icons/hwg-logo.icns"
   },
   "linux": {
+    "artifactName": "${productName}_${version}.${ext}",
     "target": "AppImage",
     "icon": "public/images/icons/hwg-logo.png"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false
   }
 }

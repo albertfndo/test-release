@@ -165,7 +165,7 @@ export const useApi = definePiniaStore("api", () => {
       });
 
       handled = true;
-    } else if (error.statusCode > 500) {
+    } else if (error.statusCode >= 500) {
       snackbar.error({
         title: "Error",
         message: "Server error. Please try again later.",
@@ -216,6 +216,8 @@ export const useApi = definePiniaStore("api", () => {
         message: "Failed to fetch data",
         autoClose: true,
       });
+
+      console.error(error);
 
       return true;
     }

@@ -93,14 +93,11 @@ onClickOutside(modalDialog, () => emits("close"));
           <div class="detail-items">
             <p>Penyimpanan #{{ index + 1 }}</p>
           </div>
-          <NuxtImg
+          <img
             preload
             :src="history.imageUrl"
             class="rounded-lg aspect-video w-full bg-gray-300 object-cover"
-            loading="lazy"
-            quality="100"
             alt="Bottle Image"
-            :placeholder="[50, 25, 75]"
           />
 
           <p class="brand mt-4">Penyimpanan</p>

@@ -121,7 +121,7 @@ export const useBottleKeeping = definePiniaStore("bottleKeeping", {
               : customerData.value.phone,
             description: this.form.description,
             image_url: imageFile,
-            outlet_id: userData.value.user?.outlet.id,
+            outlet_id: userData.value.user?.outlet?.id,
             gram: this.form.gram,
             mililiter: this.form.miliLiter,
             unlimited_expired: this.form.unlimitedExpired,

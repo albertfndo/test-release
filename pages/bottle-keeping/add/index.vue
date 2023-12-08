@@ -124,13 +124,10 @@ function getGuestData(isMember: boolean, guest?: Customer) {
     </div>
 
     <div v-else class="text-center mt-10">
-      <NuxtImg
+      <img
         preload
         src="/images/icon-not-found.svg"
         class="m-auto"
-        width="160px"
-        loading="lazy"
-        quality="80"
         alt="No Data"
       />
       <h4 class="mt-2 text-primaryText subtitle-1-r">No Data</h4>

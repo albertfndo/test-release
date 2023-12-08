@@ -17,7 +17,8 @@ process.env.DIST = path.join(process.env.ROOT, "dist-electron");
 process.env.VITE_PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? path.join(process.env.ROOT, "public")
   : path.join(process.env.ROOT, ".output/public");
-process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+
+process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "false";
 
 let win: BrowserWindow;
 
@@ -34,12 +35,12 @@ function createWindow() {
 
   if (process.env.NUXT_PUBLIC_APP_URL) {
     win.loadURL(process.env.NUXT_PUBLIC_APP_URL as string);
-    // win.webContents.openDevTools();
   } else {
-    win.loadFile(path.join(process.env.VITE_PUBLIC!, "index.html"));
+    win.loadFile(path.join(process.env.VITE_PUBLIC as string, "index.html"));
+    // win.webContents.openDevTools();
   }
 
-  win.setFullScreen(true);
+  win.maximize();
 }
 
 function runIpcMain() {

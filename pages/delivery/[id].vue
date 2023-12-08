@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import moment from "moment";
 import { DeliveryStatus } from "~/models/Delivery";
 import { BottleStatus } from "~/models/KeepingData";
 
@@ -25,10 +24,6 @@ async function initialize() {
   }
 }
 
-function getDate(date: string) {
-  return moment(date).format("DD MMM YYYY");
-}
-
 function changeStatus(status: number) {
   _delivery.updateDelivery(parseInt(route.params.id), status);
 }
@@ -45,6 +40,9 @@ function chooseBottle(id: number) {
   } else {
     _delivery.form.bottles.push(id);
   }
+}
+function edit() {
+  navigateTo({ path: `/delivery/add`, query: { id: route.params.id } });
 }
 </script>
 <template>
@@ -72,7 +70,7 @@ function chooseBottle(id: number) {
           <Iconify icon="tabler:trash-x" class="text-lg md:hidden" />
           <span class="detail" @click="deleteModal = true">Hapus</span>
         </button>
-        <button class="btn-full no-bg">
+        <button class="btn-full no-bg" @click="edit()">
           <Iconify icon="ic:round-edit" class="text-lg md:hidden" />
           <span class="detail">Edit</span>
         </button>
@@ -115,19 +113,23 @@ function chooseBottle(id: number) {
             <Iconify icon="ic:round-date-range" class="text-primaryText" />
             <p class="text-primaryText">
               {{
-                getDate(_delivery.delivery?.createdAt) +
+                formatDate(_delivery.delivery.createdAt) +
                 " / " +
-                getDate(_delivery.delivery?.updatedAt)
+                formatDate(_delivery.delivery?.arrivedAt)
               }}
             </p>
           </div>
           <div class="flex items-center gap-2">
             <Iconify icon="ic:round-location-on" class="text-primaryText" />
-            <p class="text-primaryText">{{ _delivery.delivery.outlet }}</p>
+            <p class="text-primaryText">
+              {{ _delivery.delivery.outlet?.name }}
+            </p>
           </div>
           <div class="flex items-center gap-2">
             <Iconify icon="ic:round-person" class="text-primaryText" />
-            <p class="text-primaryText">{{ _delivery.delivery.createdBy }}</p>
+            <p class="text-primaryText">
+              {{ _delivery.delivery.createdBy?.name }}
+            </p>
           </div>
           <div class="flex items-center gap-2">
             <Iconify icon="game-icons:beer-bottle" class="text-primaryText" />

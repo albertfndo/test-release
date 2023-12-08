@@ -40,10 +40,10 @@ function logout() {
       },
       onTapConfirm() {
         auth.logout({
-          callback() {
-            location.href = "/auth/login";
-          },
+          next: "/auth/login",
         });
+
+        _dialog.hideDialog();
       },
     },
     backText: "Batal",
@@ -57,18 +57,15 @@ function logout() {
 <template>
   <aside :class="showMobileNavbar ? 'max-lg:left-0' : 'max-lg:-left-full'">
     <div class="nav-info">
-      <NuxtImg
+      <img
         v-show="isMounted"
         preload
         src="/images/logo/hwg-logo.svg"
         class="mx-auto"
-        width="120px"
-        loading="lazy"
-        quality="100"
-        :placeholder="[50, 25, 75]"
+        width="100px"
       />
 
-      <h3>{{ userData.user?.outlet.name }}</h3>
+      <h3>{{ userData.user?.outlet?.name }}</h3>
 
       <div class="general">
         <p>{{ userData.user?.name }}</p>
@@ -105,7 +102,12 @@ function logout() {
         <Iconify icon="ic:outline-access-time" class="text-2xl" />
         <p>Riwayat Bottle Keep</p>
       </NuxtLink>
-      <NuxtLink to="/delivery" active-class="active" class="nav-link">
+      <NuxtLink
+        to="/delivery"
+        active-class="active"
+        class="nav-link"
+        :class="route.path.startsWith('/delivery') ? 'active' : ''"
+      >
         <Iconify icon="solar:delivery-bold" class="text-2xl" />
         <p>Pengiriman Botol</p>
       </NuxtLink>

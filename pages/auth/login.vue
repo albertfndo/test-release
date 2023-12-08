@@ -44,13 +44,11 @@ function isValid() {
         </h1>
       </div>
       <div>
-        <NuxtImg
+        <img
           preload
           src="/images/logo/hwg-logo.svg"
           class="mx-auto"
           width="160px"
-          loading="lazy"
-          quality="80"
           alt="Outlet Management Tools"
         />
         <form class="login-form" @keypress.enter="login()">

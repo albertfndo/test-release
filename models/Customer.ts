@@ -3,8 +3,8 @@ export default class Customer {
     public id: number,
     public name: string,
     public phone: string,
-    public membershipTypeText: string,
-    public typeText: string,
+    public membershipTypeText: string | null,
+    public typeText: string | null,
     public genderText: string
   ) {}
 
@@ -13,8 +13,8 @@ export default class Customer {
       json.id,
       json.first_name + " " + json.last_name,
       json.phone_number,
-      json.membership_data.membership.name,
-      json.type.name,
+      json.membership_data ? json.membership_data.membership.name : null,
+      json.type ? json.type.name : null,
       json.gender_text
     );
   }
