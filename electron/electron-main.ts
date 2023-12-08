@@ -31,7 +31,15 @@ let win: BrowserWindow;
 
 autoUpdater.logger = log;
 
-async function checkForUpdates() {
+autoUpdater.setFeedURL({
+  provider: "github",
+  owner: process.env.GITHUB_OWNER,
+  repo: process.env.GITHUB_REPO,
+  private: true, // Set to true if your repo is private
+  token: process.env.GITHUB_TOKEN,
+});
+
+function checkForUpdates() {
   autoUpdater.checkForUpdatesAndNotify();
 
   autoUpdater.on("update-available", () => {

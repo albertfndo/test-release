@@ -5,17 +5,6 @@
   "version": "0.0.1",
   "description": "Bottle Keeping App",
   "author": "HWG IT Department",
-  "build": {
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "Holywings-ID",
-        "repo": "Holywings-ID/bottle-keeping",
-        "token": "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",
-        "private": true
-      }
-    ]
-  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
