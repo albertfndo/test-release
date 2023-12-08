@@ -2,7 +2,7 @@
   <NuxtLoadingIndicator />
   <Watermark v-if="!isProduction()" />
 
-  <main>
+  <main id="auth">
     <slot />
   </main>
 </template>

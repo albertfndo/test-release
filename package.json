@@ -5,6 +5,17 @@
   "version": "0.0.1",
   "description": "Bottle Keeping App",
   "author": "HWG IT Department",
+  "build": {
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Holywings-ID",
+        "repo": "Holywings-ID/bottle-keeping",
+        "token": "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",
+        "private": true
+      }
+    ]
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -40,6 +51,7 @@
     "@vueuse/core": "^10.7.0",
     "@vueuse/electron": "^10.7.0",
     "electron-log": "^5.0.1",
+    "electron-updater": "^6.1.7",
     "escpos": "3.0.0-alpha.6",
     "escpos-network": "3.0.0-alpha.5",
     "moment": "^2.29.4",

@@ -26,6 +26,9 @@
   main {
     @apply lg:ml-64 px-4 lg:px-6 mt-6 lg:mt-0;
   }
+  main#auth {
+    @apply ml-0;
+  }
   ::-webkit-scrollbar {
     @apply w-1.5 hidden;               /* width of the entire scrollbar */
   }

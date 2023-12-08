@@ -5,7 +5,11 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const userData = useUserData();
 
-  if (to.fullPath !== "/auth/login" && !userData.value.token) {
+  if (
+    to.fullPath !== "/auth/login" &&
+    !userData.value.token &&
+    to.fullPath !== "/update"
+  ) {
     return navigateTo("/auth/login");
   } else if (to.fullPath === "/auth/login" && userData.value.token) {
     return abortNavigation();
