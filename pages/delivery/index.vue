@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Datepicker from "@vuepic/vue-datepicker";
 import { DeliveryStatus } from "~/models/Delivery";
-import moment from "moment";
 // import moment from "moment";
 import Outlet from "~/models/Outlet";
 
@@ -201,10 +200,10 @@ function getColor(status: number) {
             @click="navigateTo(`/delivery/${deliveryData.id}`)"
           >
             <td class="text-center">{{ _delivery.meta.from + index }}</td>
-            <td>{{ deliveryData.id }}</td>
-            <td>{{ moment(deliveryData.createdAt).format("DD MMM YYYY") }}</td>
-            <td>{{ moment(deliveryData.updatedAt).format("DD MMM YYYY") }}</td>
-            <td>{{ deliveryData.outlet }}</td>
+            <td>{{ deliveryData.noDelivery }}</td>
+            <td>{{ formatDate(deliveryData.createdAt) }}</td>
+            <td>{{ formatDate(deliveryData.arrivedAt) }}</td>
+            <td>{{ deliveryData.outlet.name }}</td>
             <td class="text-center">
               <span
                 :class="getColor(deliveryData.status)"

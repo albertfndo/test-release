@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "bottle-keeping-app",
   "private": true,
   "main": "dist-electron/electron-main.js",
   "version": "0.0.1",

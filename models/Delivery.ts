@@ -1,6 +1,6 @@
 import KeepingData from "./KeepingData";
-// import Outlet from "./Outlet";
-// import User from "./User";
+import Outlet from "./Outlet";
+import User from "./User";
 
 export enum DeliveryStatus {
   draft = 1,
@@ -12,13 +12,14 @@ export default class Delivery {
   public DeliveryStatus;
   constructor(
     public id: number,
-    public outlet: number,
-    public createdBy: number,
-    public checkedBy: number,
+    public noDelivery: string,
+    public outlet: Outlet,
+    public createdBy: User | null,
+    public checkedBy: User | null,
     public status: number,
     public bottles: KeepingData[],
-    public createdAt: string,
-    public updatedAt: string
+    public arrivedAt: string,
+    public createdAt: string
   ) {
     this.DeliveryStatus = DeliveryStatus;
   }
@@ -30,13 +31,14 @@ export default class Delivery {
   public static fromJson(json: any): Delivery {
     return new Delivery(
       json.id,
-      json.outlet_id,
-      json.created_by,
-      json.checked_by,
+      json.no,
+      Outlet.fromJson(json.outlet),
+      json.created_by ? User.fromJson(json.created_by) : null,
+      json.check_by ? User.fromJson(json.check_by) : null,
       json.status,
       json.bottle_keeps.map((bottle: any) => KeepingData.fromJson(bottle)),
-      json.created_at,
-      json.updated_at
+      json.arrive_date,
+      json.created_at
     );
   }
 }

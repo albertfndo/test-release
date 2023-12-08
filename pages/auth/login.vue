@@ -49,8 +49,6 @@ function isValid() {
           src="/images/logo/hwg-logo.svg"
           class="mx-auto"
           width="160px"
-          loading="lazy"
-          quality="80"
           alt="Outlet Management Tools"
         />
         <form class="login-form" @keypress.enter="login()">
@@ -73,7 +71,9 @@ function isValid() {
             <button type="button" @click="showPassword = !showPassword">
               <Iconify
                 :icon="
-                  showPassword ? `ic:outline-visibility-off` : 'ic:outline-visibility'
+                  showPassword
+                    ? `ic:outline-visibility-off`
+                    : 'ic:outline-visibility'
                 "
                 class="text-brand text-3xl"
               />

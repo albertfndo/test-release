@@ -1,5 +1,6 @@
 import numeral from "numeral";
 import { roleConstants } from "./RoleConstant";
+import moment from "moment";
 
 const userData = useUserData();
 
@@ -44,6 +45,10 @@ export function getNextPage(page: string): number {
 
 export function isAdmin() {
   return userData.value.roles?.some((role) => roleConstants.includes(role));
+}
+
+export function formatDate(date: string) {
+  return date ? moment(date).format("DD MMM YYYY") : "Not Set";
 }
 // export function registerLocalStorageMeta() {
 // localStorage.setItem("APP_ENV", import.meta.env.VITE_APP_ENV);

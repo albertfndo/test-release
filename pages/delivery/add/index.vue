@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const _bottle = useBottleKeeping();
 const _delivery = useDelivery();
+const route = useRoute();
 
 onMounted(() => {
   _bottle.$reset();
@@ -10,6 +11,9 @@ onMounted(() => {
 });
 
 async function initializaData(search?: string, page?: number) {
+  if (route.query.id) {
+    await _delivery.getDeliveryById(parseInt(route.query.id as string));
+  }
   await _bottle.getBottleDatas(search, true, page);
 }
 

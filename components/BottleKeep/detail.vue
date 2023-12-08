@@ -19,7 +19,10 @@ function getDate(date: string | undefined) {
 }
 
 function showButton() {
-  return props.bottleKeepDetail?.histories.length && props.bottleKeepDetail.status != 4;
+  return (
+    props.bottleKeepDetail?.histories.length &&
+    props.bottleKeepDetail.status != 4
+  );
 }
 
 function logsAction() {
@@ -68,8 +71,15 @@ onClickOutside(modalDialog, () => emits("close"));
             <p>: {{ props.bottleKeepDetail?.bottleStatusIndoText }}</p>
           </div>
           <div class="detail-items">
-            <button v-show="isAdmin()" class="btn-xs general w-fit" @click="logsAction()">
-              <Iconify icon="ant-design:file-search-outlined" class="text-base" />
+            <button
+              v-show="isAdmin()"
+              class="btn-xs general w-fit"
+              @click="logsAction()"
+            >
+              <Iconify
+                icon="ant-design:file-search-outlined"
+                class="text-base"
+              />
               <span>Lihat Logs</span>
             </button>
           </div>
@@ -87,10 +97,7 @@ onClickOutside(modalDialog, () => emits("close"));
             preload
             :src="history.imageUrl"
             class="rounded-lg aspect-video w-full bg-gray-300 object-cover"
-            loading="lazy"
-            quality="100"
             alt="Bottle Image"
-            :placeholder="[50, 25, 75]"
           />
 
           <p class="brand mt-4">Penyimpanan</p>
@@ -129,7 +136,9 @@ onClickOutside(modalDialog, () => emits("close"));
             type="button"
             class="btn-full"
             :class="
-              props.bottleKeepDetail?.status == 1 ? 'exit' : 'btn-full active border-none'
+              props.bottleKeepDetail?.status == 1
+                ? 'exit'
+                : 'btn-full active border-none'
             "
             :disabled="props.bottleKeepDetail?.status == 1"
             @click="emits('release')"
@@ -166,7 +175,10 @@ onClickOutside(modalDialog, () => emits("close"));
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(log, index) in props.bottleKeepDetail?.logs" :key="index">
+            <tr
+              v-for="(log, index) in props.bottleKeepDetail?.logs"
+              :key="index"
+            >
               <td class="text-center">{{ index + 1 }}</td>
               <td>{{ log.actionText }}</td>
               <td>{{ log.notes }}</td>
